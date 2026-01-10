@@ -358,6 +358,15 @@ body::before {
     font-size: 1.05em;
     position: relative;
     overflow: hidden;
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: left;
+    padding: 15px 20px;
+    line-height: 1.5;
+    min-height: fit-content;
+    height: auto;
 }
 
 .option::before {
@@ -559,6 +568,7 @@ body::before {
     animation: slideIn 0.5s ease;
     word-wrap: break-word;
     overflow-wrap: break-word;
+    white-space: normal;
 }
 
 .result-item.correct {
@@ -1050,4 +1060,46 @@ body::after {
         transform: translate(-50%, -50%) scale(0);
         opacity: 0;
     }
+}
+
+/* Quiz Options - Text Wrapping */
+.option {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    word-break: break-word;
+    text-align: left;
+    padding: 15px 20px;
+    line-height: 1.5;
+    min-height: fit-content;
+    height: auto;
+}
+
+#options-container {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+}
+
+/* Result items text wrapping */
+.result-item {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+
+.result-question,
+.result-answer {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
+}
+
+/* Ensure question text also wraps */
+#question-text {
+    white-space: normal;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+    line-height: 1.6;
 }
