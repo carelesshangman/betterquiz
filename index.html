@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quiz Maker</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <!-- Settings Panel -->
+    <div class="settings-panel">
+        <button id="toggle-animations" class="settings-button" title="Toggle Animations">
+            <span class="icon">🎨</span>
+            <span class="label">Animations: ON</span>
+        </button>
+        <button id="cat-break-btn" class="settings-button" title="Take a Cat Break">
+            <span class="icon">🐱</span>
+            <span class="label">Cat Break</span>
+        </button>
+    </div>
+
+    <!-- Cat Break Modal -->
+    <div id="cat-modal" class="cat-modal">
+        <div class="cat-modal-content">
+            <button class="cat-modal-close" id="close-cat-modal">✕</button>
+            <h2 class="cat-modal-title">🐱 Cat Break Time! 🐱</h2>
+            <div class="cat-image-container">
+                <img id="cat-image" src="" alt="Random Cat">
+                <div class="cat-loader">Loading next cat...</div>
+            </div>
+            <div class="cat-info">
+                <p id="cat-breed">Breed: Loading...</p>
+                <p class="cat-timer">Next cat in: <span id="cat-countdown">5</span>s</p>
+            </div>
+        </div>
+    </div>
+
+    <div class="container">
+        <!-- Upload Section -->
+        <div id="upload-section" class="section active">
+            <div class="upload-card animate-in">
+                <h1 class="title">🎯 Quiz Maker</h1>
+                <p class="subtitle">Upload your JSON quiz file to begin!</p>
+
+                <div class="upload-zone" id="upload-zone">
+                    <div class="upload-icon">📁</div>
+                    <p>Click to upload or drag & drop</p>
+                    <p class="file-hint">JSON files only</p>
+                    <input type="file" id="file-input" accept=".json" hidden>
+                </div>
+
+                <div class="sample-button-container">
+                    <button id="load-sample" class="secondary-button">
+                        ✨ Try Sample Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Quiz Section -->
+        <div id="quiz-section" class="section">
+            <div class="quiz-card">
+                <div class="quiz-header">
+                    <h2 id="quiz-title" class="quiz-title"></h2>
+
+                    <!-- Question Navigator -->
+                    <div class="question-navigator">
+                        <button id="question-nav-toggle" class="question-nav-toggle">
+                            📋 Jump to Question
+                        </button>
+                        <div id="question-grid" class="question-grid" style="display: none;">
+                            <!-- Question buttons will be generated here -->
+                        </div>
+                    </div>
+
+                    <div class="progress-container">
+                        <div class="progress-bar">
+                            <div id="progress-fill" class="progress-fill"></div>
+                        </div>
+                        <p class="progress-text">
+                            Question <span id="current-question">1</span> of <span id="total-questions">10</span>
+                        </p>
+                    </div>
+                </div>
+
+                <div class="question-container">
+                    <h3 id="question-text" class="question-text"></h3>
+                    <div id="options-container" class="options-container"></div>
+                </div>
+
+                <div class="navigation-buttons">
+                    <button id="prev-button" class="nav-button" disabled>
+                        ← Previous
+                    </button>
+                    <button id="next-button" class="nav-button" disabled>
+                        Next →
+                    </button>
+                    <button id="submit-button" class="submit-button" style="display: none;">
+                        🎉 Submit Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Results Section -->
+        <div id="results-section" class="section">
+            <div class="results-card animate-in">
+                <h2 class="results-title">🎊 Quiz Complete!</h2>
+                <div class="score-circle">
+                    <svg width="200" height="200">
+                        <circle cx="100" cy="100" r="90" class="score-bg"></circle>
+                        <circle id="score-progress" cx="100" cy="100" r="90" class="score-fill"></circle>
+                    </svg>
+                    <div class="score-text">
+                        <span id="score-percentage">0%</span>
+                        <span id="score-fraction"></span>
+                    </div>
+                </div>
+
+                <div id="results-details" class="results-details"></div>
+
+                <div class="results-buttons">
+                    <button id="review-button" class="nav-button">
+                        📝 Review Answers
+                    </button>
+                    <button id="restart-button" class="primary-button">
+                        🔄 New Quiz
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>

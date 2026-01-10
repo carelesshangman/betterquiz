@@ -1,0 +1,1284 @@
+{
+  "quiz": {
+    "title": "SPO Kviz - Sistemi in Programska Oprema",
+    "description": "105 teoretičnih vprašanj + 11 vprašanj o bitnih operacijah",
+    "questions": [
+      {
+        "id": 1,
+        "question": "Kaj je datotečni opisnik?",
+        "options": [
+          "Vsaka odprta datoteka ima s stališča jedra svoj datotečni opisnik (file descriptor). Le-ta je predstavljen z nenegativnim celim številom. Ko odpremo datoteko ali ustvarimo novo, jedro vrne procesu datotečni opisnik. Ko želimo brati iz datoteke (read) ali pisati vanjo (write), se nanjo sklicujemo z opisnikom, ki ga je vrnila funkcija open (ali create).",
+          "Kazalec na datoteko v uporabniškem prostoru",
+          "Struktura, ki vsebuje ime datoteke",
+          "Podatkovni tip za shranjevanje vsebine datoteke"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 2,
+        "question": "Katere argumente ima funkcija fopen in kaj vrača?",
+        "options": [
+          "const char *pathname, const char *type; vrača kazalec na FILE ali NULL",
+          "int fd, int mode; vrača datotečni opisnik",
+          "char *filename, int flags; vrača 0 ali -1",
+          "FILE *fp, char *mode; vrača število bajtov"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 3,
+        "question": "Katere so funkcije formatiranega izhoda v standardni knjižnici?",
+        "options": [
+          "printf, fprintf, sprintf",
+          "getc, putc, fgetc",
+          "read, write, open",
+          "fread, fwrite, fseek"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 4,
+        "question": "Katere so funkcije formatiranega vhoda v standardni knjižnici?",
+        "options": [
+          "scanf, fscanf, sscanf",
+          "getc, fgetc, getchar",
+          "read, fread, pread",
+          "printf, fprintf, sprintf"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 5,
+        "question": "Kateri so argumenti sistemskega klica write in kaj vrača?",
+        "options": [
+          "int fd, void *buf, size_t count; vrača število zapisanih bajtov ali -1 ob napaki",
+          "FILE *fp, char *str, int len; vrača 0 ali 1",
+          "char *buffer, int size; vrača kazalec",
+          "void *ptr, size_t size; vrača true/false"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 6,
+        "question": "Kateri so argumenti sistemskega klica read in kaj vrača?",
+        "options": [
+          "int fd, void *buf, size_t count; vrača število prebranih bajtov, 0 ob koncu datoteke, -1 ob napaki",
+          "FILE *fp, char *str; vrača število znakov",
+          "char *buffer; vrača kazalec na podatke",
+          "void *ptr, int len; vrača status kode"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 7,
+        "question": "Katere tipe in funkcije neformatiranega vhoda v standardni V/I knjižnici poznamo?",
+        "options": [
+          "Znakovni V/I (getc, fgetc), vrstični (fgets), direktni V/I (fread)",
+          "Samo scanf in fscanf",
+          "read, write, open",
+          "printf, fprintf, sprintf"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 8,
+        "question": "Kaj pomenijo argumenti funkcije fseek: fp, offset in whence?",
+        "options": [
+          "fp je file pointer; offset je število bajtov; whence določa pozicijo (SEEK_SET, SEEK_CUR, SEEK_END)",
+          "fp je datotečni opisnik; offset je način branja; whence je velikost bufferja",
+          "fp je ime datoteke; offset je hitrost; whence je tip dostopa",
+          "fp je status; offset je zastavica; whence je prioriteta"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 9,
+        "question": "Koliko argumentov ima funkcija printf?",
+        "options": [
+          "Spremenljivo število ('...' pomeni, da sta število in tip argumentov spremenljiva)",
+          "Vedno 1 argument",
+          "Vedno 2 argumenta",
+          "Največ 10 argumentov"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 10,
+        "question": "Kako izvemo ID procesa? Kateri proces ima ID enak 1?",
+        "options": [
+          "getpid(); systemd ali init proces",
+          "pid(); kernel proces",
+          "processid(); boot proces",
+          "myid(); root proces"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 11,
+        "question": "Kdo ali kaj je zombi proces?",
+        "options": [
+          "Proces, ki je dokončal izvedbo, vendar ima še vedno vnos v tabeli procesov",
+          "Proces, ki ne more dostopati do pomnilnika",
+          "Proces, ki teče v ozadju brez nadzora",
+          "Proces, ki je začasno ustavljen"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 12,
+        "question": "Kakšna je razlika med zombijem in siroto (orphan process)?",
+        "options": [
+          "Zombi se je končal, starš ni prejel statusa; sirota je proces, katerega starš se je končal pred njim",
+          "Zombi teče, sirota ne; zombi ima starša, sirota nima",
+          "Zombi je neaktiven, sirota je aktiven proces",
+          "Ni razlike, sta sinonima"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 13,
+        "question": "V čem se med seboj razlikujejo funkcije exec?",
+        "options": [
+          "execl/execlp/execle vzamejo argumente kot ločene parametre; execv/execvp/execve potrebujejo polje kazalcev",
+          "Razlikujejo se po hitrosti izvajanja",
+          "Nekatere ustvarjajo nove procese, druge ne",
+          "Uporabljajo različne sistemske klice jedra"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 14,
+        "question": "Kakšen je smisel funkcije signal?",
+        "options": [
+          "Določimo, kaj naj se zgodi ob pojavitvi signala",
+          "Pošljemo signal procesu",
+          "Blokiramo vse signale",
+          "Ustavimo proces"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 15,
+        "question": "V čem so cevi (pipes) omejene?",
+        "options": [
+          "Samo procesi iz fork() lahko komunicirajo preko cevi; half-duplex",
+          "Delujejo samo v lokalnem omrežju",
+          "Podpirajo samo tekstovne podatke",
+          "Imajo omejeno velikost 512 bajtov"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 16,
+        "question": "Kateri so argumenti funkcije pipe?",
+        "options": [
+          "int filedescriptor[2] - pfd[0] za branje, pfd[1] za pisanje",
+          "char *name, int mode",
+          "int fd, int flags, int size",
+          "void *buf, size_t len"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 17,
+        "question": "Kaj se zgodi, če pišemo na cev, ki ima zaprt bralni konec?",
+        "options": [
+          "Generira se signal SIGPIPE, write vrne napako (errno EPIPE)",
+          "Podatki se shranijo v buffer",
+          "Program se normalno nadaljuje",
+          "Ustvari se nova cev"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 18,
+        "question": "Kako trenutni odmik v datoteki zmanjšamo za 10 bajtov?",
+        "options": [
+          "lseek(fd, -10, SEEK_CUR)",
+          "fseek(fd, -10, SEEK_SET)",
+          "lseek(fd, 10, SEEK_END)",
+          "seek(fd, -10)"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 19,
+        "question": "Ali se otrok začne izvrševati pred staršem po klicu fork()?",
+        "options": [
+          "Ne vemo, odvisno od razvrševalnega algoritma jedra",
+          "Da, vedno se začne otrok",
+          "Ne, vedno se začne starš",
+          "Oba se začneta hkrati"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 20,
+        "question": "Zakaj kazalec v uporabniškem prostoru ne sme biti direktno dereferenciran v kodi jedra?",
+        "options": [
+          "Lahko kaže na neveljavno območje ali povzroči zrušitev sistema",
+          "Uporabniški prostor je vedno read-only",
+          "Jedro nima dostopa do kazalcev",
+          "Kazalci so v drugačnem formatu"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 21,
+        "question": "Razlike med moduli in aplikacijami?",
+        "options": [
+          "Modul teče v kernel space, aplikacije v user space; modul se registrira za bodoče zahteve",
+          "Moduli so hitrejši od aplikacij",
+          "Aplikacije ne morejo klicati sistemskih klicev",
+          "Ni razlike, sta sinonima"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 22,
+        "question": "Kako ustvarimo posebno datoteko za znakovno napravo?",
+        "options": [
+          "sudo mknod -m 666 /dev/naprava c major minor",
+          "touch /dev/naprava",
+          "mkfifo /dev/naprava",
+          "dd if=/dev/zero of=/dev/naprava"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 23,
+        "question": "S katerim ukazom ustvarimo FIFO?",
+        "options": [
+          "mkfifo",
+          "mknod -p",
+          "touch -f",
+          "create-pipe"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 24,
+        "question": "Kakšen je smisel semaforja?",
+        "options": [
+          "Kontrolira dostop do vira s strani več procesov s preklapljanjem med stanji",
+          "Shranjuje podatke med procesi",
+          "Pošilja sporočila med procesi",
+          "Ustvarja nove procese"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 25,
+        "question": "Kaj je inode?",
+        "options": [
+          "Podatkovna struktura 64-128 bajtov, ki opisuje objekte datotečnega sistema",
+          "Vrsta procesa v jedru",
+          "Sistemski klic za dostop",
+          "Tip datoteke v /dev"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 26,
+        "question": "Kako ustvarjena nit ve, kaj mora delati?",
+        "options": [
+          "V pthread_create() s tretjim argumentom 'start_routine' povemo funkcijo",
+          "Nit avtomatsko prevzame delo starša",
+          "Prebere ukaze iz datoteke",
+          "Čaka na signal od jedra"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 27,
+        "question": "Čemu služita funkciji raise in kill?",
+        "options": [
+          "kill pošlje signal procesu; raise omogoča procesu, da pošlje signal sam sebi",
+          "Obe ustavita proces",
+          "Obe ustvarita nov proces",
+          "Obe povečata prioriteto"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 28,
+        "question": "V čem se paralelni TCP strežnik razlikuje od iterativnega?",
+        "options": [
+          "Paralelni lahko sprejme več zahtev, za vsako pokliče fork()",
+          "Iterativni je hitrejši",
+          "Paralelni ne podpira TCP",
+          "Iterativni uporablja niti"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 29,
+        "question": "Kako pogledamo inode številko datoteke?",
+        "options": [
+          "ls -i \"filename\"",
+          "cat /proc/inode",
+          "stat --inode",
+          "file -i"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 30,
+        "question": "Na kakšen način sta povezana znakovna datoteka naprave in gonilnik?",
+        "options": [
+          "Prek major in minor števila ter sistemskih klicev jedra",
+          "Direktno z naslovom pomnilnika",
+          "Prek datotečnega sistema",
+          "Z simbolično povezavo"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 31,
+        "question": "Ali imajo PC-ji enoten naslovni prostor?",
+        "options": [
+          "Nekateri proizvajalci ga implementirajo, pri drugih imajo periferne naprave svoj naslovni prostor",
+          "Da, vsi imajo",
+          "Ne, nobeden nima",
+          "Odvisno od operacijskega sistema"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 32,
+        "question": "Kaj pomeni dev_t?",
+        "options": [
+          "Podatkovni tip za major in minor števila (32 bitov: 12 za major, 20 za minor)",
+          "Device type za identifikacijo",
+          "Development tool",
+          "Descriptor table"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 33,
+        "question": "Za kaj se pri modulih uporablja podatkovna struktura file_operations?",
+        "options": [
+          "Vsebuje kazalce na funkcije, ki jih implementira gonilnik za operacije na napravi",
+          "Shranjuje odprte datoteke",
+          "Upravlja file descriptorje",
+          "Hrani metapodatke"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 34,
+        "question": "Kaj dosežemo z ukazom ls | wc -w?",
+        "options": [
+          "Število datotek v trenutnem direktoriju",
+          "Število vrstic v direktoriju",
+          "Število bajtov vseh datotek",
+          "Število uporabnikov"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 35,
+        "question": "Kako skupini others dodamo pravice za branje in pisanje datoteke?",
+        "options": [
+          "chmod o+rw",
+          "chmod 777",
+          "chown others",
+          "chmod a+rw"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 36,
+        "question": "Kako ustvarimo simbolično povezavo?",
+        "options": [
+          "ln -s <source_file> <link_dirname>",
+          "ln <source_file> <link_dirname>",
+          "cp -s <source_file> <link_dirname>",
+          "link <source_file> <link_dirname>"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 37,
+        "question": "Kaj je MBR (master boot record)?",
+        "options": [
+          "Informacije v prvem sektorju hard diska, ki povejo kje se OS nahaja",
+          "Glavni pomnilniški register",
+          "Master boot routine v BIOS-u",
+          "Memory buffer register"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 38,
+        "question": "Kaj vsebuje datoteka /etc/inittab?",
+        "options": [
+          "Navodila za init proces",
+          "Seznam uporabnikov",
+          "Sistemske spremenljivke",
+          "Konfiguracijo omrežja"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 39,
+        "question": "Pri kateri funkciji uporabljamo zastavico O_RDONLY, O_WRONLY, O_RDWR?",
+        "options": [
+          "Pri funkciji open kot tretji argument (oflag)",
+          "Pri funkciji fopen",
+          "Pri funkciji read",
+          "Pri funkciji chmod"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 40,
+        "question": "Kako testiramo dostopnost datoteke glede na realno UID in GID?",
+        "options": [
+          "S funkcijo access, stat ali fstat",
+          "S funkcijo test",
+          "S funkcijo check",
+          "S funkcijo verify"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 41,
+        "question": "S katero funkcijo spremenimo dovoljenje dostopa do datoteke?",
+        "options": [
+          "chmod, fchmod",
+          "chown, fchown",
+          "access, faccess",
+          "setperm, fperm"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 42,
+        "question": "Katere dve glavni uporabi ima funkcija fork?",
+        "options": [
+          "Starš in otrok izvajata različne dele kode; proces želi izvršiti drug program z exec",
+          "Ustvarjanje niti in paralelizem",
+          "Komunikacija in deljenje pomnilnika",
+          "Varnost in izolacija"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 43,
+        "question": "Katere 3 možnosti ravnanja s signalom ima proces?",
+        "options": [
+          "Ga ignorira, ga ujame, izvede privzeto akcijo",
+          "Ga pošlje naprej, shrani, zavrže",
+          "Ga blokira, preusmeri, duplicira",
+          "Ga zadrži, pospeši, ustavi"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 44,
+        "question": "Kaj pomeni IPC_RMID?",
+        "options": [
+          "Remove IPC identifier (odstrani sporočilno vrsto/shared memory/semafor)",
+          "IPC read mode identifier",
+          "Inter-process communication remote ID",
+          "IPC resource management ID"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 45,
+        "question": "Kaj je modul v Linuxu?",
+        "options": [
+          "Kos kode, ki ga je mogoče dinamično povezati v jedro po zagonu sistema",
+          "Aplikacija v user space",
+          "Konfiguracijska datoteka",
+          "Posebna vrsta procesa"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 46,
+        "question": "Koliko biten je podatkovni register pri vzporednih vratih?",
+        "options": [
+          "8-bit",
+          "16-bit",
+          "32-bit",
+          "64-bit"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 47,
+        "question": "Za kaj se uporablja ioremap?",
+        "options": [
+          "Mapira fizični naslov I/O naprave v kernel virtual address",
+          "Prenaša podatke med procesi",
+          "Odpira datoteke v jedru",
+          "Rezervira RAM"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 48,
+        "question": "Kaj počne zagonski nalagalnik (boot loader)?",
+        "options": [
+          "Naloži operacijski sistem v pomnilnik",
+          "Zagane BIOS",
+          "Inicializira jedro",
+          "Formatira disk"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 49,
+        "question": "Kaj je značilno za nebufferiran V/I?",
+        "options": [
+          "Vsako branje in pisanje povzroči sistemski klic v jedru",
+          "Podatki se shranjujejo v buffer",
+          "Hitrejši je od bufferiranega",
+          "Uporablja se samo za tekst"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 50,
+        "question": "Kaj se zgodi, če pišemo na mesto odmika, ki je večji od velikosti datoteke?",
+        "options": [
+          "V datoteki se ustvari luknja",
+          "Dobi se napaka",
+          "Datoteka se razširi z ničlami",
+          "Pisanje se ignorira"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 51,
+        "question": "Kako podvojimo obstoječ datotečni opisnik?",
+        "options": [
+          "dup, dup2",
+          "fork, vfork",
+          "copy, copy2",
+          "clone, clone2"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 52,
+        "question": "Kaj dela funkcija stat?",
+        "options": [
+          "Vrne stat strukturo z metapodatki o datoteki",
+          "Ustvari novo datoteko",
+          "Spremeni pravice",
+          "Izbriše datoteko"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 53,
+        "question": "Katere tipe datotek poznamo?",
+        "options": [
+          "Direktorije, bločne/znakovno posebne datoteke, navadne, simbolične povezave, cevi, vtičnice",
+          "Samo navadne in direktoriji",
+          "Tekstovne in binarne",
+          "Sistemske in uporabniške"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 54,
+        "question": "Kaj vrne funkcija umask?",
+        "options": [
+          "Vrne prejšnjo vrednost maske",
+          "Vrne trenutno masko",
+          "Vrne seznam uporabnikov",
+          "Vrne ID procesa"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 55,
+        "question": "Kaj dela funkcija umask?",
+        "options": [
+          "Nastavi privzeto masko dovoljenj za nove datoteke",
+          "Spremeni pravice obstoječih datotek",
+          "Izbriše datoteke",
+          "Ustvari nove uporabnike"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 56,
+        "question": "S katero funkcijo spremenimo lastništvo datoteke?",
+        "options": [
+          "chown",
+          "chmod",
+          "chgrp",
+          "setowner"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 57,
+        "question": "Kolikšna je velikost datoteke, ki je simbolična povezava (pri ls)?",
+        "options": [
+          "Število bajtov enako številu črk v imenu datoteke",
+          "Vedno 0",
+          "Velikost originalne datoteke",
+          "4096 bajtov"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 58,
+        "question": "Katere funkcije uporabljamo pri branju datoteke?",
+        "options": [
+          "open, close, fopen, fclose, fscanf, getc, getw, fseek, ftell, rewind",
+          "Samo read in write",
+          "input, output, process",
+          "load, save, update"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 59,
+        "question": "Kako dobimo ID procesa in ID starša?",
+        "options": [
+          "getpid() za ID procesa, getppid() za ID starša",
+          "pid() in ppid()",
+          "myid() in parentid()",
+          "procid() in parid()"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 60,
+        "question": "Kaj je fork?",
+        "options": [
+          "Funkcija, ki ustvari nov proces tako, da podvoji klicni proces",
+          "Funkcija za odpiranje datotek",
+          "Funkcija za pošiljanje signalov",
+          "Funkcija za ustvarjanje niti"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 61,
+        "question": "Kaj je msgget?",
+        "options": [
+          "Funkcija, ki ustvari ali vrne sporočilno vrsto za podan ključ",
+          "Funkcija za branje sporočil",
+          "Funkcija za pošiljanje sporočil",
+          "Funkcija za brisanje sporočil"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 62,
+        "question": "Na kakšen način se proces priklopi na segment deljenega pomnilnika in odklopi?",
+        "options": [
+          "shmat() za attach, shmdt() za detach",
+          "shmget() in shmctl()",
+          "malloc() in free()",
+          "attach() in detach()"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 63,
+        "question": "Kaj pomeni semget(key, 10, 066 | IPC_CREATE)?",
+        "options": [
+          "Ustvari množico 10 semaforjev s ključem key",
+          "Pridobi vrednost 10. semaforja",
+          "Izbriše 10 semaforjev",
+          "Nastavi semafor na 10"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 64,
+        "question": "Kaj pomeni shmget(key, 1024, 0644 | IPC_CREAT)?",
+        "options": [
+          "Dobimo ID segmenta deljenega pomnilnika velikosti 1024 B z zastavico 0644",
+          "Ustvarimo datoteko 1024 B",
+          "Rezerviramo 1024 B stacka",
+          "Alociramo 1024 B heapa"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 65,
+        "question": "Kaj dosežemo s pomnilniško pregrado (memory barrier)?",
+        "options": [
+          "Ohranimo vrstni red hardverskih operacij",
+          "Ločimo user in kernel space",
+          "Zaščitimo pred overflow",
+          "Povečamo hitrost"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 66,
+        "question": "Kaj dela funkcija pthread_join?",
+        "options": [
+          "Počaka da se nit izvede in pridobi njen izhodni status",
+          "Združi dve niti",
+          "Ustvari novo nit",
+          "Ustavi nit"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 67,
+        "question": "Kaj so pogojne spremenljivke (condition variables)?",
+        "options": [
+          "Način za sinhronizacijo niti na osnovi vrednosti podatkov brez pollinga",
+          "Globalne spremenljivke",
+          "Kazalci na funkcije",
+          "Spremenljivke v jedru"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 68,
+        "question": "Kaj pomenita HBO in NBO?",
+        "options": [
+          "HBO je vrstni red shranjevanja bajtov v pomnilnik; NBO je 32-bitna binarna vrednost za IP",
+          "HBO je hard disk boot order; NBO je network boot option",
+          "HBO je hardware buffer; NBO je network buffer",
+          "HBO je host byte offset; NBO je network byte offset"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 69,
+        "question": "Kaj je ioread16 in od kod dobi naslov?",
+        "options": [
+          "Prebere vrednosti iz V/I pomnilnika, naslov dobi od ioremap",
+          "Prebere 16 bajtov iz datoteke",
+          "Prebere iz omrežja",
+          "Prebere iz RAM-a"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 70,
+        "question": "Kaj dela funkcija iowrite16?",
+        "options": [
+          "Pisanje v V/I pomnilnik",
+          "Pisanje v datoteko",
+          "Pisanje v buffer",
+          "Pisanje na konzolo"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 71,
+        "question": "Kaj pomenijo S_IRWXU, S_XUSR, S_IRWXG, S_IROTH?",
+        "options": [
+          "S_IRWXU: rwx user, S_XUSR: --x user, S_IRWXG: rwx group, S_IROTH: r-- others",
+          "Vse pomenijo isto - full access",
+          "To so datotečni tipi",
+          "To so sistemski klici"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 72,
+        "question": "Kaj so st_atime, st_mtime in st_ctime?",
+        "options": [
+          "st_atime: čas zadnjega dostopa, st_mtime: čas zadnje modifikacije, st_ctime: čas zadnje spremembe inode",
+          "Vse tri so enake - čas ustvarjanja",
+          "To so velikosti datotek",
+          "To so pravice dostopa"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 73,
+        "question": "Kako lahko gonilnik dostopa do bufferja v uporabniškem prostoru?",
+        "options": [
+          "Uporablja posebne jedrne funkcije iz <asm/uaccess.h>",
+          "Direktno z kazalci",
+          "Z malloc() in free()",
+          "Z read() in write()"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 74,
+        "question": "Kaj pomeni semctl(id, 0, SETVAL, argument)?",
+        "options": [
+          "Vrednosti 0-tega semaforja nastavimo na vrednost strukture argument",
+          "Pridobimo vrednost semaforja",
+          "Izbrišemo semafor",
+          "Ustvarimo nov semafor"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 75,
+        "question": "Kaj pomeni semctl(id, 1, GETVAL, argument)?",
+        "options": [
+          "Vrne vrednost števca semaforja na indeksu 1 (sem[1])",
+          "Nastavi vrednost semaforja",
+          "Izbriše semafor",
+          "Ustvari nov semafor"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 76,
+        "question": "S čim lahko spremenimo implementacijo medpomnjenja?",
+        "options": [
+          "setbuf ali setvbuf (setvbuf določa tudi tip bufferiranja)",
+          "malloc in free",
+          "read in write",
+          "open in close"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 77,
+        "question": "Katere so razlike med wait in waitpid?",
+        "options": [
+          "waitpid lahko čaka na točno določen proces, omogoča ne-blokirajočo verzijo, podpira job control",
+          "wait je hitrejši",
+          "waitpid podpira več procesov hkrati",
+          "Ni razlike"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 78,
+        "question": "Kateri so argumenti funkcije fork?",
+        "options": [
+          "Nima argumentov",
+          "1 argument - PID",
+          "2 argumenta - PID in prioriteta",
+          "3 argumente"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 79,
+        "question": "Kateri signal ima številko nič?",
+        "options": [
+          "SIGT (za preverjanje ali je to uporabnikov proces)",
+          "SIGKILL",
+          "SIGTERM",
+          "SIGHUP"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 80,
+        "question": "Kaj dela funkcija utime?",
+        "options": [
+          "Spreminja dostopni in modifikacijski čas datoteke",
+          "Vrne trenutni čas",
+          "Nastavi sistemski čas",
+          "Meri čas izvajanja"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 81,
+        "question": "Katere tipe bufferiranja poznamo?",
+        "options": [
+          "Polno, vrstično (linijsko), nebufferirano",
+          "Hiter, počasen, srednji",
+          "Direktno, indirektno",
+          "Sinhrono, asinhrono"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 82,
+        "question": "Ali lahko iz FILE* dobimo datotečni opisnik?",
+        "options": [
+          "Da, z fileno(FILE *stream)",
+          "Ne, to ni mogoče",
+          "Samo z fdopen()",
+          "Samo z fopen()"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 83,
+        "question": "Kako v ukazni vrstici procesu pošljemo signal?",
+        "options": [
+          "Ctrl + C ali DELETE za SIGINT, kill <pid>",
+          "Samo z ukazom signal",
+          "Samo z ukazom send",
+          "To ni mogoče"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 84,
+        "question": "Kaj počne funkcija popen?",
+        "options": [
+          "Ustvari cev in požene ukaz v lupini, vrne kazalec na tok",
+          "Odpre datoteko za pisanje",
+          "Ustvari nov proces",
+          "Pošlje signal"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 85,
+        "question": "V katerem primeru se pošlje signal SIGCHLD?",
+        "options": [
+          "Ko se otroški proces konča ali ustavi",
+          "Ko starš ustvari otroka",
+          "Ko otrok ustvari nit",
+          "Ko proces dobi signal"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 86,
+        "question": "Kaj so sistemski klici?",
+        "options": [
+          "Vmesniki med uporabniškimi programi in OS za dostop do sistemskih virov",
+          "Funkcije v standardni knjižnici",
+          "Ukazi v ukazni vrstici",
+          "Gonilniki naprav"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 87,
+        "question": "Ali je sistemski klic write bufferirana funkcija?",
+        "options": [
+          "Ni bufferiran, vendar jedro lahko uporablja buffering za optimizacijo",
+          "Da, vedno bufferiran",
+          "Ne, nikoli ni bufferiran",
+          "Odvisno od tipa datoteke"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 88,
+        "question": "Kaj je problem funkcije gets?",
+        "options": [
+          "Ne preverja velikosti bufferja, lahko povzroči buffer overflow",
+          "Je prepočasna",
+          "Ne podpira Unicode",
+          "Ne deluje z datotekami"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 89,
+        "question": "V čem se niti razlikujejo od procesov?",
+        "options": [
+          "Niti si delijo naslovni prostor in vire, procesi imajo ločene naslovne prostore",
+          "Niti so hitrejše",
+          "Procesi si delijo pomnilnik",
+          "Niti ne morejo komunicirati"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 90,
+        "question": "Kako ugotovimo major in minor število datoteke naprave?",
+        "options": [
+          "ls -l /dev ali ls -l /proc/devices; major predstavlja gonilnik, minor napravo",
+          "cat /dev/device",
+          "stat --major",
+          "file -m"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 91,
+        "question": "Katere so prednosti modulov v uporabniškem prostoru?",
+        "options": [
+          "Lažje razvijanje, testiranje, posodabljanje, neodvisnost od jedra, manjše tveganje zrušenja",
+          "Hitrejše izvajanje",
+          "Večji dostop do strojne opreme",
+          "Neomejene pravice"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 92,
+        "question": "Kaj pomeni enoten naslovni prostor?",
+        "options": [
+          "Vsi procesi imajo dostop do istega naslovnega prostora",
+          "Vsak proces ima svoj prostor",
+          "Procesi ne morejo dostopati do pomnilnika",
+          "Rezerviran za jedro"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 93,
+        "question": "Kaj delata funkciji inb in outb?",
+        "options": [
+          "inb prebere bajt iz V/I porta, outb zapiše bajt v V/I port",
+          "Obe pišeta v datoteko",
+          "Obe bereta iz omrežja",
+          "Obe delata z RAM-om"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 94,
+        "question": "Kaj sta inw in outw?",
+        "options": [
+          "Ukaza za dostop do strojnih naprav preko V/I vrat (word - 16-bit)",
+          "Funkciji za branje datotek",
+          "Sistemska klica za mreži",
+          "Funkciji za delo z niti"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 95,
+        "question": "Kaj je set-user-ID in kako ga preverimo?",
+        "options": [
+          "Zastavica, ki omogoča programu izvajanje s pravicami lastnika; preverimo z ls -l (prikaže 's')",
+          "ID trenutnega uporabnika",
+          "Funkcija za spreminjanje UID",
+          "Tip datoteke"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 96,
+        "question": "Kaj pomenita S_ISCHR in S_ISBLK?",
+        "options": [
+          "S_ISCHR preverja za znakovno napravo, S_ISBLK za bločno napravo",
+          "Obe preverjata za direktorij",
+          "Obe preverjata za simbolične povezave",
+          "To sta sistemska klica"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 97,
+        "question": "Kaj dela funkcija system in zakaj obstaja?",
+        "options": [
+          "Izvede ukaz v lupini; obstaja za poenostavitev izvajanja lupinskih ukazov",
+          "Inicializira sistem",
+          "Upravlja z viri",
+          "Ustvarja nove procese"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 98,
+        "question": "Kaj sestavlja vtičniški par?",
+        "options": [
+          "IP naslov in vratna številka (port)",
+          "Dva procesa",
+          "Dve datoteki",
+          "Dva uporabnika"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 99,
+        "question": "Kaj predstavlja copy_from_user in zakaj se tako imenuje?",
+        "options": [
+          "Funkcija v jedru, ki kopira podatke iz uporabniškega prostora v jedrni prostor",
+          "Funkcija za kopiranje datotek",
+          "Funkcija za kloniranje procesov",
+          "Funkcija za prenos po omrežju"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 100,
+        "question": "Kaj je trojno rokovanje pri TCP in kateri sistemski klici sodelujejo?",
+        "options": [
+          "Postopek vzpostavitve TCP povezave; sodelujejo connect (odjemalec) in accept (strežnik)",
+          "Pošiljanje treh paketov hkrati",
+          "Metoda šifriranja",
+          "Protokol za prenos datotek"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 101,
+        "question": "Kaj je jiffies?",
+        "options": [
+          "Števec v jedru, ki meri čas v enotah 'ticks' (običajno ms)",
+          "Funkcija za merjenje hitrosti",
+          "Sistem za časovno razvrščanje",
+          "Tip podatkovne strukture"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 102,
+        "question": "Kaj počne funkcija pause?",
+        "options": [
+          "Začasno ustavi izvajanje programa, dokler ni ujet signal; vrne -1",
+          "Zaustavi vse procese",
+          "Zadrži sistemski čas",
+          "Blokira sistemske klice"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 103,
+        "question": "Kaj je IPC_NOWAIT?",
+        "options": [
+          "Zastavica za ne-blokirajoče operacije pri IPC",
+          "Ukaz za čakanje na IPC",
+          "Tip IPC komunikacije",
+          "Funkcija za sinhronizacijo"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 104,
+        "question": "Kaj dela funkcija htons?",
+        "options": [
+          "Spremeni 16-bitno število v omrežno obliko (big-endian)",
+          "Pretvori hostname v IP",
+          "Vzpostavi TCP povezavo",
+          "Pošlje podatke"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 105,
+        "question": "Kaj vsebuje dirent?",
+        "options": [
+          "Informacije o datotekah v imeniku (d_name, d_ino, d_type)",
+          "Vsebino datoteke",
+          "Sistemske klice",
+          "Pravice dostopa"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 106,
+        "question": "Kaj dobimo pri izračunu (a | b) ^ (c >> d), če so a=33, b=47, c=80, d=2?",
+        "options": [
+          "0x3B (59)",
+          "0x2F (47)",
+          "0x14 (20)",
+          "0x50 (80)"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 107,
+        "question": "Kateri c dobimo, če izvedemo c = (~a & b) ^ 0xF0, kjer je a=78, b=0xA4?",
+        "options": [
+          "0x50 (80)",
+          "0xA0 (160)",
+          "0xF0 (240)",
+          "0x4E (78)"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 108,
+        "question": "Kaj dobimo pri (a ^ ~b) | (c << d), če so a=33, b=47, c=80, d=3?",
+        "options": [
+          "0xF1 (241)",
+          "0x80 (128)",
+          "0x21 (33)",
+          "0x2F (47)"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 109,
+        "question": "Kateri c dobimo, če izvedemo c = (a | ~b) ^ 0x1E, kjer je a=88, b=0xC3?",
+        "options": [
+          "0x62 (98)",
+          "0x7C (124)",
+          "0x58 (88)",
+          "0x1E (30)"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 110,
+        "question": "Kateri c dobimo če izvedemo c = ~(a | b) ^ 0xD1, kjer je a=71, b=0xB5?",
+        "options": [
+          "217 (0xD9)",
+          "181",
+          "71",
+          "209"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 111,
+        "question": "Kako z bitnimi operacijami negiramo najmanj pomembne 3 bite 8-bitnega števila?",
+        "options": [
+          "x ^= 0x07",
+          "x &= 0x07",
+          "x |= 0x07",
+          "x <<= 3"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 112,
+        "question": "Kako z bitnimi operacijami negiramo najmanj pomembne 4 bite 8-bitnega števila?",
+        "options": [
+          "x ^= 0x0F",
+          "x &= 0x0F",
+          "x |= 0x0F",
+          "x >>= 4"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 113,
+        "question": "Kako negiramo tretji in četrti bit (z leve; uteži 2^3 in 2^4) 8-bitnega števila?",
+        "options": [
+          "x ^= 0x18",
+          "x &= 0x18",
+          "x |= 0x18",
+          "x -= 0x18"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 114,
+        "question": "Kako drugi bit (z leve; utež 2^6) 8-bitnega števila nastavimo na 1?",
+        "options": [
+          "x |= 1 << 6",
+          "x &= 1 << 6",
+          "x ^= 1 << 6",
+          "x += 64"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 115,
+        "question": "Kako tretji bit (z leve; utež 2^5) 8-bitnega števila postavimo na 1?",
+        "options": [
+          "x |= 1 << 5",
+          "x &= 1 << 5",
+          "x ^= 1 << 5",
+          "x += 32"
+        ],
+        "correctAnswer": 0
+      },
+      {
+        "id": 116,
+        "question": "Kako tretji bit (z leve; utež 2^5) 8-bitnega števila postavimo na 0?",
+        "options": [
+          "x &= ~(1 << 5)",
+          "x |= ~(1 << 5)",
+          "x ^= ~(1 << 5)",
+          "x -= 32"
+        ],
+        "correctAnswer": 0
+      }
+    ]
+  }
+}
