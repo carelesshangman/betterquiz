@@ -1,0 +1,705 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 3 - Directory Operations</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
+
+        <div class="docs-header">
+            <h1>📁 Vaja 3: Directory Operations and Path Resolution</h1>
+            <p class="subtitle">Working with directories, sorting, and path resolution</p>
+        </div>
+
+        <!-- lst.c -->
+        <div class="file-card">
+            <div class="file-name">📄 lst.c</div>
+
+            <div class="task-description">
+                <h3>Naloga 1: LST - Sortiranje datotek po času modifikacije</h3>
+                <ul>
+                    <li>Napišite v C-ju program lst, ki izvede poenostavljeno verzijo ukaza ls –t</li>
+                    <li>Izpiše direktorijske vnose (datoteke in poddirektorije) v vrstnem redu od najstarejših do najmlajših (glede na čas modifikacije)</li>
+                    <li>Podpira obratni vrstni red (kot ls –tr, kjer r pomeni reversed order)</li>
+                    <li>Za sortiranje lahko uporabite funkcijo qsort iz knjižnice stdlib</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Examples:</strong><br>
+                $ ./lst           # Izpiše datoteke od najstarejših do najnovejših<br>
+                $ ./lst -r        # Izpiše datoteke od najnovejših do najstarejših
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;time.h&gt;
+
+// Struktura za shranjevanje informacij o datoteki
+typedef struct {
+    char name[256];
+    time_t mtime;
+} FileEntry;
+
+// Funkcija za primerjavo — od najstarejših do najnovejših
+int compare_asc(const void *a, const void *b) {
+    FileEntry *fa = (FileEntry *)a;
+    FileEntry *fb = (FileEntry *)b;
+    if (fa-&gt;mtime &lt; fb-&gt;mtime) return -1;
+    if (fa-&gt;mtime &gt; fb-&gt;mtime) return 1;
+    return 0;
+}
+
+// Funkcija za primerjavo — od najnovejših do najstarejših
+int compare_desc(const void *a, const void *b) {
+    return compare_asc(b, a);
+}
+
+int main(int argc, char *argv[]) {
+    int reverse = 0;
+    if (argc &gt; 1 &amp;&amp; strcmp(argv[1], "-r") == 0) {
+        reverse = 1;
+    }
+
+    DIR *dir;
+    struct dirent *entry;
+    struct stat fileStat;
+    FileEntry *files = NULL;
+    int count = 0;
+
+    dir = opendir(".");
+    if (dir == NULL) {
+        perror("Napaka pri odpiranju direktorija");
+        return 1;
+    }
+
+    // Preberi vse datoteke v trenutnem direktoriju
+    while ((entry = readdir(dir)) != NULL) {
+        if (strcmp(entry-&gt;d_name, ".") == 0 || strcmp(entry-&gt;d_name, "..") == 0)
+            continue;
+
+        if (stat(entry-&gt;d_name, &amp;fileStat) == -1) {
+            perror("stat");
+            continue;
+        }
+
+        files = realloc(files, (count + 1) * sizeof(FileEntry));
+        if (files == NULL) {
+            perror("Napaka pri alokaciji pomnilnika");
+            closedir(dir);
+            return 1;
+        }
+
+        strncpy(files[count].name, entry-&gt;d_name, sizeof(files[count].name));
+        files[count].name[sizeof(files[count].name) - 1] = '\0';
+        files[count].mtime = fileStat.st_mtime;
+        count++;
+    }
+    closedir(dir);
+
+    // Sortiraj po času modifikacije
+    qsort(files, count, sizeof(FileEntry), reverse ? compare_desc : compare_asc);
+
+    // Izpiši rezultate
+    for (int i = 0; i &lt; count; i++) {
+        struct tm *timeinfo = localtime(&amp;files[i].mtime);
+        char timebuf[64];
+        strftime(timebuf, sizeof(timebuf), "%Y-%m-%d %H:%M:%S", timeinfo);
+        printf("%-30s  %s\n", files[i].name, timebuf);
+    }
+
+    free(files);
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>📚 1. Struktura FileEntry in primerjalne funkcije</h5>
+                    <div class="code-snippet">typedef struct {
+    char name[256];
+    time_t mtime;
+} FileEntry;
+
+int compare_asc(const void *a, const void *b) {
+    FileEntry *fa = (FileEntry *)a;
+    FileEntry *fb = (FileEntry *)b;
+    if (fa-&gt;mtime &lt; fb-&gt;mtime) return -1;
+    if (fa-&gt;mtime &gt; fb-&gt;mtime) return 1;
+    return 0;
+}</div>
+                    <div class="description">
+                        <strong>FileEntry struktura</strong> shranjuje ime datoteke in čas zadnje modifikacije.<br><br>
+                        <strong>time_t mtime</strong>: Unix timestamp (število sekund od 1.1.1970) zadnje spremembe datoteke.<br><br>
+                        <strong>compare_asc() funkcija</strong>: Primerja dve datoteki po času modifikacije.<br>
+                        <ul>
+                            <li>Vrne <strong>-1</strong> če je prva datoteka starejša (mtime manjši)</li>
+                            <li>Vrne <strong>1</strong> če je prva datoteka novejša (mtime večji)</li>
+                            <li>Vrne <strong>0</strong> če sta enaki</li>
+                        </ul>
+                        <strong>compare_desc() funkcija</strong>: Obrne vrstni red s klicem compare_asc(b, a) namesto compare_asc(a, b).
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📂 2. Branje direktorija z opendir() in readdir()</h5>
+                    <div class="code-snippet">DIR *dir = opendir(".");
+struct dirent *entry;
+
+while ((entry = readdir(dir)) != NULL) {
+    if (strcmp(entry-&gt;d_name, ".") == 0 || strcmp(entry-&gt;d_name, "..") == 0)
+        continue;
+    // ...
+}</div>
+                    <div class="description">
+                        <strong>opendir(".")</strong>: Odpre trenutni direktorij za branje.<br>
+                        → Vrne kazalec tipa DIR*, ki ga uporabljamo za iteracijo.<br><br>
+                        <strong>readdir(dir)</strong>: Prebere naslednji vnos v direktoriju.<br>
+                        → Vrne kazalec na strukturo dirent, ki vsebuje informacije o vnosu.<br>
+                        → Vrne NULL, ko ni več vnosov.<br><br>
+                        <strong>entry-&gt;d_name</strong>: Ime datoteke ali poddirektorija.<br><br>
+                        <strong>Preskakovanje "." in ".."</strong>: Te vnose preskočimo, ker predstavljajo trenutni in nadrejeni direktorij.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📊 3. Pridobivanje metapodatkov s stat()</h5>
+                    <div class="code-snippet">struct stat fileStat;
+if (stat(entry-&gt;d_name, &amp;fileStat) == -1) {
+    perror("stat");
+    continue;
+}
+
+files[count].mtime = fileStat.st_mtime;</div>
+                    <div class="description">
+                        <strong>stat()</strong>: Prebere metapodatke datoteke (velikost, dovoljenja, časi, itd.).<br><br>
+                        <strong>fileStat.st_mtime</strong>: Čas zadnje modifikacije datoteke (modification time).<br>
+                        → Tip time_t - število sekund od Unix epoch (1.1.1970).<br><br>
+                        <strong>Drugi uporabni časi v stat:</strong>
+                        <ul>
+                            <li><strong>st_atime</strong>: Čas zadnjega dostopa (access time)</li>
+                            <li><strong>st_ctime</strong>: Čas zadnje spremembe metapodatkov (change time)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔄 4. Dinamična alokacija in rast polja</h5>
+                    <div class="code-snippet">files = realloc(files, (count + 1) * sizeof(FileEntry));
+if (files == NULL) {
+    perror("Napaka pri alokaciji pomnilnika");
+    closedir(dir);
+    return 1;
+}</div>
+                    <div class="description">
+                        <strong>realloc()</strong>: Spremeni velikost že alociranega pomnilnika.<br><br>
+                        <strong>Zakaj realloc?</strong>
+                        <ul>
+                            <li>Na začetku ne vemo, koliko datotek je v direktoriju</li>
+                            <li>Vsako iteracijo povečamo polje za en FileEntry</li>
+                            <li>realloc poskuša razširiti obstoječi blok, če je možno</li>
+                            <li>Če ne more, premakne podatke na novo lokacijo</li>
+                        </ul>
+                        <strong>Pomembno</strong>: Vedno preverimo, če je realloc uspel (če ni vrnil NULL).
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📐 5. Sortiranje s qsort()</h5>
+                    <div class="code-snippet">qsort(files, count, sizeof(FileEntry),
+      reverse ? compare_desc : compare_asc);</div>
+                    <div class="description">
+                        <strong>qsort()</strong>: Standardna C funkcija za sortiranje (quick sort algoritem).<br><br>
+                        <strong>Parametri:</strong>
+                        <ul>
+                            <li><strong>files</strong>: Kazalec na polje, ki ga sortiramo</li>
+                            <li><strong>count</strong>: Število elementov v polju</li>
+                            <li><strong>sizeof(FileEntry)</strong>: Velikost vsakega elementa v bajtih</li>
+                            <li><strong>compare_asc/compare_desc</strong>: Kazalec na primerjalno funkcijo</li>
+                        </ul>
+                        <strong>Ternarni operator (?:)</strong>: Izbere compare_desc če je reverse=1, sicer compare_asc.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🕐 6. Formatiranje časa za izpis</h5>
+                    <div class="code-snippet">struct tm *timeinfo = localtime(&amp;files[i].mtime);
+char timebuf[64];
+strftime(timebuf, sizeof(timebuf), "%Y-%m-%d %H:%M:%S", timeinfo);
+printf("%-30s  %s\n", files[i].name, timebuf);</div>
+                    <div class="description">
+                        <strong>localtime()</strong>: Pretvori Unix timestamp (time_t) v strukturo tm z lokalnim časom.<br><br>
+                        <strong>struct tm</strong>: Vsebuje polja year, month, day, hour, minute, second.<br><br>
+                        <strong>strftime()</strong>: Formatira čas v berljiv niz.<br>
+                        → <strong>%Y-%m-%d %H:%M:%S</strong> format: "2026-01-11 15:30:45"<br><br>
+                        <strong>printf("%-30s")</strong>: Izpiše niz poravnan na levo, širina 30 znakov.
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>Key Concepts:</h4>
+                <ul>
+                    <li>Branje direktorijev z opendir() in readdir()</li>
+                    <li>Dinamična alokacija pomnilnika z realloc()</li>
+                    <li>Sortiranje s qsort() in primerjalne funkcije</li>
+                    <li>Delo s časom (time_t, struct tm, localtime, strftime)</li>
+                    <li>Struktura dirent in stat za metapodatke</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- pwd1.c -->
+        <div class="file-card">
+            <div class="file-name">📄 pwd1.c</div>
+
+            <div class="task-description">
+                <h3>Naloga 2: PWD - Poenostavljena verzija getcwd</h3>
+                <ul>
+                    <li>Napišite v C-ju poenostavljeno verzijo funkcije getcwd, ki sestavi absolutno pot do trenutnega direktorija</li>
+                    <li>Napišite program pwd1, ki kliče to funkcijo in izpiše pot, podobno kot ukaz pwd</li>
+                    <li>Odprete starševski imenik in v njem pregledujete vnose – ko najdete tistega z enako inode-številko</li>
+                    <li>Premikajte se preko staršev s pomočjo chdir(".."), dokler ne pridete do root imenika</li>
+                    <li>V korenskem imeniku je inode-številka starša enaka njegovi</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Example:</strong><br>
+                $ ./pwd1<br>
+                /home/spo/SPO
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;dirent.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/stat.h&gt;
+#include &lt;sys/types.h&gt;
+
+#define MAX_PATH 4096
+
+// Funkcija, ki poenostavljeno implementira getcwd()
+char *my_getcwd(char *buf, size_t size) {
+    struct stat current_stat, parent_stat;
+    char *path = malloc(MAX_PATH);
+    if (!path) {
+        perror("malloc");
+        return NULL;
+    }
+    path[0] = '\0'; // začnemo z prazno potjo
+
+    while (1) {
+        // Preberi podatke o trenutnem in starševskem direktoriju
+        if (stat(".", &amp;current_stat) == -1) {
+            perror("stat .");
+            free(path);
+            return NULL;
+        }
+
+        if (stat("..", &amp;parent_stat) == -1) {
+            perror("stat ..");
+            free(path);
+            return NULL;
+        }
+
+        // Če imata trenutni in starševski isti inode, smo v korenskem direktoriju
+        if (current_stat.st_ino == parent_stat.st_ino &amp;&amp;
+            current_stat.st_dev == parent_stat.st_dev) {
+            // Če smo v korenu, dodamo začetni '/'
+            if (strlen(path) == 0)
+                strcpy(path, "/");
+            break;
+        }
+
+        // Premaknemo se v nadrejeni direktorij
+        if (chdir("..") == -1) {
+            perror("chdir ..");
+            free(path);
+            return NULL;
+        }
+
+        // Poiščemo ime trenutnega direktorija v nadrejenem direktoriju
+        DIR *dir = opendir(".");
+        if (!dir) {
+            perror("opendir");
+            free(path);
+            return NULL;
+        }
+
+        struct dirent *entry;
+        char dirname[256];
+        dirname[0] = '\0';
+
+        while ((entry = readdir(dir)) != NULL) {
+            struct stat entry_stat;
+            if (stat(entry-&gt;d_name, &amp;entry_stat) == -1)
+                continue;
+
+            if (entry_stat.st_ino == current_stat.st_ino &amp;&amp;
+                entry_stat.st_dev == current_stat.st_dev) {
+                strncpy(dirname, entry-&gt;d_name, sizeof(dirname));
+                dirname[sizeof(dirname) - 1] = '\0';
+                break;
+            }
+        }
+        closedir(dir);
+
+        // Sestavimo pot: dodamo "/ime" pred obstoječo pot
+        char temp[MAX_PATH];
+        snprintf(temp, sizeof(temp), "/%s%s", dirname, path);
+        strncpy(path, temp, MAX_PATH);
+        path[MAX_PATH - 1] = '\0';
+    }
+
+    // Kopiramo v uporabnikov buffer (če obstaja)
+    if (buf != NULL &amp;&amp; size &gt; 0) {
+        strncpy(buf, path, size);
+        buf[size - 1] = '\0';
+        free(path);
+        return buf;
+    }
+
+    return path; // vrnemo dinamično alociran niz
+}
+
+int main() {
+    char buffer[MAX_PATH];
+
+    if (my_getcwd(buffer, sizeof(buffer)) == NULL) {
+        fprintf(stderr, "Napaka pri pridobivanju poti.\n");
+        return 1;
+    }
+
+    printf("%s\n", buffer);
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>🔍 1. Preverjanje korenskega direktorija</h5>
+                    <div class="code-snippet">if (current_stat.st_ino == parent_stat.st_ino &amp;&amp;
+    current_stat.st_dev == parent_stat.st_dev) {
+    if (strlen(path) == 0)
+        strcpy(path, "/");
+    break;
+}</div>
+                    <div class="description">
+                        <strong>Kako prepoznamo root direktorij?</strong><br>
+                        V Linux datotečnem sistemu ima root "/" edinstven inode, kjer je njegov starš on sam.<br><br>
+                        <strong>st_ino</strong>: Inode številka (unique identifier datoteke/direktorija v datotečnem sistemu)<br>
+                        <strong>st_dev</strong>: Device ID (identifier naprave/particije)<br><br>
+                        <strong>Pogoj</strong>: Če imata "." in ".." enako inode številko IN device ID, smo v korenu.<br><br>
+                        <strong>Zakaj oba?</strong> st_dev je pomemben, če je sistem montiran na več particij.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⬆️ 2. Premikanje navzgor po drevesu direktorijev</h5>
+                    <div class="code-snippet">if (chdir("..") == -1) {
+    perror("chdir ..");
+    free(path);
+    return NULL;
+}</div>
+                    <div class="description">
+                        <strong>chdir("..")</strong>: Sistemski klic, ki spremeni trenutni delovni direktorij procesa.<br><br>
+                        <strong>".."</strong>: Simbolična povezava na nadrejeni (starševski) direktorij.<br><br>
+                        <strong>Pomembno</strong>: Po chdir("..")  smo se premaknili en nivo višje v hierarhiji.<br>
+                        → Prej: /home/spo/SPO<br>
+                        → Po chdir(".."): /home/spo
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔎 3. Iskanje imena direktorija po inode številki</h5>
+                    <div class="code-snippet">while ((entry = readdir(dir)) != NULL) {
+    struct stat entry_stat;
+    if (stat(entry-&gt;d_name, &amp;entry_stat) == -1)
+        continue;
+
+    if (entry_stat.st_ino == current_stat.st_ino &amp;&amp;
+        entry_stat.st_dev == current_stat.st_dev) {
+        strncpy(dirname, entry-&gt;d_name, sizeof(dirname));
+        break;
+    }
+}</div>
+                    <div class="description">
+                        <strong>Algoritem:</strong><br>
+                        1. Shranimo inode trenutnega direktorija (current_stat.st_ino)<br>
+                        2. Premaknemo se v starša z chdir("..")<br>
+                        3. Preberemo vse vnose v starševskem direktoriju<br>
+                        4. Za vsak vnos preverimo, če se inode ujema s shranjenim<br>
+                        5. Ko najdemo ujemanje, smo našli ime direktorija<br><br>
+                        <strong>Primer:</strong><br>
+                        Če smo bili v /home/spo/SPO:<br>
+                        → inode direktorija "SPO" je npr. 12345<br>
+                        → Po chdir("..") smo v /home/spo<br>
+                        → Pregledamo vnose: spo, Documents, ...<br>
+                        → Vnos z inode 12345 je "SPO" - to je naše ime!
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔗 4. Gradnja poti v obratnem vrstnem redu</h5>
+                    <div class="code-snippet">char temp[MAX_PATH];
+snprintf(temp, sizeof(temp), "/%s%s", dirname, path);
+strncpy(path, temp, MAX_PATH);
+path[MAX_PATH - 1] = '\0';</div>
+                    <div class="description">
+                        <strong>Zakaj obratni vrstni red?</strong><br>
+                        Potujemo od trenutnega direktorija navzgor (SPO → spo → home → /), zato moramo imena dodajati na začetek.<br><br>
+                        <strong>Postopek gradnje poti:</strong>
+                        <ul>
+                            <li><strong>Začetek:</strong> path = "" (prazen)</li>
+                            <li><strong>1. iteracija:</strong> dirname="SPO" → path="/SPO"</li>
+                            <li><strong>2. iteracija:</strong> dirname="spo" → path="/spo/SPO"</li>
+                            <li><strong>3. iteracija:</strong> dirname="home" → path="/home/spo/SPO"</li>
+                            <li><strong>4. iteracija:</strong> Dosežemo root, končamo</li>
+                        </ul>
+                        <strong>snprintf()</strong>: Varno formatiranje niza z omejitvijo velikosti (preprečuje buffer overflow).
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>💾 5. Vračanje rezultata</h5>
+                    <div class="code-snippet">if (buf != NULL &amp;&amp; size &gt; 0) {
+    strncpy(buf, path, size);
+    buf[size - 1] = '\0';
+    free(path);
+    return buf;
+}
+return path;</div>
+                    <div class="description">
+                        <strong>Dve možnosti za vračanje:</strong><br><br>
+                        <strong>1. Če uporabnik poda buffer:</strong>
+                        <ul>
+                            <li>Kopiramo pot v uporabnikov buffer</li>
+                            <li>Sprostimo začasni dinamični path</li>
+                            <li>Vrnemo kazalec na uporabnikov buffer</li>
+                        </ul>
+                        <strong>2. Če buffer je NULL:</strong>
+                        <ul>
+                            <li>Vrnemo dinamično alociran path</li>
+                            <li>Uporabnik je odgovoren za free()</li>
+                        </ul>
+                        <strong>Kompatibilnost z getcwd()</strong>: Prava getcwd() deluje enako - podpora za oba načina.
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>Key Concepts:</h4>
+                <ul>
+                    <li>Inode številke in njihova uporaba za identifikacijo datotek</li>
+                    <li>chdir() za spreminjanje trenutnega direktorija</li>
+                    <li>Gradnja poti v obratnem vrstnem redu</li>
+                    <li>Preverjanje korenskega direktorija (st_ino == parent st_ino)</li>
+                    <li>Iskanje imen po inode številkah</li>
+                    <li>Dinamična alokacija in upravljanje pomnilnika</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>SPO Documentation</title>
+    <title>SPO Vaja 2 - File Metadata and Permissions</title>
     <link rel="stylesheet" href="style.css">
     <style>
         .docs-container {
@@ -42,7 +42,7 @@
             transform: translateX(-5px);
         }
 
-        .vaja-section {
+        .file-card {
             background: var(--bg-card);
             border-radius: 15px;
             padding: 30px;
@@ -51,26 +51,10 @@
             box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
         }
 
-        .vaja-title {
-            font-size: 2em;
-            color: var(--accent-pink);
-            margin-bottom: 20px;
-            padding-bottom: 10px;
-            border-bottom: 2px solid var(--accent-purple);
-        }
-
-        .file-card {
-            background: var(--bg-hover);
-            border-radius: 10px;
-            padding: 20px;
-            margin-bottom: 20px;
-            border-left: 4px solid var(--accent-blue);
-        }
-
         .file-name {
-            font-size: 1.5em;
+            font-size: 1.8em;
             color: var(--accent-blue);
-            margin-bottom: 10px;
+            margin-bottom: 15px;
             font-family: 'Courier New', monospace;
         }
 
@@ -96,24 +80,6 @@
             margin-bottom: 5px;
         }
 
-        .code-info {
-            margin-top: 15px;
-        }
-
-        .code-info h4 {
-            color: var(--accent-orange);
-            margin-bottom: 10px;
-        }
-
-        .code-info ul {
-            margin-left: 20px;
-            color: var(--text-secondary);
-        }
-
-        .code-info li {
-            margin-bottom: 5px;
-        }
-
         .usage-example {
             background: rgba(99, 179, 237, 0.1);
             border: 1px solid var(--accent-blue);
@@ -122,24 +88,6 @@
             margin-top: 10px;
             font-family: 'Courier New', monospace;
             color: var(--accent-blue);
-        }
-
-        .key-concepts {
-            background: rgba(246, 173, 85, 0.1);
-            border-left: 4px solid var(--accent-orange);
-            padding: 15px;
-            margin-top: 15px;
-            border-radius: 5px;
-        }
-
-        .key-concepts h4 {
-            color: var(--accent-orange);
-            margin-bottom: 10px;
-        }
-
-        .key-concepts ul {
-            margin-left: 20px;
-            color: var(--text-secondary);
         }
 
         .code-display {
@@ -187,9 +135,6 @@
             color: var(--accent-purple);
             margin-bottom: 12px;
             font-size: 1.1em;
-            display: flex;
-            align-items: center;
-            gap: 8px;
         }
 
         .explanation-block .code-snippet {
@@ -219,349 +164,38 @@
         .explanation-block .description li {
             margin-bottom: 8px;
         }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
     </style>
 </head>
 <body>
     <div class="background-animation"></div>
 
     <div class="docs-container">
-        <a href="index.html" class="back-link">← Back to Quiz Maker</a>
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
 
         <div class="docs-header">
-            <h1>📚 SPO - Sistemsko Programiranje Documentation</h1>
-            <p class="subtitle">Comprehensive documentation of all exercises and C programs</p>
+            <h1>🔐 Vaja 2: File Metadata and Permissions</h1>
+            <p class="subtitle">Working with file metadata, permissions, and special bits</p>
         </div>
 
-        <!-- Vaja 1 -->
         <div class="vaja-section">
-            <h2 class="vaja-title">Vaja 1: File I/O with System Calls</h2>
-
-            <!-- Tee1.c -->
-            <div class="file-card">
-                <div class="file-name">📄 Tee1.c</div>
-
-                <div class="task-description">
-                    <h3>Naloga 1: Tee Utility</h3>
-                    <ul>
-                        <li>Napišite v C-ju program tee1, ki deluje podobno kot tee (GNU utility)</li>
-                        <li>Standardni vhod prepiše na standardni izhod in v datoteko, ki jo podamo kot argument v ukazni vrstici</li>
-                        <li>Če dodamo pred datoteko še opcijo -a, se standardni vhod doda k vsebini datoteke</li>
-                        <li>Uporabite sistemske klice open, read, write in close</li>
-                    </ul>
-                </div>
-
-                <div class="usage-example">
-                    <strong>Usage Examples:</strong><br>
-                    $ echo "Hello World" | ./tee1 output.txt<br>
-                    $ echo "Append this" | ./tee1 -a output.txt
-                </div>
-
-                <div class="code-display">
-                    <h4>Source Code:</h4>
-                    <pre><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-#include &lt;fcntl.h&gt;
-
-int main(int argc, char *argv[]){
-	char buf[BUFSIZ];
-	int n, fd;
-
-	if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
-		fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
-	}
-	else if (argc == 2){
-		fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
-	}
-	else {
-		perror("Napačna uporaba programa");
-		return -1;
-	}
-
-	if(fd&lt;0){
-		perror("fd open error");
-		return -1;
-	}
-
-	while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
-		if(write(STDOUT_FILENO, buf, n) != n) {
-			err("write");
-		}
-		if(write(fd, buf, n) != n) {
-			err("write2");
-		}
-	}
-
-	return 0;
-}</code></pre>
-                </div>
-
-                <div class="explanation-section">
-                    <h4>📖 Detailed Code Explanation</h4>
-
-                    <div class="explanation-block">
-                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
-                        <div class="code-snippet">#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-#include &lt;fcntl.h&gt;</div>
-                        <div class="description">
-                            Vsaka knjižnica ima svoj namen za sistemske klice:
-                            <ul>
-                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak) in definicijo BUFSIZ.</li>
-                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, close ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
-                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov - preverjanje za "-a").</li>
-                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice (flags) kot so O_WRONLY, O_CREAT, itd.</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>⚙️ 2. Procesiranje argumentov (argc in argv)</h5>
-                        <div class="code-snippet">if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
-	fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
-}
-else if (argc == 2){
-	fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
-}</div>
-                        <div class="description">
-                            Program mora vedeti, ali naj datoteko prepiše ali nanjo dodaja.<br><br>
-                            <strong>argc (Argument Count)</strong>: Pove, koliko argumentov je v vrstici. Ime programa je vedno prvi argument (indeks 0).<br><br>
-                            <strong>Če je argc == 3</strong>: Uporabnik je verjetno vpisal ./tee1 -a datoteka.txt<br>
-                            <strong>Če je argc == 2</strong>: Uporabnik je verjetno vpisal ./tee1 datoteka.txt<br><br>
-                            <strong>strcmp</strong>: Preveri, ali je prvi argument res zastavica -a.<br><br>
-                            <strong>Zastavice (Flags)</strong>:
-                            <ul>
-                                <li><strong>O_WRONLY</strong>: Datoteko odpremo samo za pisanje (Write Only)</li>
-                                <li><strong>O_CREAT</strong>: Če datoteka ne obstaja, jo ustvari</li>
-                                <li><strong>O_APPEND</strong>: Dodaja na konec datoteke (samo v prvem primeru z -a)</li>
-                                <li><strong>0666</strong>: Določa pravice (permissions) nove datoteke (rw-rw-rw-)</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>🔄 3. Glavna zanka: Branje in pisanje</h5>
-                        <div class="code-snippet">while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
-	if(write(STDOUT_FILENO, buf, n) != n) {
-		err("write");
-	}
-	if(write(fd, buf, n) != n) {
-		err("write2");
-	}
-}</div>
-                        <div class="description">
-                            To je srce programa tee. Podatki tečejo iz vhoda na dva izhoda.<br><br>
-                            <strong>read(STDIN_FILENO, buf, BUFSIZ)</strong>:
-                            <ul>
-                                <li>Bere iz standardnega vhoda (tipkovnica ali pipe)</li>
-                                <li>Podatke shranjuje v polje buf</li>
-                                <li>Bere največ BUFSIZ bajtov naenkrat</li>
-                                <li>Vrne n: število dejansko prebranih bajtov. Če vrne 0, to pomeni EOF (End Of File - konec vhoda), in zanka se konča.</li>
-                            </ul>
-                            <strong>Dvojni write</strong>:
-                            <ul>
-                                <li>Prvi write piše na STDOUT_FILENO (zaslon)</li>
-                                <li>Drugi write piše v fd (našo datoteko)</li>
-                                <li>Pomembno je, da pišemo točno n bajtov (kolikor smo jih prebrali), ne celotnega bufferja</li>
-                            </ul>
-                        </div>
-                    </div>
-                </div>
-
-                <div class="key-concepts">
-                    <h4>Key Concepts:</h4>
-                    <ul>
-                        <li>File descriptors (STDIN_FILENO, STDOUT_FILENO)</li>
-                        <li>Low-level I/O operations</li>
-                        <li>File creation modes and permissions (0666)</li>
-                        <li>Buffered reading and writing</li>
-                    </ul>
-                </div>
-            </div>
-
-            <!-- rep.c -->
-            <div class="file-card">
-                <div class="file-name">📄 rep.c</div>
-
-                <div class="task-description">
-                    <h3>Naloga 2: Tail Utility (Rep)</h3>
-                    <ul>
-                        <li>Napišite C program rep, ki izpiše zadnjih n vrstic besedilne datoteke</li>
-                        <li>Deluje podobno kot program (GNU utility) tail, a z manj opcijami</li>
-                        <li>Primer klica programa: rep –n 3 a.txt</li>
-                        <li>Privzeta vrednost za n naj bo 5</li>
-                        <li>Opomba: privzemite, da je datoteka lahko zelo velika, zato ne shranjujte celotne datoteke v pomnilnik (buffer)</li>
-                        <li>Nasvet: Pojdite najprej na konec z lseek, potem pa nazaj in iščite znake '\n'</li>
-                        <li>Uporabite le sistemske klice (in ne funkcij iz stdio)</li>
-                    </ul>
-                </div>
-
-                <div class="usage-example">
-                    <strong>Usage Examples:</strong><br>
-                    $ ./rep file.txt          # Shows last 5 lines<br>
-                    $ ./rep -n 3 file.txt     # Shows last 3 lines<br>
-                    $ ./rep -n 10 data.txt    # Shows last 10 lines
-                </div>
-
-                <div class="code-display">
-                    <h4>Source Code:</h4>
-                    <pre><code class="language-c">#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;stdlib.h&gt;
-
-int main(int argc, char *argv[]){
-	char buf[BUFSIZ];
-	int n = 5;
-	int fd;
-
-	if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
-		n = atoi(argv[2]);
-		fd = open(argv[3], O_RDONLY);
-	}
-	else if (argc == 2){
-		fd = open(argv[1], O_RDONLY);
-	}
-	else {
-		perror("Napačna uporaba programa");
-		return -1;
-	}
-
-	if(fd&lt;0){
-		perror("fd open error");
-		return -1;
-	}
-
-	lseek(fd, 0, SEEK_END);
-	lseek(fd, -1, SEEK_CUR);
-	int count = 0, temp_place = 300;
-
-	while(count &lt;= n &amp;&amp; temp_place&gt;0) {
-		read(fd, buf, 1);
-		if(buf[0] == '\n'){
-			count ++;
-		}
-		temp_place = lseek(fd, -2, SEEK_CUR);
-	}
-	if(count &gt;= n) lseek(fd, 2, SEEK_CUR);
-	int t = read(fd, buf, BUFSIZ);
-	write(STDOUT_FILENO, buf, t);
-
-	return 0;
-}</code></pre>
-                </div>
-
-                <div class="explanation-section">
-                    <h4>📖 Detailed Code Explanation</h4>
-
-                    <div class="explanation-block">
-                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
-                        <div class="code-snippet">#include &lt;stdio.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;
-#include &lt;fcntl.h&gt;
-#include &lt;stdlib.h&gt;</div>
-                        <div class="description">
-                            Vsaka knjižnica ima svoj namen za sistemske klice:
-                            <ul>
-                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak).</li>
-                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, lseek ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
-                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov).</li>
-                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice O_RDONLY.</li>
-                                <li><strong>&lt;stdlib.h&gt;</strong>: Potrebno za funkcijo atoi (pretvorba niza v število).</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>⚙️ 2. Procesiranje argumentov</h5>
-                        <div class="code-snippet">if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
-	n = atoi(argv[2]);
-	fd = open(argv[3], O_RDONLY);
-}
-else if (argc == 2){
-	fd = open(argv[1], O_RDONLY);
-}</div>
-                        <div class="description">
-                            Program mora vedeti, koliko vrstic naj prikaže.<br><br>
-                            <strong>Če je argc == 4</strong>: Uporabnik je vpisal ./rep -n 3 datoteka.txt
-                            <ul>
-                                <li>argv[1] je "-n"</li>
-                                <li>argv[2] je število vrstic (pretvorjeno z atoi)</li>
-                                <li>argv[3] je ime datoteke</li>
-                            </ul>
-                            <strong>Če je argc == 2</strong>: Uporabnik je vpisal ./rep datoteka.txt
-                            <ul>
-                                <li>Uporabi privzeto vrednost n = 5</li>
-                                <li>argv[1] je ime datoteke</li>
-                            </ul>
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>📍 3. Pozicioniranje na konec datoteke</h5>
-                        <div class="code-snippet">lseek(fd, 0, SEEK_END);
-lseek(fd, -1, SEEK_CUR);</div>
-                        <div class="description">
-                            <strong>lseek(fd, 0, SEEK_END)</strong>: Premakne kazalec na konec datoteke.<br><br>
-                            <strong>lseek(fd, -1, SEEK_CUR)</strong>: Premakne kazalec 1 bajt nazaj od trenutne pozicije (SEEK_CUR = trenutna pozicija).<br><br>
-                            To je začetek algoritma za branje od konca datoteke nazaj.
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>🔍 4. Iskanje začetka n-te vrstice od konca</h5>
-                        <div class="code-snippet">while(count &lt;= n &amp;&amp; temp_place&gt;0) {
-	read(fd, buf, 1);
-	if(buf[0] == '\n'){
-		count ++;
-	}
-	temp_place = lseek(fd, -2, SEEK_CUR);
-}</div>
-                        <div class="description">
-                            Ta zanka se premika po datoteki nazaj in išče znake za novo vrstico.<br><br>
-                            <strong>read(fd, buf, 1)</strong>: Prebere en bajt (en znak).<br><br>
-                            <strong>if(buf[0] == '\n')</strong>: Če najdemo nov znak za novo vrstico, povečamo števec.<br><br>
-                            <strong>lseek(fd, -2, SEEK_CUR)</strong>: Premakne kazalec 2 bajta nazaj:
-                            <ul>
-                                <li>-1 da odšteje prebrani bajt</li>
-                                <li>-1 da gre dodatno 1 bajt nazaj</li>
-                            </ul>
-                            Zanka se konča, ko najdemo n znakov '\n' ali pridemo na začetek datoteke.
-                        </div>
-                    </div>
-
-                    <div class="explanation-block">
-                        <h5>📄 5. Branje in izpis zadnjih vrstic</h5>
-                        <div class="code-snippet">int t = read(fd, buf, BUFSIZ);
-write(STDOUT_FILENO, buf, t);</div>
-                        <div class="description">
-                            Ko smo našli pravo pozicijo, preberemo in izpišemo vse do konca datoteke.<br><br>
-                            <strong>read(fd, buf, BUFSIZ)</strong>: Prebere do BUFSIZ bajtov (ali do konca datoteke).<br><br>
-                            <strong>write(STDOUT_FILENO, buf, t)</strong>: Izpiše točno t bajtov (kolikor smo jih dejansko prebrali) na standardni izhod.
-                        </div>
-                    </div>
-                </div>
-
-                <div class="key-concepts">
-                    <h4>Key Concepts:</h4>
-                    <ul>
-                        <li>File seeking with lseek (SEEK_END, SEEK_CUR)</li>
-                        <li>Backward file traversal</li>
-                        <li>Memory-efficient file processing</li>
-                        <li>Newline character detection</li>
-                        <li>Command-line argument parsing</li>
-                    </ul>
-                </div>
-            </div>
-        </div>
-
-        <!-- Vaja 2 -->
-        <div class="vaja-section">
-            <h2 class="vaja-title">Vaja 2: File Metadata and Permissions</h2>
-
             <!-- lsl.c -->
             <div class="file-card">
                 <div class="file-name">📄 lsl.c</div>
@@ -664,12 +298,12 @@ int main(int argc, char *argv[]){
                     <div class="explanation-block">
                         <h5>📚 1. Vključevanje knjižnic</h5>
                         <div class="code-snippet">#include &lt;stdio.h&gt;
-#include &lt;stdlib.h&gt;
-#include &lt;sys/stat.h&gt;
-#include &lt;pwd.h&gt;
-#include &lt;grp.h&gt;
-#include &lt;unistd.h&gt;
-#include &lt;string.h&gt;</div>
+                            #include &lt;stdlib.h&gt;
+                            #include &lt;sys/stat.h&gt;
+                            #include &lt;pwd.h&gt;
+                            #include &lt;grp.h&gt;
+                            #include &lt;unistd.h&gt;
+                            #include &lt;string.h&gt;</div>
                         <div class="description">
                             Potrebne knjižnice za delo z metapodatki datotek:
                             <ul>
@@ -684,17 +318,17 @@ int main(int argc, char *argv[]){
                     <div class="explanation-block">
                         <h5>🔍 2. Branje metapodatkov datoteke</h5>
                         <div class="code-snippet">struct stat info;
-struct passwd *pw;
-struct group *gr;
+                            struct passwd *pw;
+                            struct group *gr;
 
-if (lstat(argv[1], &amp;info) == -1) {
-	perror("Napaka pri branju dat.");
-	return -1;
-}
+                            if (lstat(argv[1], &amp;info) == -1) {
+                            perror("Napaka pri branju dat.");
+                            return -1;
+                            }
 
-pw = getpwuid(info.st_uid);
-gr = getgrgid(info.st_gid);
-mode_t mode = info.st_mode;</div>
+                            pw = getpwuid(info.st_uid);
+                            gr = getgrgid(info.st_gid);
+                            mode_t mode = info.st_mode;</div>
                         <div class="description">
                             <strong>struct stat info</strong>: Struktura, ki vsebuje vse metapodatke datoteke (velikost, dovoljenja, lastnik, čas, itd.)<br><br>
                             <strong>lstat()</strong>: Prebere metapodatke datoteke. Uporablja lstat namesto stat, ker lstat ne sledi simbolnim povezavam (vrne podatke o sami povezavi, ne o ciljni datoteki).<br><br>
@@ -707,14 +341,14 @@ mode_t mode = info.st_mode;</div>
                     <div class="explanation-block">
                         <h5>📋 3. Določanje tipa datoteke</h5>
                         <div class="code-snippet">char perms[11];
-if (S_ISREG(mode)) perms[0] = '-';       // običajna datoteka
-else if(S_ISDIR(mode)) perms[0] = 'd';   // imenik (directory)
-else if(S_ISLNK(mode)) perms[0] = 'l';   // simbolna povezava (link)
-else if(S_ISCHR(mode)) perms[0] = 'c';   // znakovna naprava (character device)
-else if(S_ISBLK(mode)) perms[0] = 'b';   // bločna naprava (block device)
-else if(S_ISFIFO(mode)) perms[0] = 'p';  // cev (pipe/FIFO)
-else if(S_ISSOCK(mode)) perms[0] = 's';  // vtičnica (socket)
-else perms[0] = '?';</div>
+                            if (S_ISREG(mode)) perms[0] = '-';       // običajna datoteka
+                            else if(S_ISDIR(mode)) perms[0] = 'd';   // imenik (directory)
+                            else if(S_ISLNK(mode)) perms[0] = 'l';   // simbolna povezava (link)
+                            else if(S_ISCHR(mode)) perms[0] = 'c';   // znakovna naprava (character device)
+                            else if(S_ISBLK(mode)) perms[0] = 'b';   // bločna naprava (block device)
+                            else if(S_ISFIFO(mode)) perms[0] = 'p';  // cev (pipe/FIFO)
+                            else if(S_ISSOCK(mode)) perms[0] = 's';  // vtičnica (socket)
+                            else perms[0] = '?';</div>
                         <div class="description">
                             Makroji S_IS* preverjajo tip datoteke iz mode bita:<br><br>
                             <strong>Tipi datotek v Linux:</strong>
@@ -733,19 +367,19 @@ else perms[0] = '?';</div>
                     <div class="explanation-block">
                         <h5>🔐 4. Določanje osnovnih dovoljenj (rwx)</h5>
                         <div class="code-snippet">//User permissions
-perms[1] = (mode &amp; S_IRUSR) ? 'r' : '-';  // read
-perms[2] = (mode &amp; S_IWUSR) ? 'w' : '-';  // write
-perms[3] = (mode &amp; S_IXUSR) ? 'x' : '-';  // execute
+                            perms[1] = (mode &amp; S_IRUSR) ? 'r' : '-';  // read
+                            perms[2] = (mode &amp; S_IWUSR) ? 'w' : '-';  // write
+                            perms[3] = (mode &amp; S_IXUSR) ? 'x' : '-';  // execute
 
-//Group permissions
-perms[4] = (mode &amp; S_IRGRP) ? 'r' : '-';
-perms[5] = (mode &amp; S_IWGRP) ? 'w' : '-';
-perms[6] = (mode &amp; S_IXGRP) ? 'x' : '-';
+                            //Group permissions
+                            perms[4] = (mode &amp; S_IRGRP) ? 'r' : '-';
+                            perms[5] = (mode &amp; S_IWGRP) ? 'w' : '-';
+                            perms[6] = (mode &amp; S_IXGRP) ? 'x' : '-';
 
-//Other permissions
-perms[7] = (mode &amp; S_IROTH) ? 'r' : '-';
-perms[8] = (mode &amp; S_IWOTH) ? 'w' : '-';
-perms[9] = (mode &amp; S_IXOTH) ? 'x' : '-';</div>
+                            //Other permissions
+                            perms[7] = (mode &amp; S_IROTH) ? 'r' : '-';
+                            perms[8] = (mode &amp; S_IWOTH) ? 'w' : '-';
+                            perms[9] = (mode &amp; S_IXOTH) ? 'x' : '-';</div>
                         <div class="description">
                             Dovoljenja se preverjajo z bitnim AND (&amp;) operatorjem.<br><br>
                             <strong>Dovoljenja so razdeljena v tri skupine:</strong>
@@ -766,9 +400,9 @@ perms[9] = (mode &amp; S_IXOTH) ? 'x' : '-';</div>
                     <div class="explanation-block">
                         <h5>⭐ 5. Posebni biti (SUID, SGID, Sticky Bit)</h5>
                         <div class="code-snippet">//Special permissions
-if(mode &amp; S_ISUID) perms[3] = (perms[3] == 'x') ? 's' : 'S';
-if(mode &amp; S_ISGID) perms[6] = (perms[6] == 'x') ? 's' : 'S';
-if(mode &amp; S_ISVTX) perms[9] = (perms[9] == 'x') ? 't' : 'T';</div>
+                            if(mode &amp; S_ISUID) perms[3] = (perms[3] == 'x') ? 's' : 'S';
+                            if(mode &amp; S_ISGID) perms[6] = (perms[6] == 'x') ? 's' : 'S';
+                            if(mode &amp; S_ISVTX) perms[9] = (perms[9] == 'x') ? 't' : 'T';</div>
                         <div class="description">
                             <strong>Posebni varnostni biti, ki spreminjajo obnašanje programa/imenika:</strong><br><br>
                             <strong>S_ISUID (Set User ID)</strong>:
@@ -797,9 +431,9 @@ if(mode &amp; S_ISVTX) perms[9] = (perms[9] == 'x') ? 't' : 'T';</div>
                     <div class="explanation-block">
                         <h5>📄 6. Izpis rezultatov</h5>
                         <div class="code-snippet">printf("%s", perms);
-printf(" %lu %s %ld %s\n", info.st_nlink,
-       (pw != NULL ? pw-&gt;pw_name : "?"),
-       info.st_size, argv[1]);</div>
+                            printf(" %lu %s %ld %s\n", info.st_nlink,
+                            (pw != NULL ? pw-&gt;pw_name : "?"),
+                            info.st_size, argv[1]);</div>
                         <div class="description">
                             <strong>Format izpisa:</strong> [tip][dovoljenja] [št. povezav] [lastnik] [velikost] [ime]<br><br>
                             <ul>
@@ -954,14 +588,14 @@ int main(int argc, char *argv[]){
                     <div class="explanation-block">
                         <h5>🖨️ 1. Funkcija print_mode() - Izpis dovoljenj</h5>
                         <div class="code-snippet">void print_mode(mode_t mode) {
-	char perms[11];
-	// ... določanje tipa in dovoljenj ...
-	if(mode &amp; S_ISUID) perms[3] = (perms[3] == 'x') ? 's' : 'S';
-	if(mode &amp; S_ISGID) perms[6] = (perms[6] == 'x') ? 's' : 'S';
-	if(mode &amp; S_ISVTX) perms[9] = (perms[9] == 'x') ? 't' : 'T';
+                            char perms[11];
+                            // ... določanje tipa in dovoljenj ...
+                            if(mode &amp; S_ISUID) perms[3] = (perms[3] == 'x') ? 's' : 'S';
+                            if(mode &amp; S_ISGID) perms[6] = (perms[6] == 'x') ? 's' : 'S';
+                            if(mode &amp; S_ISVTX) perms[9] = (perms[9] == 'x') ? 't' : 'T';
 
-	printf("Nova dovoljenja: %s\n", perms);
-}</div>
+                            printf("Nova dovoljenja: %s\n", perms);
+                            }</div>
                         <div class="description">
                             Pomožna funkcija, ki pretvori številčna dovoljenja (mode_t) v berljiv format.<br><br>
                             Deluje enako kot v lsl.c programu - pretvori bitne zastavice v znake rwxrwxrwx s posebnimi biti.
@@ -971,8 +605,8 @@ int main(int argc, char *argv[]){
                     <div class="explanation-block">
                         <h5>📥 2. Branje trenutnih dovoljenj</h5>
                         <div class="code-snippet">struct stat info;
-stat(filename, &amp;info);
-mode_t new_mode = info.st_mode;</div>
+                            stat(filename, &amp;info);
+                            mode_t new_mode = info.st_mode;</div>
                         <div class="description">
                             <strong>stat(filename, &amp;info)</strong>: Prebere trenutne metapodatke datoteke.<br><br>
                             <strong>new_mode = info.st_mode</strong>: Shrani trenutna dovoljenja. Ta se bodo spreminjala glede na vnos uporabnika, ostali podatki (tip datoteke) pa ostanejo nespremenjeni.
@@ -982,11 +616,11 @@ mode_t new_mode = info.st_mode;</div>
                     <div class="explanation-block">
                         <h5>➕ 3. Simbolično dodajanje bitov (u+s, g+s)</h5>
                         <div class="code-snippet">if (strcmp(mode_str, "u+s") == 0) {
-	new_mode |= S_ISUID;  // Bitni OR - doda bit
-}
-else if (strcmp(mode_str, "g+s") == 0) {
-	new_mode |= S_ISGID;  // Doda SGID bit
-}</div>
+                            new_mode |= S_ISUID;  // Bitni OR - doda bit
+                            }
+                            else if (strcmp(mode_str, "g+s") == 0) {
+                            new_mode |= S_ISGID;  // Doda SGID bit
+                            }</div>
                         <div class="description">
                             <strong>Bitni OR (|=)</strong> operator <strong>doda bit</strong>, ne da bi vplival na ostale bite.<br><br>
                             <strong>u+s</strong>: Postavi Set-UID bit (S_ISUID)<br>
@@ -1001,8 +635,8 @@ else if (strcmp(mode_str, "g+s") == 0) {
                     <div class="explanation-block">
                         <h5>➖ 4. Simbolično odstranjevanje bitov (u-s)</h5>
                         <div class="code-snippet">else if (strcmp(mode_str, "u-s") == 0) {
-	new_mode &amp;= ~S_ISUID;  // Bitni AND z negacijo - odstrani bit
-}</div>
+                            new_mode &amp;= ~S_ISUID;  // Bitni AND z negacijo - odstrani bit
+                            }</div>
                         <div class="description">
                             <strong>Bitni AND z negacijo (&amp;= ~)</strong> operator <strong>odstrani specifičen bit</strong>.<br><br>
                             <strong>Kako deluje:</strong>
@@ -1018,11 +652,11 @@ else if (strcmp(mode_str, "g+s") == 0) {
                     <div class="explanation-block">
                         <h5>📖 5. Posebna zastavica a+rX</h5>
                         <div class="code-snippet">else if (strcmp(mode_str, "a+rX") == 0) {
-	if (info.st_mode &amp; S_IRUSR) {
-		new_mode |= S_IRGRP;  // Dodaj read za skupino
-		new_mode |= S_IROTH;  // Dodaj read za ostale
-	}
-}</div>
+                            if (info.st_mode &amp; S_IRUSR) {
+                            new_mode |= S_IRGRP;  // Dodaj read za skupino
+                            new_mode |= S_IROTH;  // Dodaj read za ostale
+                            }
+                            }</div>
                         <div class="description">
                             <strong>a+rX</strong>: Dodaj vsem (all) dovoljenje za branje (r), če ga lastnik že ima.<br><br>
                             <strong>Posebnost X (velika črka):</strong>
@@ -1040,14 +674,14 @@ else if (strcmp(mode_str, "g+s") == 0) {
                     <div class="explanation-block">
                         <h5>🔢 6. Osmiška (oktalna) števila za dovoljenja</h5>
                         <div class="code-snippet">else {
-	long int mode_oct;
-	char *endptr;
-	mode_oct = strtol(mode_str, &amp;endptr, 8);  // Pretvori v osmiško
-	if(endptr != mode_str) {
-		check = false;
-		chmod(filename, mode_oct);
-	}
-}</div>
+                            long int mode_oct;
+                            char *endptr;
+                            mode_oct = strtol(mode_str, &amp;endptr, 8);  // Pretvori v osmiško
+                            if(endptr != mode_str) {
+                            check = false;
+                            chmod(filename, mode_oct);
+                            }
+                            }</div>
                         <div class="description">
                             <strong>strtol(mode_str, &amp;endptr, 8)</strong>: Pretvori niz v število v osnovi 8 (osmiško).<br><br>
                             <strong>Osmiška števila za dovoljenja:</strong>
@@ -1075,8 +709,8 @@ else if (strcmp(mode_str, "g+s") == 0) {
                         <h5>💾 7. Uporaba chmod() sistemskega klica</h5>
                         <div class="code-snippet">if(check) chmod(filename, new_mode);
 
-stat(filename, &amp;info);
-print_mode(info.st_mode);</div>
+                            stat(filename, &amp;info);
+                            print_mode(info.st_mode);</div>
                         <div class="description">
                             <strong>chmod(filename, new_mode)</strong>: Sistemski klic, ki dejansko spremeni dovoljenja datoteke.<br><br>
                             <strong>Ponovni stat()</strong>: Ponovno prebere metapodatke, da potrdi spremembe.<br><br>

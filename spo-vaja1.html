@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 1 - File I/O with System Calls</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
+
+        <div class="docs-header">
+            <h1>📄 Vaja 1: File I/O with System Calls</h1>
+            <p class="subtitle">Working with low-level file operations using system calls</p>
+        </div>
+
+        <!-- Vaja 1 -->
+        <div class="vaja-section">
+            <!-- Tee1.c -->
+            <div class="file-card">
+                <div class="file-name">📄 Tee1.c</div>
+
+                <div class="task-description">
+                    <h3>Naloga 1: Tee Utility</h3>
+                    <ul>
+                        <li>Napišite v C-ju program tee1, ki deluje podobno kot tee (GNU utility)</li>
+                        <li>Standardni vhod prepiše na standardni izhod in v datoteko, ki jo podamo kot argument v ukazni vrstici</li>
+                        <li>Če dodamo pred datoteko še opcijo -a, se standardni vhod doda k vsebini datoteke</li>
+                        <li>Uporabite sistemske klice open, read, write in close</li>
+                    </ul>
+                </div>
+
+                <div class="usage-example">
+                    <strong>Usage Examples:</strong><br>
+                    $ echo "Hello World" | ./tee1 output.txt<br>
+                    $ echo "Append this" | ./tee1 -a output.txt
+                </div>
+
+                <div class="code-display">
+                    <h4>Source Code:</h4>
+                    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+
+int main(int argc, char *argv[]){
+	char buf[BUFSIZ];
+	int n, fd;
+
+	if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
+		fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
+	}
+	else if (argc == 2){
+		fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
+	}
+	else {
+		perror("Napačna uporaba programa");
+		return -1;
+	}
+
+	if(fd&lt;0){
+		perror("fd open error");
+		return -1;
+	}
+
+	while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
+		if(write(STDOUT_FILENO, buf, n) != n) {
+			err("write");
+		}
+		if(write(fd, buf, n) != n) {
+			err("write2");
+		}
+	}
+
+	return 0;
+}</code></pre>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>📖 Detailed Code Explanation</h4>
+
+                    <div class="explanation-block">
+                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
+                        <div class="code-snippet">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;</div>
+                        <div class="description">
+                            Vsaka knjižnica ima svoj namen za sistemske klice:
+                            <ul>
+                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak) in definicijo BUFSIZ.</li>
+                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, close ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
+                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov - preverjanje za "-a").</li>
+                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice (flags) kot so O_WRONLY, O_CREAT, itd.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔢 2. Definicija spremenljivk</h5>
+                        <div class="code-snippet">int main(int argc, char *argv[]){
+    char buf[BUFSIZ];
+    int n, fd;</div>
+                        <div class="description">
+                            <strong>int main(int argc, char *argv[])</strong>: Začetek glavne funkcije programa.<br>
+                            <ul>
+                                <li><strong>int argc</strong>: "argument count" - število argumentov, ki jih je uporabnik podal v ukazni vrstici (vključno z imenom programa)</li>
+                                <li><strong>char *argv[]</strong>: "argument vector" - tabela (array) nizov (stringov), ki vsebuje vse argumente
+                                    <ul>
+                                        <li>argv[0] = ime programa (npr. "./tee1")</li>
+                                        <li>argv[1] = prvi argument (npr. "-a" ali "output.txt")</li>
+                                        <li>argv[2] = drugi argument (npr. "output.txt" če je -a prisotna)</li>
+                                    </ul>
+                                </li>
+                            </ul>
+                            <strong>char buf[BUFSIZ]</strong>: Buffer (polje) za začasno shranjevanje podatkov med prenosom.<br>
+                            <ul>
+                                <li><strong>BUFSIZ</strong> je konstanta (običajno 8192 bajtov = 8 KB), ki določa optimalno velikost bufferja</li>
+                                <li>Buffer deluje kot "vedro" - vanj zlijemo podatke iz vhoda, nato jih prenesemo na izhod</li>
+                            </ul>
+                            <strong>int n</strong>: Shrani število bajtov, ki jih preberemo v enem klicu funkcije read.<br><br>
+                            <strong>int fd</strong>: "file descriptor" - ŠTEVILKA, ki predstavlja odprto datoteko.
+                            <ul>
+                                <li>V Linuxu vsaka odprta datoteka dobi številko (0, 1, 2, 3, 4, ...)</li>
+                                <li>0 = STDIN (standardni vhod - tipkovnica)</li>
+                                <li>1 = STDOUT (standardni izhod - zaslon)</li>
+                                <li>2 = STDERR (izhod za napake)</li>
+                                <li>3+ = datoteke, ki jih odpremo sami</li>
+                                <li>Če je fd negativen (npr. -1), to pomeni NAPAKO pri odpiranju</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>⚙️ 3. Procesiranje argumentov - Prvi if stavek</h5>
+                        <div class="code-snippet">if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
+    fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
+}</div>
+                        <div class="description">
+                            <strong>if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0)</strong>: Preveri DVA pogoja HKRATI (oba morata biti true):<br><br>
+
+                            <strong>Pogoj 1: argc == 3</strong><br>
+                            <ul>
+                                <li>Preveri, ali je uporabnik podal TOČNO 3 argumente</li>
+                                <li>argc vključuje ime programa, torej 3 pomeni: ime programa + 2 argumenta</li>
+                                <li>Primer: <code>./tee1 -a output.txt</code>
+                                    <ul>
+                                        <li>argv[0] = "./tee1"</li>
+                                        <li>argv[1] = "-a"</li>
+                                        <li>argv[2] = "output.txt"</li>
+                                        <li>argc = 3 ✓</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <strong>&amp;&amp;</strong>: Logični AND - oba pogoja morata biti true, da se koda v {} izvede<br><br>
+
+                            <strong>Pogoj 2: strcmp(argv[1], "-a") == 0</strong><br>
+                            <ul>
+                                <li><strong>strcmp()</strong> = "string compare" - primerja dva niza (stringa)</li>
+                                <li>Vrne 0, če sta niza POPOLNOMA ENAKA</li>
+                                <li>Vrne negativno število, če je prvi niz leksikografsko manjši</li>
+                                <li>Vrne pozitivno število, če je prvi niz leksikografsko večji</li>
+                                <li>V našem primeru: preveri, ali je argv[1] (prvi argument) enak "-a"</li>
+                                <li>== 0 pomeni "če sta enaka"</li>
+                            </ul>
+
+                            <strong>ZAKAJ ta preverjanje?</strong> Preverjamo, ali uporabnik želi dodajati (append) k datoteki namesto prepisovanja.<br><br>
+
+                            <strong>fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666)</strong>:<br>
+                            <ul>
+                                <li><strong>open()</strong>: Sistemski klic, ki odpre datoteko in vrne file descriptor (številko)</li>
+                                <li><strong>argv[2]</strong>: Ime datoteke (drugi argument po -a)</li>
+                                <li><strong>O_WRONLY</strong>: "Open for Writing ONLY" - odpri samo za pisanje (ne moremo brati)</li>
+                                <li><strong>|</strong>: Bitni OR - združuje več zastavic skupaj</li>
+                                <li><strong>O_CREAT</strong>: "Create" - če datoteka NE obstaja, jo ustvari</li>
+                                <li><strong>O_APPEND</strong>: "Append" - piši na KONEC datoteke (ne prepisuj)</li>
+                                <li><strong>0666</strong>: Dovoljenja za novo datoteko v osmiški obliki
+                                    <ul>
+                                        <li>6 = rw- (read + write, brez execute)</li>
+                                        <li>První 6: dovoljenja za lastnika (owner)</li>
+                                        <li>Drugi 6: dovoljenja za skupino (group)</li>
+                                        <li>Tretji 6: dovoljenja za ostale (others)</li>
+                                        <li>Rezultat: rw-rw-rw- (vsi lahko berejo in pišejo)</li>
+                                    </ul>
+                                </li>
+                                <li><strong>fd =</strong>: Shrani file descriptor, ki ga vrne open() - če uspe, je to pozitivno število (npr. 3, 4, 5...)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>⚙️ 4. Procesiranje argumentov - Drugi else if stavek</h5>
+                        <div class="code-snippet">else if (argc == 2){
+    fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
+}</div>
+                        <div class="description">
+                            <strong>else if</strong>: Izvede se SAMO, če prejšnji if (argc == 3...) NI bil true<br><br>
+
+                            <strong>argc == 2</strong>: Preveri, ali je uporabnik podal TOČNO 2 argumenta (ime programa + 1 argument)<br>
+                            <ul>
+                                <li>Primer: <code>./tee1 output.txt</code>
+                                    <ul>
+                                        <li>argv[0] = "./tee1"</li>
+                                        <li>argv[1] = "output.txt"</li>
+                                        <li>argc = 2 ✓</li>
+                                    </ul>
+                                </li>
+                                <li>V tem primeru NI zastavice -a, torej bo program PREPISAL datoteko</li>
+                            </ul>
+
+                            <strong>fd = open(argv[1], O_WRONLY | O_CREAT, 0666)</strong>:<br>
+                            <ul>
+                                <li>Skoraj isto kot prej, AMPAK BREZ O_APPEND</li>
+                                <li><strong>argv[1]</strong>: Ime datoteke je takoj prvi argument (ker ni -a)</li>
+                                <li><strong>O_WRONLY | O_CREAT</strong>: Odpri za pisanje, ustvari če ne obstaja</li>
+                                <li><strong>BREZ O_APPEND</strong>: Datoteka se bo PREPISALA od začetka (stara vsebina se izbriše)</li>
+                                <li><strong>0666</strong>: Ista dovoljenja kot prej</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>❌ 5. Napačna uporaba - Else blok</h5>
+                        <div class="code-snippet">else {
+    perror("Napačna uporaba programa");
+    return -1;
+}</div>
+                        <div class="description">
+                            <strong>else</strong>: Izvede se, če NOBEN od zgornjih pogojev NI bil true<br>
+                            <ul>
+                                <li>To pomeni, da argc NI 2 in tudi NI 3 (ali pa je 3, ampak prvi argument ni "-a")</li>
+                                <li>Primeri napačne uporabe:
+                                    <ul>
+                                        <li><code>./tee1</code> - brez argumentov (argc = 1) ❌</li>
+                                        <li><code>./tee1 -a output.txt extra</code> - preveč argumentov (argc = 4) ❌</li>
+                                        <li><code>./tee1 -b output.txt</code> - napačna zastavica (argc = 3, ampak argv[1] != "-a") ❌</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <strong>perror("Napačna uporaba programa")</strong>:<br>
+                            <ul>
+                                <li><strong>perror</strong> = "print error" - izpiše sporočilo o napaki</li>
+                                <li>Izpiše tvoj niz ("Napačna uporaba programa") + dodatne informacije o napaki iz sistema</li>
+                                <li>Izpis gre na STDERR (file descriptor 2), ne STDOUT</li>
+                            </ul>
+
+                            <strong>return -1</strong>:<br>
+                            <ul>
+                                <li><strong>return</strong>: Konča funkcijo main in s tem cel program</li>
+                                <li><strong>-1</strong>: Vrne negativno vrednost operacijskemu sistemu, kar pomeni "program se je končal z NAPAKO"</li>
+                                <li>0 bi pomenilo "uspeh", vse ostalo (negativno ali pozitivno) pomeni napako</li>
+                                <li>Ko program vrne -1, lahko lupina (shell) to preveri z <code>echo $?</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔍 6. Preverjanje uspešnosti open() - KLJUČNI CHECK</h5>
+                        <div class="code-snippet">if(fd&lt;0){
+    perror("fd open error");
+    return -1;
+}</div>
+                        <div class="description">
+                            <strong>if(fd &lt; 0)</strong>: TO JE TISTO KAR SI OMENIL! Preveri, ali je open() USPEL ali SELIL.<br><br>
+
+                            <strong>ZAKAJ preverjamo fd &lt; 0?</strong><br>
+                            <ul>
+                                <li>Funkcija open() vrne:
+                                    <ul>
+                                        <li><strong>Pozitivno število (≥ 3)</strong>: USPEH - to je file descriptor (številka datoteke)</li>
+                                        <li><strong>-1</strong>: NAPAKA - datoteke ni bilo mogoče odpreti</li>
+                                    </ul>
+                                </li>
+                                <li>fd &lt; 0 pomeni "če je fd negativen" = "če je prišlo do napake"</li>
+                            </ul>
+
+                            <strong>KDAJ lahko open() vrne -1 (fail)?</strong><br>
+                            <ul>
+                                <li>Datoteka ne obstaja in nimamo O_CREAT zastavice</li>
+                                <li>Nimamo dovoljenj za pisanje v ta imenik</li>
+                                <li>Imenik, kjer želimo ustvariti datoteko, ne obstaja (npr. /neobstojec/output.txt)</li>
+                                <li>Disk je poln</li>
+                                <li>Ime datoteke je predolgo</li>
+                                <li>Datoteka je zaklenjena od drugega procesa</li>
+                            </ul>
+
+                            <strong>Kaj se zgodi, če je fd &lt; 0?</strong><br>
+                            <ul>
+                                <li><strong>perror("fd open error")</strong>: Izpiše sporočilo o napaki
+                                    <ul>
+                                        <li>perror avtomatsko doda sistemsko sporočilo o napaki</li>
+                                        <li>Primer izhoda: "fd open error: Permission denied"</li>
+                                        <li>Ali: "fd open error: No such file or directory"</li>
+                                    </ul>
+                                </li>
+                                <li><strong>return -1</strong>: Program se konča z napako</li>
+                                <li>Brez tega preverjanja bi program poskušal pisati v neveljavno datoteko → CRASH!</li>
+                            </ul>
+
+                            <strong>POMEMBNO</strong>: Ta check je KRITIČEN - brez njega bi program crashnil, če datoteke ne bi mogel odpreti!
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔄 7. Glavna zanka - While loop</h5>
+                        <div class="code-snippet">while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
+    if(write(STDOUT_FILENO, buf, n) != n) {
+        err("write");
+    }
+    if(write(fd, buf, n) != n) {
+        err("write2");
+    }
+}</div>
+                        <div class="description">
+                            <strong>while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0)</strong>: Ta vrstica dela 3 stvari NAENKRAT!<br><br>
+
+                            <strong>Korak 1: read(STDIN_FILENO, buf, BUFSIZ)</strong><br>
+                            <ul>
+                                <li><strong>read()</strong>: Sistemski klic, ki prebere podatke</li>
+                                <li><strong>STDIN_FILENO</strong>: Konstanta = 0 = standardni vhod (tipkovnica ali pipe)</li>
+                                <li><strong>buf</strong>: Kam shranjujemo podatke (naš buffer)</li>
+                                <li><strong>BUFSIZ</strong>: Koliko bajtov MAKSIMALNO želimo prebrati naenkrat (npr. 8192)</li>
+                                <li><strong>Vrne</strong>: Število DEJANSKO prebranih bajtov
+                                    <ul>
+                                        <li>Pozitivno število (npr. 100): Prebral 100 bajtov</li>
+                                        <li>0: EOF (End Of File) - ni več podatkov, vhod se je končal</li>
+                                        <li>-1: Napaka pri branju</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <strong>Korak 2: n = ...</strong><br>
+                            <ul>
+                                <li>Shrani število prebranih bajtov v spremenljivko n</li>
+                                <li>n potrebujemo kasneje, da vemo, koliko bajtov moramo pisati</li>
+                            </ul>
+
+                            <strong>Korak 3: (n = ...) &gt; 0</strong><br>
+                            <ul>
+                                <li>Preveri, ali je n VEČJI od 0</li>
+                                <li>Če je n &gt; 0: Prebrali smo podatke, nadaljuj s zanko</li>
+                                <li>Če je n = 0: EOF, konec vhoda, izstopi iz zanke</li>
+                                <li>Če je n = -1: Napaka, tudi izstopi iz zanke (ampak to bi morali checkati posebej!)</li>
+                            </ul>
+
+                            <strong>KAKO deluje while zanka?</strong><br>
+                            <ol>
+                                <li>Preberi podatke iz stdin → n dobi število prebranih bajtov</li>
+                                <li>Preveri, ali je n &gt; 0</li>
+                                <li>Če DA: izvedi kodo v {} (piši podatke)</li>
+                                <li>Pojdi nazaj na korak 1 in ponovi</li>
+                                <li>Če NE (n ≤ 0): izstopi iz zanke, nadaljuj za }</li>
+                            </ol>
+
+                            <strong>ZAKAJ &gt; 0 in ne != 0?</strong><br>
+                            <ul>
+                                <li>Ker želimo nadaljevati SAMO, če smo dejansko prebrali podatke</li>
+                                <li>n = 0 → konec vhoda, ustavi se</li>
+                                <li>n = -1 → napaka, tudi ustavi se</li>
+                                <li>n &gt; 0 → podatki so prisotni, nadaljuj</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>✍️ 8. Prvi write - Pisanje na zaslon</h5>
+                        <div class="code-snippet">if(write(STDOUT_FILENO, buf, n) != n) {
+    err("write");
+}</div>
+                        <div class="description">
+                            <strong>write(STDOUT_FILENO, buf, n)</strong>:<br>
+                            <ul>
+                                <li><strong>write()</strong>: Sistemski klic, ki zapiše podatke</li>
+                                <li><strong>STDOUT_FILENO</strong>: Konstanta = 1 = standardni izhod (zaslon/terminal)</li>
+                                <li><strong>buf</strong>: Podatki, ki jih pišemo (tisti, ki smo jih pravkar prebrali)</li>
+                                <li><strong>n</strong>: Koliko bajtov želimo zapisati (točno toliko, kot smo prebrali)</li>
+                                <li><strong>Vrne</strong>: Število DEJANSKO zapisanih bajtov
+                                    <ul>
+                                        <li>Če je vse OK: vrne n (število, ki smo ga zahtevali)</li>
+                                        <li>Če je napaka: vrne manj kot n ali -1</li>
+                                    </ul>
+                                </li>
+                            </ul>
+
+                            <strong>if(write(...) != n)</strong>: TO JE POMEMBEN CHECK!<br>
+                            <ul>
+                                <li><strong>!= n</strong>: "če je različno od n" = "če NISMO uspeli zapisati VSEH n bajtov"</li>
+                                <li>ZAKAJ bi write() vrnil manj kot n?
+                                    <ul>
+                                        <li>Disk je poln</li>
+                                        <li>Pipe/stdout je bil zaprt</li>
+                                        <li>Signal je prekinil write (EINTR)</li>
+                                        <li>Nizka količina pomnilnika</li>
+                                    </ul>
+                                </li>
+                                <li>Če write() NI zapisal vseh n bajtov → NAPAKA → pokliči err("write")</li>
+                            </ul>
+
+                            <strong>err("write")</strong>:<br>
+                            <ul>
+                                <li>Podobno kot perror(), izpiše sporočilo in konča program</li>
+                                <li>OPOMBA: err() ni standardna funkcija - potrebuje #include &lt;err.h&gt;</li>
+                                <li>Ali pa je to typo in bi moralo biti perror()? V tem primeru koda ne bo kompajlala brez err.h!</li>
+                            </ul>
+
+                            <strong>ZAKAJ ta check?</strong><br>
+                            Če ne checkamo uspešnosti write(), bi lahko izgubili podatke, ne da bi vedeli!
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>💾 9. Drugi write - Pisanje v datoteko</h5>
+                        <div class="code-snippet">if(write(fd, buf, n) != n) {
+    err("write2");
+}</div>
+                        <div class="description">
+                            <strong>write(fd, buf, n)</strong>:<br>
+                            <ul>
+                                <li>ISTO kot prejšnji write, AMPAK piše v DATOTEKO namesto na zaslon</li>
+                                <li><strong>fd</strong>: File descriptor datoteke, ki smo jo odprli z open()</li>
+                                <li><strong>buf</strong>: Isti podatki kot prej (pišemo iste podatke na oba izhoda!)</li>
+                                <li><strong>n</strong>: Ista količina bajtov</li>
+                            </ul>
+
+                            <strong>if(write(fd, buf, n) != n)</strong>: Spet preverjamo uspešnost!<br>
+                            <ul>
+                                <li>ZAKAJ bi write v datoteko selil?
+                                    <ul>
+                                        <li>Disk je poln (najpogosteje!)</li>
+                                        <li>Datoteka je bila izbrisana medtem</li>
+                                        <li>Nimamo več dovoljenj</li>
+                                        <li>Kvota diska presežena</li>
+                                        <li>File system je read-only</li>
+                                    </ul>
+                                </li>
+                                <li>Če ne uspe → err("write2")</li>
+                            </ul>
+
+                            <strong>POMEMBNO - Dvojni write</strong>:<br>
+                            <ul>
+                                <li>To je BISTVO programa tee - iste podatke pošlje na DVA mesta:</li>
+                                <li>1. Na STDOUT (zaslon) → uporabnik vidi, kaj se dogaja</li>
+                                <li>2. V datoteko (fd) → podatki se shranjujejo</li>
+                                <li>Kot "T" cev - voda teče notri (stdin), ven pa na dva izhoda (stdout + file)</li>
+                            </ul>
+
+                            <strong>VPRAŠANJE: Kaj če prvi write uspe, drugi pa ne?</strong><br>
+                            <ul>
+                                <li>Podatki se prikažejo na zaslonu, ampak NE shranijo v datoteko</li>
+                                <li>Program javi napako in se konča</li>
+                                <li>To je OK - vsaj uporabnik ve, da nekaj ni v redu!</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>✅ 10. Konec programa</h5>
+                        <div class="code-snippet">return 0;</div>
+                        <div class="description">
+                            <strong>return 0</strong>: Program se uspešno konča.<br>
+                            <ul>
+                                <li><strong>return</strong>: Konča funkcijo main (in s tem program)</li>
+                                <li><strong>0</strong>: Vrne 0 operacijskemu sistemu = "USPEH, ni napak"</li>
+                                <li>To se zgodi, ko:
+                                    <ul>
+                                        <li>While zanka se konča (read() vrne 0 = EOF)</li>
+                                        <li>Vsi podatki so bili uspešno prebrani in zapisani</li>
+                                        <li>Ni bilo nobenih napak</li>
+                                    </ul>
+                                </li>
+                                <li>Shell lahko preveri exit status: <code>echo $?</code> → izpiše 0</li>
+                            </ul>
+
+                            <strong>OPOMBA - Manjkajoče čiščenje</strong>:<br>
+                            <ul>
+                                <li>Program NE pokliče close(fd) eksplicitno</li>
+                                <li>To je OK, ker OS avtomatsko zapre vse odprte datoteke, ko se program konča</li>
+                                <li>Ampak dobra praksa bi bila: <code>close(fd);</code> pred <code>return 0;</code></li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🎯 POVZETEK - Kako program deluje od začetka do konca</h5>
+                        <div class="description">
+                            <strong>Primer uporabe: <code>echo "Hello" | ./tee1 output.txt</code></strong><br><br>
+
+                            <ol>
+                                <li><strong>Zagon</strong>: argc=2, argv[0]="./tee1", argv[1]="output.txt"</li>
+                                <li><strong>Procesiranje argumentov</strong>: argc==2 → odpri output.txt za pisanje (PREPIŠI)</li>
+                                <li><strong>open()</strong>: Vrne fd=3 (uspeh)</li>
+                                <li><strong>Check fd&lt;0</strong>: 3&lt;0? NE → nadaljuj</li>
+                                <li><strong>While zanka - iteracija 1</strong>:
+                                    <ul>
+                                        <li>read(stdin) → prebere "Hello\n" (6 bajtov) → n=6</li>
+                                        <li>n&gt;0? DA → vstopi v zanko</li>
+                                        <li>write(stdout, "Hello\n", 6) → izpiše na zaslon → vrne 6</li>
+                                        <li>6!=6? NE → OK, nadaljuj</li>
+                                        <li>write(fd=3, "Hello\n", 6) → zapiše v output.txt → vrne 6</li>
+                                        <li>6!=6? NE → OK, nadaljuj</li>
+                                    </ul>
+                                </li>
+                                <li><strong>While zanka - iteracija 2</strong>:
+                                    <ul>
+                                        <li>read(stdin) → ni več podatkov → vrne 0 (EOF)</li>
+                                        <li>n&gt;0? NE (0&gt;0 je false) → izstopi iz zanke</li>
+                                    </ul>
+                                </li>
+                                <li><strong>return 0</strong>: Program se konča uspešno</li>
+                                <li><strong>Rezultat</strong>:
+                                    <ul>
+                                        <li>"Hello\n" se prikaže na zaslonu</li>
+                                        <li>"Hello\n" se zapiše v output.txt</li>
+                                        <li>Exit status = 0 (uspeh)</li>
+                                    </ul>
+                                </li>
+                            </ol>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-concepts">
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li><strong>File descriptors</strong>: Številke, ki predstavljajo odprte datoteke (0=stdin, 1=stdout, 2=stderr, 3+=datoteke)</li>
+                        <li><strong>Sistemski klici</strong>: open(), read(), write(), close() - nizko-nivojske operacije za delo z datotekami</li>
+                        <li><strong>File creation modes</strong>: O_WRONLY, O_CREAT, O_APPEND - zastavice za open()</li>
+                        <li><strong>Error checking</strong>: Vedno preverjaj return values! fd&lt;0, write()!=n, itd.</li>
+                        <li><strong>Buffered I/O</strong>: Uporaba bufferja za učinkovito branje/pisanje podatkov</li>
+                        <li><strong>EOF detection</strong>: read() vrne 0, ko zmanjka podatkov</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- rep.c -->
+            <div class="file-card">
+                <div class="file-name">📄 rep.c</div>
+
+                <div class="task-description">
+                    <h3>Naloga 2: Tail Utility (Rep)</h3>
+                    <ul>
+                        <li>Napišite C program rep, ki izpiše zadnjih n vrstic besedilne datoteke</li>
+                        <li>Deluje podobno kot program (GNU utility) tail, a z manj opcijami</li>
+                        <li>Primer klica programa: rep –n 3 a.txt</li>
+                        <li>Privzeta vrednost za n naj bo 5</li>
+                        <li>Opomba: privzemite, da je datoteka lahko zelo velika, zato ne shranjujte celotne datoteke v pomnilnik (buffer)</li>
+                        <li>Nasvet: Pojdite najprej na konec z lseek, potem pa nazaj in iščite znake '\n'</li>
+                        <li>Uporabite le sistemske klice (in ne funkcij iz stdio)</li>
+                    </ul>
+                </div>
+
+                <div class="usage-example">
+                    <strong>Usage Examples:</strong><br>
+                    $ ./rep file.txt          # Shows last 5 lines<br>
+                    $ ./rep -n 3 file.txt     # Shows last 3 lines<br>
+                    $ ./rep -n 10 data.txt    # Shows last 10 lines
+                </div>
+
+                <div class="code-display">
+                    <h4>Source Code:</h4>
+                    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char *argv[]){
+	char buf[BUFSIZ];
+	int n = 5;
+	int fd;
+
+	if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
+		n = atoi(argv[2]);
+		fd = open(argv[3], O_RDONLY);
+	}
+	else if (argc == 2){
+		fd = open(argv[1], O_RDONLY);
+	}
+	else {
+		perror("Napačna uporaba programa");
+		return -1;
+	}
+
+	if(fd&lt;0){
+		perror("fd open error");
+		return -1;
+	}
+
+	lseek(fd, 0, SEEK_END);
+	lseek(fd, -1, SEEK_CUR);
+	int count = 0, temp_place = 300;
+
+	while(count &lt;= n &amp;&amp; temp_place&gt;0) {
+		read(fd, buf, 1);
+		if(buf[0] == '\n'){
+			count ++;
+		}
+		temp_place = lseek(fd, -2, SEEK_CUR);
+	}
+	if(count &gt;= n) lseek(fd, 2, SEEK_CUR);
+	int t = read(fd, buf, BUFSIZ);
+	write(STDOUT_FILENO, buf, t);
+
+	return 0;
+}</code></pre>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>📖 Detailed Code Explanation</h4>
+
+                    <div class="explanation-block">
+                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
+                        <div class="code-snippet">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdlib.h&gt;</div>
+                        <div class="description">
+                            Vsaka knjižnica ima svoj namen za sistemske klice:
+                            <ul>
+                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak).</li>
+                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, lseek ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
+                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov).</li>
+                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice O_RDONLY.</li>
+                                <li><strong>&lt;stdlib.h&gt;</strong>: Potrebno za funkcijo atoi (pretvorba niza v število).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>⚙️ 2. Procesiranje argumentov</h5>
+                        <div class="code-snippet">if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
+    n = atoi(argv[2]);
+    fd = open(argv[3], O_RDONLY);
+}
+else if (argc == 2){
+    fd = open(argv[1], O_RDONLY);
+}</div>
+                        <div class="description">
+                            Program mora vedeti, koliko vrstic naj prikaže.<br><br>
+                            <strong>Če je argc == 4</strong>: Uporabnik je vpisal ./rep -n 3 datoteka.txt
+                            <ul>
+                                <li>argv[1] je "-n"</li>
+                                <li>argv[2] je število vrstic (pretvorjeno z atoi)</li>
+                                <li>argv[3] je ime datoteke</li>
+                            </ul>
+                            <strong>Če je argc == 2</strong>: Uporabnik je vpisal ./rep datoteka.txt
+                            <ul>
+                                <li>Uporabi privzeto vrednost n = 5</li>
+                                <li>argv[1] je ime datoteke</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>📍 3. Pozicioniranje na konec datoteke</h5>
+                        <div class="code-snippet">lseek(fd, 0, SEEK_END);
+lseek(fd, -1, SEEK_CUR);</div>
+                        <div class="description">
+                            <strong>lseek(fd, 0, SEEK_END)</strong>: Premakne kazalec na konec datoteke.<br><br>
+                            <strong>lseek(fd, -1, SEEK_CUR)</strong>: Premakne kazalec 1 bajt nazaj od trenutne pozicije (SEEK_CUR = trenutna pozicija).<br><br>
+                            To je začetek algoritma za branje od konca datoteke nazaj.
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔍 4. Iskanje začetka n-te vrstice od konca</h5>
+                        <div class="code-snippet">while(count &lt;= n &amp;&amp; temp_place&gt;0) {
+    read(fd, buf, 1);
+    if(buf[0] == '\n'){
+        count ++;
+    }
+    temp_place = lseek(fd, -2, SEEK_CUR);
+}</div>
+                        <div class="description">
+                            Ta zanka se premika po datoteki nazaj in išče znake za novo vrstico.<br><br>
+                            <strong>read(fd, buf, 1)</strong>: Prebere en bajt (en znak).<br><br>
+                            <strong>if(buf[0] == '\n')</strong>: Če najdemo nov znak za novo vrstico, povečamo števec.<br><br>
+                            <strong>lseek(fd, -2, SEEK_CUR)</strong>: Premakne kazalec 2 bajta nazaj:
+                            <ul>
+                                <li>-1 da odšteje prebrani bajt</li>
+                                <li>-1 da gre dodatno 1 bajt nazaj</li>
+                            </ul>
+                            Zanka se konča, ko najdemo n znakov '\n' ali pridemo na začetek datoteke.
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>📄 5. Branje in izpis zadnjih vrstic</h5>
+                        <div class="code-snippet">int t = read(fd, buf, BUFSIZ);
+write(STDOUT_FILENO, buf, t);</div>
+                        <div class="description">
+                            Ko smo našli pravo pozicijo, preberemo in izpišemo vse do konca datoteke.<br><br>
+                            <strong>read(fd, buf, BUFSIZ)</strong>: Prebere do BUFSIZ bajtov (ali do konca datoteke).<br><br>
+                            <strong>write(STDOUT_FILENO, buf, t)</strong>: Izpiše točno t bajtov (kolikor smo jih dejansko prebrali) na standardni izhod.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-concepts">
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li>File seeking with lseek (SEEK_END, SEEK_CUR)</li>
+                        <li>Backward file traversal</li>
+                        <li>Memory-efficient file processing</li>
+                        <li>Newline character detection</li>
+                        <li>Command-line argument parsing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

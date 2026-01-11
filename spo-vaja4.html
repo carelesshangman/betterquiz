@@ -1,0 +1,792 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 4 - Buffering and Text Editor</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
+
+        <div class="docs-header">
+            <h1>💾 Vaja 4: Buffering and Text Editor</h1>
+            <p class="subtitle">Buffer optimization and line-based text editing</p>
+        </div>
+
+        <!-- program1.c -->
+        <div class="file-card">
+            <div class="file-name">📄 program1.c</div>
+
+            <div class="task-description">
+                <h3>Naloga 1: Vpliv velikosti medpomnilnika na hitrost pisanja</h3>
+                <ul>
+                    <li>Program uporablja različne velikosti medpomnilnika ('bufferja') pri izpisu podatkov v datoteko</li>
+                    <li>S klicem funkcije fopen() ustvari dve datoteki: "izhod1" in "izhod2"</li>
+                    <li>Pred pisanjem v "izhod1" nastavi velikost medpomnilnika na 10 bajtov (setvbuf)</li>
+                    <li>Pred pisanjem v "izhod2" nastavi velikost medpomnilnika na 100 bajtov</li>
+                    <li>V obe datoteki 5 milijon-krat izpiše isti stavek</li>
+                    <li>Meri čas zapisovanja s funkcijo time() in primerja rezultate</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Example:</strong><br>
+                $ ./program1<br>
+                Zacetek pisanja v izhod1.txt (buffer 10 B)...<br>
+                Cas pisanja v izhod1.txt: 45.00 sekund.<br>
+                Zacetek pisanja v izhod2.txt (buffer 100 B)...<br>
+                Cas pisanja v izhod2.txt: 12.00 sekund.
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;time.h&gt;
+
+int main(void) {
+    FILE *f1, *f2;
+    char buffer1[10];
+    char buffer2[100];
+    const char *stavek = "To je moj najljubši stavek.\n";
+    long i;
+    time_t start, end;
+    double cas1, cas2;
+
+    /* --- Prva datoteka: izhod1 (buffer = 10 B) --- */
+    f1 = fopen("izhod1.txt", "w");
+    if (f1 == NULL) {
+        perror("Napaka pri odpiranju datoteke izhod1.txt");
+        return 1;
+    }
+
+    if (setvbuf(f1, buffer1, _IOFBF, sizeof(buffer1)) != 0) {
+        perror("Napaka pri nastavitvi medpomnilnika za izhod1.txt");
+        fclose(f1);
+        return 1;
+    }
+
+    printf("Zacetek pisanja v izhod1.txt (buffer 10 B)...\n");
+    start = time(NULL);
+    for (i = 0; i &lt; 5000000; i++) {
+        if (fputs(stavek, f1) == EOF) {
+            perror("Napaka pri pisanju v izhod1.txt");
+            fclose(f1);
+            return 1;
+        }
+    }
+    fflush(f1);
+    end = time(NULL);
+    cas1 = difftime(end, start);
+    fclose(f1);
+    printf("Cas pisanja v izhod1.txt: %.2f sekund.\n", cas1);
+
+    /* --- Druga datoteka: izhod2 (buffer = 100 B) --- */
+    f2 = fopen("izhod2.txt", "w");
+    if (f2 == NULL) {
+        perror("Napaka pri odpiranju datoteke izhod2.txt");
+        return 1;
+    }
+
+    if (setvbuf(f2, buffer2, _IOFBF, sizeof(buffer2)) != 0) {
+        perror("Napaka pri nastavitvi medpomnilnika za izhod2.txt");
+        fclose(f2);
+        return 1;
+    }
+
+    printf("Zacetek pisanja v izhod2.txt (buffer 100 B)...\n");
+    start = time(NULL);
+    for (i = 0; i &lt; 5000000; i++) {
+        if (fputs(stavek, f2) == EOF) {
+            perror("Napaka pri pisanju v izhod2.txt");
+            fclose(f2);
+            return 1;
+        }
+    }
+    fflush(f2);
+    end = time(NULL);
+    cas2 = difftime(end, start);
+    fclose(f2);
+    printf("Cas pisanja v izhod2.txt: %.2f sekund.\n", cas2);
+
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>🔧 1. Nastavitev medpomnilnika s setvbuf()</h5>
+                    <div class="code-snippet">char buffer1[10];
+if (setvbuf(f1, buffer1, _IOFBF, sizeof(buffer1)) != 0) {
+    perror("Napaka pri nastavitvi medpomnilnika");
+    return 1;
+}</div>
+                    <div class="description">
+                        <strong>setvbuf()</strong>: Nastavi način in velikost medpomnilnika za datotečni tok.<br><br>
+                        <strong>Parametri:</strong>
+                        <ul>
+                            <li><strong>f1</strong>: FILE* kazalec na datotečni tok</li>
+                            <li><strong>buffer1</strong>: Naš buffer (lahko je tudi NULL za avtomatsko alokacijo)</li>
+                            <li><strong>_IOFBF</strong>: Način medpomnjenja (Full Buffering)</li>
+                            <li><strong>sizeof(buffer1)</strong>: Velikost bufferja v bajtih</li>
+                        </ul>
+                        <strong>Načini medpomnjenja (_IOFBF, _IOLBF, _IONBF):</strong>
+                        <ul>
+                            <li><strong>_IOFBF</strong> (Full Buffering): Podatki se zapišejo šele ko je buffer poln</li>
+                            <li><strong>_IOLBF</strong> (Line Buffering): Podatki se zapišejo ob vsakem '\n'</li>
+                            <li><strong>_IONBF</strong> (No Buffering): Podatki se zapišejo takoj (brez bufferja)</li>
+                        </ul>
+                        <strong>Zakaj je pomembno?</strong> Sistemski klici (write) so počasni. Z medpomnenjem zmanjšamo število klicev.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⏱️ 2. Merjenje časa z time() in difftime()</h5>
+                    <div class="code-snippet">time_t start, end;
+double cas1;
+
+start = time(NULL);
+// ... operacije ...
+end = time(NULL);
+cas1 = difftime(end, start);</div>
+                    <div class="description">
+                        <strong>time(NULL)</strong>: Vrne trenutni čas kot Unix timestamp (sekunde od 1.1.1970).<br><br>
+                        <strong>time_t</strong>: Tip podatka za shranjevanje časa (običajno long integer).<br><br>
+                        <strong>difftime(end, start)</strong>: Izračuna razliko med dvema časoma v sekundah.<br>
+                        → Vrne double, kar omogoča decimalna mesta<br><br>
+                        <strong>Zakaj difftime()?</strong> Čeprav bi lahko uporabili (end - start), je difftime() portabilna in deluje na vseh sistemih.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>💾 3. Princip delovanja bufferja</h5>
+                    <div class="code-snippet">// Buffer 10B:
+fputs(stavek, f1);  // Stavek dolg 29B
+// → Buffer se napolni, sproži write(), buffer se izprazni
+// → Ostane še 19B za naslednji klic
+
+// Buffer 100B:
+fputs(stavek, f1);  // Stavek dolg 29B
+// → Gre v buffer (29/100 polno)
+fputs(stavek, f1);  // Še en stavek
+// → Gre v buffer (58/100 polno)
+// ... itd. dokler ni buffer poln</div>
+                    <div class="description">
+                        <strong>Kako buffer vpliva na hitrost?</strong><br><br>
+                        <strong>Majhen buffer (10 bajtov):</strong>
+                        <ul>
+                            <li>Stavek je dolg ~29 znakov</li>
+                            <li>Buffer se napolni že pri vsakem klicu fputs()</li>
+                            <li>Za 5M vrstic → ~5M sistemskih klicev write()</li>
+                            <li>Vsak write() zahteva preklop v kernel mode → POČASNO</li>
+                        </ul>
+                        <strong>Večji buffer (100 bajtov):</strong>
+                        <ul>
+                            <li>V buffer gre ~3 stavkov naenkrat</li>
+                            <li>Za 5M vrstic → ~1.7M sistemskih klicev</li>
+                            <li>3x manj preklopov → 3x HITREJŠE</li>
+                        </ul>
+                        <strong>Zaključek:</strong> Večji buffer = manj sistemskih klicev = hitrejše izvajanje!
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🚿 4. fflush() - ročno praznjenje bufferja</h5>
+                    <div class="code-snippet">fflush(f1);</div>
+                    <div class="description">
+                        <strong>fflush()</strong>: Prisili izpis vseh podatkov iz bufferja v datoteko.<br><br>
+                        <strong>Zakaj je potreben?</strong>
+                        <ul>
+                            <li>Buffer se avtomatsko izprazni ob fclose()</li>
+                            <li>Ampak želimo meriti čas vključno s pisanjem</li>
+                            <li>fflush() zagotovi, da so podatki res na disku pred merjenjem konca</li>
+                        </ul>
+                        <strong>Kdaj uporabiti fflush()?</strong>
+                        <ul>
+                            <li>Pred branjem podatkov, ki smo jih pravkar pisali</li>
+                            <li>Ko želimo zagotoviti, da so kritični podatki shranjeni</li>
+                            <li>Pri logiranju, da vidimo sporočila v realnem času</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📊 5. Praktični rezultati</h5>
+                    <div class="code-snippet">// Primer meritev:
+// Buffer 10B:  ~45 sekund
+// Buffer 100B: ~12 sekund
+// Razmerje: ~3.75x hitrejše</div>
+                    <div class="description">
+                        <strong>Analiza rezultatov:</strong><br><br>
+                        Stavek je dolg 29 bajtov (vključno z '\n').<br><br>
+                        <strong>Buffer 10B:</strong> 29B / 10B = potrebuje ~3 write klice na stavek → 15M write klicev<br>
+                        <strong>Buffer 100B:</strong> 100B / 29B = ~3.4 stavkov na write → 1.5M write klicev<br><br>
+                        <strong>Teorija:</strong> 15M / 1.5M = 10x razlika<br>
+                        <strong>Praksa:</strong> ~4x razlika<br><br>
+                        <strong>Zakaj manj kot teorija?</strong>
+                        <ul>
+                            <li>OS uporablja dodatne cache mehanizme</li>
+                            <li>Disk ima svoj buffer</li>
+                            <li>Overhead sistemskega klica ni edini strošek</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>Key Concepts:</h4>
+                <ul>
+                    <li>Buffering in vrste medpomnjenja (_IOFBF, _IOLBF, _IONBF)</li>
+                    <li>setvbuf() za konfiguracijo bufferja</li>
+                    <li>Vpliv velikosti bufferja na performanco</li>
+                    <li>Merjenje časa z time() in difftime()</li>
+                    <li>fflush() za ročno praznjenje bufferja</li>
+                    <li>Kompromis med porabo pomnilnika in hitrostjo</li>
+                </ul>
+            </div>
+        </div>
+
+        <!-- kamned.c -->
+        <div class="file-card">
+            <div class="file-name">📄 kamned.c</div>
+
+            <div class="task-description">
+                <h3>Naloga 2: kamned - Preprost vrstični urejevalnik</h3>
+                <ul>
+                    <li>S pomočjo funkcij iz knjižnice stdio napišite preprost vrstični urejevalnik besedil (line editor)</li>
+                    <li>kamned (editor iz kamene dobe) podpira tri ukaze:</li>
+                    <li><strong>-a</strong>: Doda (append) na konec datoteke vrstice, ki jih uporabnik vnaša</li>
+                    <li><strong>-d &lt;n&gt;</strong>: Izbriše (delete) n-to vrstico</li>
+                    <li><strong>-i &lt;n&gt;</strong>: Vstavi (insert) n-to vrstico</li>
+                    <li>Vsak ukaz izvede spremembo in zapiše datoteko</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Examples:</strong><br>
+                $ ./kamned test.txt -a<br>
+                Vnašaj vrstice (prazna vrstica za konec):<br>
+                Hello world<br>
+                This is a test<br>
+                <br>
+                Vrstice dodane v test.txt.<br><br>
+                $ ./kamned test.txt -d 1<br>
+                Vrstica 1 izbrisana.<br><br>
+                $ ./kamned test.txt -i 1<br>
+                Vnesi vrstico za vstavljanje:<br>
+                Nova prva vrstica<br>
+                Vrstica vstavljena na mesto 1.
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+
+#define MAX_LINE 1024
+#define TEMP_FILE "temp_kamned.txt"
+
+void append_lines(const char *filename);
+void delete_line(const char *filename, int n);
+void insert_line(const char *filename, int n);
+
+int main(int argc, char *argv[]) {
+    if (argc &lt; 3) {
+        fprintf(stderr, "Uporaba:\n");
+        fprintf(stderr, "  %s &lt;filename&gt; -a\n", argv[0]);
+        fprintf(stderr, "  %s &lt;filename&gt; -d &lt;n&gt;\n", argv[0]);
+        fprintf(stderr, "  %s &lt;filename&gt; -i &lt;n&gt;\n", argv[0]);
+        return 1;
+    }
+
+    const char *filename = argv[1];
+    const char *option = argv[2];
+
+    if (strcmp(option, "-a") == 0) {
+        append_lines(filename);
+    }
+    else if (strcmp(option, "-d") == 0 &amp;&amp; argc == 4) {
+        int n = atoi(argv[3]);
+        if (n &lt;= 0) {
+            fprintf(stderr, "Neveljavna številka vrstice.\n");
+            return 1;
+        }
+        delete_line(filename, n);
+    }
+    else if (strcmp(option, "-i") == 0 &amp;&amp; argc == 4) {
+        int n = atoi(argv[3]);
+        if (n &lt;= 0) {
+            fprintf(stderr, "Neveljavna številka vrstice.\n");
+            return 1;
+        }
+        insert_line(filename, n);
+    }
+    else {
+        fprintf(stderr, "Neveljavna uporaba argumentov.\n");
+        return 1;
+    }
+
+    return 0;
+}
+
+/* --- doda vrstice na konec datoteke --- */
+void append_lines(const char *filename) {
+    FILE *f = fopen(filename, "a");
+    if (!f) {
+        perror("Napaka pri odpiranju datoteke");
+        return;
+    }
+
+    char line[MAX_LINE];
+    printf("Vnašaj vrstice (prazna vrstica za konec):\n");
+    while (1) {
+        if (!fgets(line, sizeof(line), stdin)) break;
+        if (strcmp(line, "\n") == 0) break;
+        fputs(line, f);
+    }
+
+    fclose(f);
+    printf("Vrstice dodane v %s.\n", filename);
+}
+
+/* --- izbriše n-to vrstico --- */
+void delete_line(const char *filename, int n) {
+    FILE *f = fopen(filename, "r");
+    FILE *temp = fopen(TEMP_FILE, "w");
+
+    if (!f || !temp) {
+        perror("Napaka pri odpiranju datoteke");
+        if (f) fclose(f);
+        if (temp) fclose(temp);
+        return;
+    }
+
+    char line[MAX_LINE];
+    int line_no = 0;
+    int found = 0;
+
+    while (fgets(line, sizeof(line), f)) {
+        line_no++;
+        if (line_no == n) {
+            found = 1;
+            continue; // preskoči n-to vrstico
+        }
+        fputs(line, temp);
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    if (!found) {
+        printf("Vrstica %d ne obstaja.\n", n);
+        remove(TEMP_FILE);
+    } else {
+        remove(filename);
+        rename(TEMP_FILE, filename);
+        printf("Vrstica %d izbrisana.\n", n);
+    }
+}
+
+/* --- vstavi n-to vrstico --- */
+void insert_line(const char *filename, int n) {
+    FILE *f = fopen(filename, "r");
+    FILE *temp = fopen(TEMP_FILE, "w");
+
+    if (!f || !temp) {
+        perror("Napaka pri odpiranju datoteke");
+        if (f) fclose(f);
+        if (temp) fclose(temp);
+        return;
+    }
+
+    char line[MAX_LINE];
+    int line_no = 0;
+    int inserted = 0;
+
+    printf("Vnesi vrstico za vstavljanje:\n");
+    char new_line[MAX_LINE];
+    if (!fgets(new_line, sizeof(new_line), stdin)) {
+        printf("Napaka pri branju vrstice.\n");
+        fclose(f);
+        fclose(temp);
+        remove(TEMP_FILE);
+        return;
+    }
+
+    while (fgets(line, sizeof(line), f)) {
+        line_no++;
+        if (line_no == n) {
+            fputs(new_line, temp);
+            inserted = 1;
+        }
+        fputs(line, temp);
+    }
+
+    /* Če je vstavljanje na konec */
+    if (!inserted &amp;&amp; n == line_no + 1) {
+        fputs(new_line, temp);
+        inserted = 1;
+    }
+
+    fclose(f);
+    fclose(temp);
+
+    if (inserted) {
+        remove(filename);
+        rename(TEMP_FILE, filename);
+        printf("Vrstica vstavljena na mesto %d.\n", n);
+    } else {
+        printf("Vrstica %d ne obstaja.\n", n);
+        remove(TEMP_FILE);
+    }
+}</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>➕ 1. Append - Dodajanje vrstic na konec</h5>
+                    <div class="code-snippet">FILE *f = fopen(filename, "a");
+
+while (1) {
+    if (!fgets(line, sizeof(line), stdin)) break;
+    if (strcmp(line, "\n") == 0) break;
+    fputs(line, f);
+}</div>
+                    <div class="description">
+                        <strong>fopen(filename, "a")</strong>: Odpre datoteko v načinu "append".<br>
+                        → Če datoteka ne obstaja, jo ustvari<br>
+                        → Vse pisanje se doda na konec obstoječe vsebine<br>
+                        → Kazalec je avtomatsko na koncu datoteke<br><br>
+                        <strong>fgets(line, sizeof(line), stdin)</strong>: Prebere vrstico iz standardnega vhoda.<br>
+                        → Vključi znak '\n' na koncu<br>
+                        → Avtomatsko doda '\0' terminator<br>
+                        → Varno pred buffer overflow (max sizeof(line) znakov)<br><br>
+                        <strong>Pogoj za konec:</strong> Prazna vrstica (samo '\n') konča vnašanje.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🗑️ 2. Delete - Brisanje vrstice s pomočjo začasne datoteke</h5>
+                    <div class="code-snippet">FILE *f = fopen(filename, "r");
+FILE *temp = fopen(TEMP_FILE, "w");
+
+while (fgets(line, sizeof(line), f)) {
+    line_no++;
+    if (line_no == n) {
+        found = 1;
+        continue; // preskoči n-to vrstico
+    }
+    fputs(line, temp);
+}
+
+remove(filename);
+rename(TEMP_FILE, filename);</div>
+                    <div class="description">
+                        <strong>Algoritem "preberi-preskoči-zapiši":</strong><br>
+                        1. Odpremo originalno datoteko za branje<br>
+                        2. Ustvarimo začasno datoteko za pisanje<br>
+                        3. Preberemo vrstico po vrstico<br>
+                        4. Vse vrstice razen n-te prepišemo v začasno<br>
+                        5. Zapremo obe datoteki<br>
+                        6. Izbrišemo original z remove()<br>
+                        7. Preimenujemo začasno v original z rename()<br><br>
+                        <strong>Zakaj začasna datoteka?</strong>
+                        <ul>
+                            <li>Ne moremo brisati iz datoteke "on-the-fly"</li>
+                            <li>Če bi pisali nazaj, bi prepisali naslednje vrstice</li>
+                            <li>Začasna datoteka zagotavlja varnost (če program crashne, imamo še original)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📝 3. Insert - Vstavljanje vrstice</h5>
+                    <div class="code-snippet">while (fgets(line, sizeof(line), f)) {
+    line_no++;
+    if (line_no == n) {
+        fputs(new_line, temp);  // Najprej nova vrstica
+        inserted = 1;
+    }
+    fputs(line, temp);  // Potem stara vrstica
+}
+
+// Posebej obdelamo vstavljanje na konec
+if (!inserted &amp;&amp; n == line_no + 1) {
+    fputs(new_line, temp);
+    inserted = 1;
+}</div>
+                    <div class="description">
+                        <strong>Vrstni red je pomemben!</strong><br><br>
+                        <strong>Ko pridemo do pozicije n:</strong><br>
+                        1. Najprej zapišemo NOVO vrstico<br>
+                        2. Nato zapišemo STARO vrstico (ki je bila prej n-ta)<br>
+                        → Nova vrstica postane n-ta<br>
+                        → Stara n-ta vrstica postane (n+1)-va<br><br>
+                        <strong>Primer:</strong>
+                        <ul>
+                            <li>Originalna datoteka: [A, B, C]</li>
+                            <li>Vstavimo X na pozicijo 2</li>
+                            <li>Rezultat: [A, X, B, C]</li>
+                        </ul>
+                        <strong>Robni primer:</strong> Vstavljanje na n = line_no + 1 (dodajanje na konec).
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📁 4. Delo z začasnimi datotekami (remove in rename)</h5>
+                    <div class="code-snippet">remove(filename);      // Izbriše datoteko
+rename(TEMP_FILE, filename);  // Preimenuje začasno v original</div>
+                    <div class="description">
+                        <strong>remove()</strong>: Izbriše datoteko iz datotečnega sistema.<br>
+                        → Deluje na zaprte datoteke<br>
+                        → Podobno kot 'rm' ukaz v Linux<br><br>
+                        <strong>rename(old, new)</strong>: Preimenuje datoteko.<br>
+                        → Atomična operacija (zgodi se naenkrat)<br>
+                        → Če new že obstaja, jo prepiše<br>
+                        → Podobno kot 'mv' ukaz v Linux<br><br>
+                        <strong>Vrstni red je pomemben!</strong><br>
+                        1. Najprej remove(filename) - izbrišemo original<br>
+                        2. Potem rename(TEMP, filename) - začasna postane nova originalna<br><br>
+                        <strong>Varnostna kopija?</strong> Za produkcijske programe bi bilo pametno narediti backup pred remove().
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔍 5. Validacija in obravnava napak</h5>
+                    <div class="code-snippet">if (!f || !temp) {
+    perror("Napaka pri odpiranju datoteke");
+    if (f) fclose(f);
+    if (temp) fclose(temp);
+    return;
+}
+
+if (!found) {
+    printf("Vrstica %d ne obstaja.\n", n);
+    remove(TEMP_FILE);  // Pobrišemo začasno
+}</div>
+                    <div class="description">
+                        <strong>Preverjanje uspešnosti operacij:</strong><br><br>
+                        <strong>Odpiranje datotek:</strong> Vedno preverimo, če sta f in temp različna od NULL.<br><br>
+                        <strong>Čiščenje ob napaki:</strong>
+                        <ul>
+                            <li>Zapremo vse odprte datoteke</li>
+                            <li>Izbrišemo začasne datoteke</li>
+                            <li>Ne pustimo "smeti" v datotečnem sistemu</li>
+                        </ul>
+                        <strong>Validacija vhodnih podatkov:</strong>
+                        <ul>
+                            <li>Številka vrstice mora biti &gt; 0</li>
+                            <li>Preverjamo, ali vrstica res obstaja</li>
+                            <li>Ustrezna sporočila za uporabnika</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>Key Concepts:</h4>
+                <ul>
+                    <li>Branje in pisanje z fgets() in fputs()</li>
+                    <li>Modi odpiranja datotek ("r", "w", "a")</li>
+                    <li>Tehnika začasnih datotek za urejanje</li>
+                    <li>remove() in rename() za manipulacijo datotek</li>
+                    <li>Vrstično procesiranje besedilnih datotek</li>
+                    <li>Validacija vnosov in obravnava napak</li>
+                    <li>stdin za interaktivni vnos uporabnika</li>
+                </ul>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+

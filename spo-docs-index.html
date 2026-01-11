@@ -1,0 +1,170 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Documentation - Index</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .vaja-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 20px;
+            margin-top: 30px;
+        }
+
+        .vaja-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 25px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+            transition: all 0.3s ease;
+            text-decoration: none;
+            display: block;
+        }
+
+        .vaja-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 40px rgba(183, 148, 246, 0.4);
+            border-color: var(--accent-pink);
+        }
+
+        .vaja-card h3 {
+            color: var(--accent-pink);
+            margin-bottom: 15px;
+            font-size: 1.5em;
+        }
+
+        .vaja-card p {
+            color: var(--text-secondary);
+            line-height: 1.6;
+        }
+
+        .vaja-card .file-count {
+            color: var(--accent-blue);
+            font-size: 0.9em;
+            margin-top: 10px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="index.html" class="back-link">← Back to Quiz Maker</a>
+
+        <div class="docs-header">
+            <h1>📚 SPO - Sistemsko Programiranje</h1>
+            <p class="subtitle">Comprehensive documentation of all exercises</p>
+        </div>
+
+        <div class="vaja-grid">
+            <a href="spo-vaja1.html" class="vaja-card">
+                <h3>📁 Vaja 1</h3>
+                <p>File I/O with System Calls</p>
+                <div class="file-count">📄 2 programs: tee1.c, rep.c</div>
+            </a>
+
+            <a href="spo-vaja2.html" class="vaja-card">
+                <h3>📁 Vaja 2</h3>
+                <p>File Metadata and Permissions</p>
+                <div class="file-count">📄 2 programs: lsl.c, mojChmod.c</div>
+            </a>
+
+            <a href="spo-vaja3.html" class="vaja-card">
+                <h3>📁 Vaja 3</h3>
+                <p>Directory Operations and Path Resolution</p>
+                <div class="file-count">📄 2 programs: lst.c, pwd1.c</div>
+            </a>
+
+            <a href="spo-vaja4.html" class="vaja-card">
+                <h3>📁 Vaja 4</h3>
+                <p>Buffering and Text Editor</p>
+                <div class="file-count">📄 2 programs: program1.c, kamned.c</div>
+            </a>
+
+            <a href="spo-vaja5.html" class="vaja-card">
+                <h3>📁 Vaja 5</h3>
+                <p>Command Line Processing</p>
+                <div class="file-count">📄 1 program: ukaznaVrstica.c</div>
+            </a>
+
+            <a href="spo-vaja6.html" class="vaja-card">
+                <h3>📁 Vaja 6</h3>
+                <p>Advanced Command Line</p>
+                <div class="file-count">📄 1 program: ukaznaVrstica_v6.c</div>
+            </a>
+
+            <a href="spo-vaja7.html" class="vaja-card">
+                <h3>📁 Vaja 7</h3>
+                <p>Inter-Process Communication</p>
+                <div class="file-count">📄 3 programs: generator.c, posrednik.c, zapisovalec.c</div>
+            </a>
+
+            <a href="spo-vaja8.html" class="vaja-card">
+                <h3>📁 Vaja 8</h3>
+                <p>Monte Carlo Simulation</p>
+                <div class="file-count">📄 1 program: montecarlo_sphere.c</div>
+            </a>
+
+            <a href="spo-vaja9.html" class="vaja-card">
+                <h3>📁 Vaja 9</h3>
+                <p>Client-Server Communication</p>
+                <div class="file-count">📄 2 programs: client.c, server.c</div>
+            </a>
+
+            <a href="spo-vaja10.html" class="vaja-card">
+                <h3>📁 Vaja 10</h3>
+                <p>TCP Networking</p>
+                <div class="file-count">📄 3 programs: TCPclient1.c, TCPserver1.c, TCPserver2.c</div>
+            </a>
+
+            <a href="spo-vaja11.html" class="vaja-card">
+                <h3>📁 Vaja 11</h3>
+                <p>Testing and Quality</p>
+                <div class="file-count">📄 2 programs: qread.c, test_qread.c</div>
+            </a>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
