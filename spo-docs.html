@@ -1,0 +1,566 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Documentation</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .vaja-section {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .vaja-title {
+            font-size: 2em;
+            color: var(--accent-pink);
+            margin-bottom: 20px;
+            padding-bottom: 10px;
+            border-bottom: 2px solid var(--accent-purple);
+        }
+
+        .file-card {
+            background: var(--bg-hover);
+            border-radius: 10px;
+            padding: 20px;
+            margin-bottom: 20px;
+            border-left: 4px solid var(--accent-blue);
+        }
+
+        .file-name {
+            font-size: 1.5em;
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .code-info {
+            margin-top: 15px;
+        }
+
+        .code-info h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .code-info ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .code-info li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="index.html" class="back-link">← Back to Quiz Maker</a>
+
+        <div class="docs-header">
+            <h1>📚 SPO - Sistemsko Programiranje Documentation</h1>
+            <p class="subtitle">Comprehensive documentation of all exercises and C programs</p>
+        </div>
+
+        <!-- Vaja 1 -->
+        <div class="vaja-section">
+            <h2 class="vaja-title">Vaja 1: File I/O with System Calls</h2>
+
+            <!-- Tee1.c -->
+            <div class="file-card">
+                <div class="file-name">📄 Tee1.c</div>
+
+                <div class="task-description">
+                    <h3>Naloga 1: Tee Utility</h3>
+                    <ul>
+                        <li>Napišite v C-ju program tee1, ki deluje podobno kot tee (GNU utility)</li>
+                        <li>Standardni vhod prepiše na standardni izhod in v datoteko, ki jo podamo kot argument v ukazni vrstici</li>
+                        <li>Če dodamo pred datoteko še opcijo -a, se standardni vhod doda k vsebini datoteke</li>
+                        <li>Uporabite sistemske klice open, read, write in close</li>
+                    </ul>
+                </div>
+
+                <div class="usage-example">
+                    <strong>Usage Examples:</strong><br>
+                    $ echo "Hello World" | ./tee1 output.txt<br>
+                    $ echo "Append this" | ./tee1 -a output.txt
+                </div>
+
+                <div class="code-display">
+                    <h4>Source Code:</h4>
+                    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+
+int main(int argc, char *argv[]){
+	char buf[BUFSIZ];
+	int n, fd;
+
+	if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
+		fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
+	}
+	else if (argc == 2){
+		fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
+	}
+	else {
+		perror("Napačna uporaba programa");
+		return -1;
+	}
+
+	if(fd&lt;0){
+		perror("fd open error");
+		return -1;
+	}
+
+	while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
+		if(write(STDOUT_FILENO, buf, n) != n) {
+			err("write");
+		}
+		if(write(fd, buf, n) != n) {
+			err("write2");
+		}
+	}
+
+	return 0;
+}</code></pre>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>📖 Detailed Code Explanation</h4>
+
+                    <div class="explanation-block">
+                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
+                        <div class="code-snippet">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;</div>
+                        <div class="description">
+                            Vsaka knjižnica ima svoj namen za sistemske klice:
+                            <ul>
+                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak) in definicijo BUFSIZ.</li>
+                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, close ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
+                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov - preverjanje za "-a").</li>
+                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice (flags) kot so O_WRONLY, O_CREAT, itd.</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>⚙️ 2. Procesiranje argumentov (argc in argv)</h5>
+                        <div class="code-snippet">if (argc == 3 &amp;&amp; strcmp(argv[1], "-a") == 0){
+	fd = open(argv[2], O_WRONLY | O_CREAT | O_APPEND, 0666);
+}
+else if (argc == 2){
+	fd = open(argv[1], O_WRONLY | O_CREAT, 0666);
+}</div>
+                        <div class="description">
+                            Program mora vedeti, ali naj datoteko prepiše ali nanjo dodaja.<br><br>
+                            <strong>argc (Argument Count)</strong>: Pove, koliko argumentov je v vrstici. Ime programa je vedno prvi argument (indeks 0).<br><br>
+                            <strong>Če je argc == 3</strong>: Uporabnik je verjetno vpisal ./tee1 -a datoteka.txt<br>
+                            <strong>Če je argc == 2</strong>: Uporabnik je verjetno vpisal ./tee1 datoteka.txt<br><br>
+                            <strong>strcmp</strong>: Preveri, ali je prvi argument res zastavica -a.<br><br>
+                            <strong>Zastavice (Flags)</strong>:
+                            <ul>
+                                <li><strong>O_WRONLY</strong>: Datoteko odpremo samo za pisanje (Write Only)</li>
+                                <li><strong>O_CREAT</strong>: Če datoteka ne obstaja, jo ustvari</li>
+                                <li><strong>O_APPEND</strong>: Dodaja na konec datoteke (samo v prvem primeru z -a)</li>
+                                <li><strong>0666</strong>: Določa pravice (permissions) nove datoteke (rw-rw-rw-)</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔄 3. Glavna zanka: Branje in pisanje</h5>
+                        <div class="code-snippet">while((n = read(STDIN_FILENO, buf, BUFSIZ)) &gt; 0) {
+	if(write(STDOUT_FILENO, buf, n) != n) {
+		err("write");
+	}
+	if(write(fd, buf, n) != n) {
+		err("write2");
+	}
+}</div>
+                        <div class="description">
+                            To je srce programa tee. Podatki tečejo iz vhoda na dva izhoda.<br><br>
+                            <strong>read(STDIN_FILENO, buf, BUFSIZ)</strong>:
+                            <ul>
+                                <li>Bere iz standardnega vhoda (tipkovnica ali pipe)</li>
+                                <li>Podatke shranjuje v polje buf</li>
+                                <li>Bere največ BUFSIZ bajtov naenkrat</li>
+                                <li>Vrne n: število dejansko prebranih bajtov. Če vrne 0, to pomeni EOF (End Of File - konec vhoda), in zanka se konča.</li>
+                            </ul>
+                            <strong>Dvojni write</strong>:
+                            <ul>
+                                <li>Prvi write piše na STDOUT_FILENO (zaslon)</li>
+                                <li>Drugi write piše v fd (našo datoteko)</li>
+                                <li>Pomembno je, da pišemo točno n bajtov (kolikor smo jih prebrali), ne celotnega bufferja</li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-concepts">
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li>File descriptors (STDIN_FILENO, STDOUT_FILENO)</li>
+                        <li>Low-level I/O operations</li>
+                        <li>File creation modes and permissions (0666)</li>
+                        <li>Buffered reading and writing</li>
+                    </ul>
+                </div>
+            </div>
+
+            <!-- rep.c -->
+            <div class="file-card">
+                <div class="file-name">📄 rep.c</div>
+
+                <div class="task-description">
+                    <h3>Naloga 2: Tail Utility (Rep)</h3>
+                    <ul>
+                        <li>Napišite C program rep, ki izpiše zadnjih n vrstic besedilne datoteke</li>
+                        <li>Deluje podobno kot program (GNU utility) tail, a z manj opcijami</li>
+                        <li>Primer klica programa: rep –n 3 a.txt</li>
+                        <li>Privzeta vrednost za n naj bo 5</li>
+                        <li>Opomba: privzemite, da je datoteka lahko zelo velika, zato ne shranjujte celotne datoteke v pomnilnik (buffer)</li>
+                        <li>Nasvet: Pojdite najprej na konec z lseek, potem pa nazaj in iščite znake '\n'</li>
+                        <li>Uporabite le sistemske klice (in ne funkcij iz stdio)</li>
+                    </ul>
+                </div>
+
+                <div class="usage-example">
+                    <strong>Usage Examples:</strong><br>
+                    $ ./rep file.txt          # Shows last 5 lines<br>
+                    $ ./rep -n 3 file.txt     # Shows last 3 lines<br>
+                    $ ./rep -n 10 data.txt    # Shows last 10 lines
+                </div>
+
+                <div class="code-display">
+                    <h4>Source Code:</h4>
+                    <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdlib.h&gt;
+
+int main(int argc, char *argv[]){
+	char buf[BUFSIZ];
+	int n = 5;
+	int fd;
+
+	if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
+		n = atoi(argv[2]);
+		fd = open(argv[3], O_RDONLY);
+	}
+	else if (argc == 2){
+		fd = open(argv[1], O_RDONLY);
+	}
+	else {
+		perror("Napačna uporaba programa");
+		return -1;
+	}
+
+	if(fd&lt;0){
+		perror("fd open error");
+		return -1;
+	}
+
+	lseek(fd, 0, SEEK_END);
+	lseek(fd, -1, SEEK_CUR);
+	int count = 0, temp_place = 300;
+
+	while(count &lt;= n &amp;&amp; temp_place&gt;0) {
+		read(fd, buf, 1);
+		if(buf[0] == '\n'){
+			count ++;
+		}
+		temp_place = lseek(fd, -2, SEEK_CUR);
+	}
+	if(count &gt;= n) lseek(fd, 2, SEEK_CUR);
+	int t = read(fd, buf, BUFSIZ);
+	write(STDOUT_FILENO, buf, t);
+
+	return 0;
+}</code></pre>
+                </div>
+
+                <div class="explanation-section">
+                    <h4>📖 Detailed Code Explanation</h4>
+
+                    <div class="explanation-block">
+                        <h5>📚 1. Vključevanje knjižnic (Header files)</h5>
+                        <div class="code-snippet">#include &lt;stdio.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;stdlib.h&gt;</div>
+                        <div class="description">
+                            Vsaka knjižnica ima svoj namen za sistemske klice:
+                            <ul>
+                                <li><strong>&lt;stdio.h&gt;</strong>: Potrebno za perror (izpis napak).</li>
+                                <li><strong>&lt;unistd.h&gt;</strong>: Potrebno za sistemske klice read, write, lseek ter konstante STDIN_FILENO, STDOUT_FILENO.</li>
+                                <li><strong>&lt;string.h&gt;</strong>: Potrebno za funkcijo strcmp (primerjava nizov).</li>
+                                <li><strong>&lt;fcntl.h&gt;</strong>: Potrebno za sistemski klic open in zastavice O_RDONLY.</li>
+                                <li><strong>&lt;stdlib.h&gt;</strong>: Potrebno za funkcijo atoi (pretvorba niza v število).</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>⚙️ 2. Procesiranje argumentov</h5>
+                        <div class="code-snippet">if (argc == 4 &amp;&amp; strcmp(argv[1], "-n") == 0){
+	n = atoi(argv[2]);
+	fd = open(argv[3], O_RDONLY);
+}
+else if (argc == 2){
+	fd = open(argv[1], O_RDONLY);
+}</div>
+                        <div class="description">
+                            Program mora vedeti, koliko vrstic naj prikaže.<br><br>
+                            <strong>Če je argc == 4</strong>: Uporabnik je vpisal ./rep -n 3 datoteka.txt
+                            <ul>
+                                <li>argv[1] je "-n"</li>
+                                <li>argv[2] je število vrstic (pretvorjeno z atoi)</li>
+                                <li>argv[3] je ime datoteke</li>
+                            </ul>
+                            <strong>Če je argc == 2</strong>: Uporabnik je vpisal ./rep datoteka.txt
+                            <ul>
+                                <li>Uporabi privzeto vrednost n = 5</li>
+                                <li>argv[1] je ime datoteke</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>📍 3. Pozicioniranje na konec datoteke</h5>
+                        <div class="code-snippet">lseek(fd, 0, SEEK_END);
+lseek(fd, -1, SEEK_CUR);</div>
+                        <div class="description">
+                            <strong>lseek(fd, 0, SEEK_END)</strong>: Premakne kazalec na konec datoteke.<br><br>
+                            <strong>lseek(fd, -1, SEEK_CUR)</strong>: Premakne kazalec 1 bajt nazaj od trenutne pozicije (SEEK_CUR = trenutna pozicija).<br><br>
+                            To je začetek algoritma za branje od konca datoteke nazaj.
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>🔍 4. Iskanje začetka n-te vrstice od konca</h5>
+                        <div class="code-snippet">while(count &lt;= n &amp;&amp; temp_place&gt;0) {
+	read(fd, buf, 1);
+	if(buf[0] == '\n'){
+		count ++;
+	}
+	temp_place = lseek(fd, -2, SEEK_CUR);
+}</div>
+                        <div class="description">
+                            Ta zanka se premika po datoteki nazaj in išče znake za novo vrstico.<br><br>
+                            <strong>read(fd, buf, 1)</strong>: Prebere en bajt (en znak).<br><br>
+                            <strong>if(buf[0] == '\n')</strong>: Če najdemo nov znak za novo vrstico, povečamo števec.<br><br>
+                            <strong>lseek(fd, -2, SEEK_CUR)</strong>: Premakne kazalec 2 bajta nazaj:
+                            <ul>
+                                <li>-1 da odšteje prebrani bajt</li>
+                                <li>-1 da gre dodatno 1 bajt nazaj</li>
+                            </ul>
+                            Zanka se konča, ko najdemo n znakov '\n' ali pridemo na začetek datoteke.
+                        </div>
+                    </div>
+
+                    <div class="explanation-block">
+                        <h5>📄 5. Branje in izpis zadnjih vrstic</h5>
+                        <div class="code-snippet">int t = read(fd, buf, BUFSIZ);
+write(STDOUT_FILENO, buf, t);</div>
+                        <div class="description">
+                            Ko smo našli pravo pozicijo, preberemo in izpišemo vse do konca datoteke.<br><br>
+                            <strong>read(fd, buf, BUFSIZ)</strong>: Prebere do BUFSIZ bajtov (ali do konca datoteke).<br><br>
+                            <strong>write(STDOUT_FILENO, buf, t)</strong>: Izpiše točno t bajtov (kolikor smo jih dejansko prebrali) na standardni izhod.
+                        </div>
+                    </div>
+                </div>
+
+                <div class="key-concepts">
+                    <h4>Key Concepts:</h4>
+                    <ul>
+                        <li>File seeking with lseek (SEEK_END, SEEK_CUR)</li>
+                        <li>Backward file traversal</li>
+                        <li>Memory-efficient file processing</li>
+                        <li>Newline character detection</li>
+                        <li>Command-line argument parsing</li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
+
