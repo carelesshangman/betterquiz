@@ -1,0 +1,987 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 7 - IPC: Deljeni Pomnilnik in Sporočilne Vrste</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+            --accent-yellow: #fbd38d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-purple);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .code-block pre {
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            overflow-x: auto;
+            margin: 0;
+        }
+
+        .code-block pre code {
+            font-family: 'Courier New', monospace;
+        }
+
+        .explanation {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 5px solid var(--accent-purple);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .explanation h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .explanation h5 {
+            color: var(--accent-orange);
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .explanation p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.9;
+        }
+
+        .explanation strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation ul, .explanation ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        .explanation li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            border: 1px solid var(--accent-blue);
+            overflow-x: auto;
+        }
+
+        .highlight-box {
+            background: rgba(246, 173, 85, 0.1);
+            border: 2px solid var(--accent-orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box h5 {
+            color: var(--accent-orange);
+            margin-bottom: 12px;
+        }
+
+        .warning-box {
+            background: rgba(252, 129, 129, 0.1);
+            border: 2px solid var(--accent-red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box h5 {
+            color: var(--accent-red);
+            margin-bottom: 12px;
+        }
+
+        .inline-code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+
+        .diagram {
+            text-align: center;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--accent-green);
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .flow-box {
+            background: rgba(251, 211, 141, 0.1);
+            border: 2px solid var(--accent-yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .flow-box h5 {
+            color: var(--accent-yellow);
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .program-title {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .program-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 SPO Vaja 7: IPC - Deljeni Pomnilnik in Sporočilne Vrste</h1>
+        <p>Komunikacija med procesi z deljenimi viri in sinhronizacijo</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="program-section">
+        <div class="program-title">🎯 Pregled naloge</div>
+
+        <div class="task-box">
+            <h3>Arhitektura sistema</h3>
+            <p>Sistem sestavljajo trije programi, ki komunicirajo preko IPC (Inter-Process Communication):</p>
+            <ul>
+                <li><strong>GENERATOR</strong> → ustvarja sporočila in jih piše v <strong>deljeni pomnilnik</strong></li>
+                <li><strong>POSREDNIK</strong> → bere iz deljenega pomnilnika in posreduje v <strong>sporočilno vrsto</strong></li>
+                <li><strong>ZAPISOVALEC</strong> → bere iz sporočilne vrste in zapisuje v datoteko</li>
+            </ul>
+        </div>
+
+        <div class="diagram">
+┌──────────────┐
+│  GENERATOR   │
+│  (piše)      │
+└──────┬───────┘
+       │
+       ▼
+┌─────────────────────────┐
+│  DELJENI POMNILNIK      │ ◄── Sinhroniziran s SEMAFORJEM
+│  (shared memory)        │
+└──────┬──────────────────┘
+       │
+       ▼
+┌──────────────┐
+│  POSREDNIK   │
+│  (bere/piše) │
+└──────┬───────┘
+       │
+       ▼
+┌─────────────────────────┐
+│  SPOROČILNA VRSTA       │
+│  (message queue)        │
+└──────┬──────────────────┘
+       │
+       ▼
+┌──────────────┐
+│ ZAPISOVALEC  │
+│  (bere)      │
+└──────────────┘
+       │
+       ▼
+   [datoteka]
+        </div>
+
+        <div class="highlight-box">
+            <h5>🔑 Ključi (Keys)</h5>
+            <ul>
+                <li><strong>0x1234</strong>: Ključ za deljeni pomnilnik IN semafor (uporablja GENERATOR in POSREDNIK)</li>
+                <li><strong>0x5678</strong>: Ključ za sporočilno vrsto (uporablja POSREDNIK in ZAPISOVALEC)</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- GENERATOR -->
+    <div class="program-section">
+        <div class="program-title">⚡ generator.c</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga generatorja</h3>
+            <ul>
+                <li>Ustvari <strong>deljeni pomnilnik</strong> (shared memory)</li>
+                <li>Ustvari <strong>semafor</strong> in ga nastavi na 1 (odklenjeno)</li>
+                <li>Vsaki 2 sekundi zapiše sporočilo z ID-jem</li>
+                <li>Pošlje 5 sporočil - zadnje je prazno (signal za konec)</li>
+                <li>Sinhronizacija: 2s izven + 2s znotraj semaforja</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/shm.h&gt;
+#include &lt;sys/sem.h&gt;
+#include &lt;unistd.h&gt;
+
+#define SHM_KEY 0x1234
+#define SEM_KEY 0x1234
+
+struct message {
+    int id;
+    char text[100];
+};
+
+void sem_lock(int semid) {
+    struct sembuf sb = {0, -1, 0};
+    semop(semid, &sb, 1);
+}
+
+void sem_unlock(int semid) {
+    struct sembuf sb = {0, 1, 0};
+    semop(semid, &sb, 1);
+}
+
+int main() {
+    // Ustvari deljeni pomnilnik
+    int shmid = shmget(SHM_KEY, sizeof(struct message), 0666 | IPC_CREAT);
+    if (shmid < 0) { perror("shmget"); exit(1); }
+
+    // Ustvari semafor
+    int semid = semget(SEM_KEY, 1, 0666 | IPC_CREAT);
+    if (semid < 0) { perror("semget"); exit(1); }
+
+    // Nastavi semafor na 1 (odklenjeno)
+    semctl(semid, 0, SETVAL, 1);
+
+    // Priklopi se na deljeni pomnilnik
+    struct message* shm = shmat(shmid, NULL, 0);
+    if (shm == (void*) -1) { perror("shmat"); exit(1); }
+
+    for (int i = 1; i <= 5; i++) {
+        sleep(2); // 2 sekundi IZVEN semaforja
+
+        sem_lock(semid);
+
+        if (i == 5) {
+            shm->id = 5;
+            shm->text[0] = '\0'; // prazno sporočilo
+        } else {
+            shm->id = i;
+            snprintf(shm->text, sizeof(shm->text), "To je sporocilo.");
+        }
+
+        printf("[GENERATOR] Zapisal: ID %d | '%s'\n", shm->id, shm->text);
+
+        sleep(2); // 2 sekundi ZNOTRAJ semaforja
+        sem_unlock(semid);
+    }
+
+    shmdt(shm);
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga</h4>
+
+            <h5>1. Struktura sporočila</h5>
+            <div class="code-snippet">struct message {
+    int id;
+    char text[100];
+};</div>
+            <p>Enostavna struktura, ki jo delimo med procesi. Vsebuje ID in besedilo.</p>
+
+            <h5>2. Ustvarjanje deljenega pomnilnika</h5>
+            <div class="code-snippet">int shmid = shmget(SHM_KEY, sizeof(struct message), 0666 | IPC_CREAT);</div>
+            <ul>
+                <li><strong>shmget</strong>: "Shared Memory GET" - pridobi ID deljenega pomnilnika</li>
+                <li><strong>SHM_KEY (0x1234)</strong>: Ključ, ki ga uporabljajo vsi procesi za dostop</li>
+                <li><strong>sizeof(struct message)</strong>: Velikost pomnilnika</li>
+                <li><strong>0666</strong>: Pravice (rw-rw-rw-)</li>
+                <li><strong>IPC_CREAT</strong>: Če še ne obstaja, ga ustvari</li>
+            </ul>
+
+            <h5>3. Ustvarjanje semaforja</h5>
+            <div class="code-snippet">int semid = semget(SEM_KEY, 1, 0666 | IPC_CREAT);
+semctl(semid, 0, SETVAL, 1);</div>
+            <ul>
+                <li><strong>semget</strong>: "Semaphore GET" - pridobi semaforsko polje</li>
+                <li><strong>1</strong>: Število semaforjev v polju (mi potrebujemo samo 1)</li>
+                <li><strong>semctl(...SETVAL, 1)</strong>: Nastavi začetno vrednost na 1</li>
+                <li>Vrednost 1 pomeni "odklenjen", 0 pomeni "zaklenjen"</li>
+            </ul>
+
+            <h5>4. Priklop na deljeni pomnilnik</h5>
+            <div class="code-snippet">struct message* shm = shmat(shmid, NULL, 0);</div>
+            <p><strong>shmat</strong> ("shared memory attach") priklopi deljeni pomnilnik v naš naslovni prostor. Vrnjen kazalec uporabljamo kot navaden kazalec.</p>
+
+            <h5>5. Funkcije za zaklepanje</h5>
+            <div class="code-snippet">void sem_lock(int semid) {
+    struct sembuf sb = {0, -1, 0};
+    semop(semid, &sb, 1);
+}</div>
+            <ul>
+                <li><strong>sembuf</strong>: Struktura za operacijo</li>
+                <li><strong>0</strong>: Indeks semaforja v polju</li>
+                <li><strong>-1</strong>: Zmanjšaj vrednost za 1 (če je 1, postane 0 in zaklenemo; če je že 0, čakamo)</li>
+                <li><strong>semop</strong>: Izvede operacijo</li>
+            </ul>
+
+            <h5>6. Glavna zanka</h5>
+            <div class="code-snippet">for (int i = 1; i <= 5; i++) {
+    sleep(2);           // Izven kritičnega območja
+    sem_lock(semid);
+    // ... pišemo v deljeni pomnilnik ...
+    sleep(2);           // Znotraj kritičnega območja
+    sem_unlock(semid);
+}</div>
+            <p>Program čaka 2 sekundi pred vstopom v semafor in še 2 sekundi znotraj. To simulira "slow writer" - posrednik ima čas, da bere.</p>
+
+            <div class="warning-box">
+                <h5>⚠️ Zakaj ne brišemo deljenega pomnilnika?</h5>
+                <p>Generator NE briše deljenega pomnilnika in semaforja, ker mora biti še vedno na voljo za posrednika! Posrednik jih bo pobrisal, ko zaključi.</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- POSREDNIK -->
+    <div class="program-section">
+        <div class="program-title">🔄 posrednik.c</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga posrednika</h3>
+            <ul>
+                <li>Ustvari <strong>sporočilno vrsto</strong> (message queue)</li>
+                <li>Pridobi dostop do obstoječega deljenega pomnilnika in semaforja</li>
+                <li>Vsako sekundo bere iz deljenega pomnilnika</li>
+                <li>Če je sporočilo <strong>drugačno</strong> od prejšnjega, ga pošlje naprej</li>
+                <li>Ko prebere prazno sporočilo, počisti vse IPC vire</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/shm.h&gt;
+#include &lt;sys/sem.h&gt;
+#include &lt;sys/msg.h&gt;
+#include &lt;unistd.h&gt;
+
+#define SHM_KEY 0x1234
+#define SEM_KEY 0x1234
+#define MSG_KEY 0x5678
+
+struct message {
+    int id;
+    char text[100];
+};
+
+struct msgbuf {
+    long mtype;
+    struct message msg;
+};
+
+void sem_lock(int semid) {
+    struct sembuf sb = {0, -1, 0};
+    semop(semid, &sb, 1);
+}
+
+void sem_unlock(int semid) {
+    struct sembuf sb = {0, 1, 0};
+    semop(semid, &sb, 1);
+}
+
+int main() {
+    // Ustvari sporočilno vrsto
+    int msgid = msgget(MSG_KEY, 0666 | IPC_CREAT);
+    if (msgid < 0) { perror("msgget"); exit(1); }
+
+    // Pridobi obstoječi deljeni pomnilnik
+    int shmid = shmget(SHM_KEY, sizeof(struct message), 0666);
+    if (shmid < 0) { perror("shmget"); exit(1); }
+
+    // Pridobi obstoječi semafor
+    int semid = semget(SEM_KEY, 1, 0666);
+    if (semid < 0) { perror("semget"); exit(1); }
+
+    struct message* shm = shmat(shmid, NULL, 0);
+    if (shm == (void*) -1) { perror("shmat"); exit(1); }
+
+    struct message prev = {-1, ""};
+
+    while (1) {
+        sleep(1);
+
+        sem_lock(semid);
+        struct message current = *shm;
+        sem_unlock(semid);
+
+        // Pošlji samo, če je DRUGAČNO od prejšnjega
+        if (current.id != prev.id || strcmp(current.text, prev.text) != 0) {
+            struct msgbuf buf;
+            buf.mtype = 1;
+            buf.msg = current;
+
+            msgsnd(msgid, &buf, sizeof(buf.msg), 0);
+
+            printf("[POSREDNIK] Poslal: ID %d | '%s'\n", current.id, current.text);
+            prev = current;
+        }
+
+        if (current.text[0] == '\0')
+            break;
+    }
+
+    // Počisti vse IPC vire
+    shmdt(shm);
+    shmctl(shmid, IPC_RMID, NULL);
+    semctl(semid, 0, IPC_RMID);
+
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga</h4>
+
+            <h5>1. Struktura za sporočilno vrsto</h5>
+            <div class="code-snippet">struct msgbuf {
+    long mtype;
+    struct message msg;
+};</div>
+            <ul>
+                <li><strong>mtype</strong>: Tip sporočila (obvezen!). Omogoča filtriranje pri branju.</li>
+                <li><strong>msg</strong>: Naše pravo sporočilo</li>
+            </ul>
+
+            <h5>2. Ustvarjanje sporočilne vrste</h5>
+            <div class="code-snippet">int msgid = msgget(MSG_KEY, 0666 | IPC_CREAT);</div>
+            <p>Ustvari novo sporočilno vrsto z ključem 0x5678. Ta ključ bo uporabil tudi zapisovalec.</p>
+
+            <h5>3. Pridobivanje obstoječih virov</h5>
+            <div class="code-snippet">int shmid = shmget(SHM_KEY, sizeof(struct message), 0666); // Brez IPC_CREAT!</div>
+            <p><strong>Pozor!</strong> Tu NE uporabljamo IPC_CREAT, ker je generator že ustvaril te vire. Mi jih samo "odpremo".</p>
+
+            <h5>4. Preverjanje unikatnosti</h5>
+            <div class="code-snippet">if (current.id != prev.id || strcmp(current.text, prev.text) != 0) {
+    // Pošlji
+    prev = current;
+}</div>
+            <p>Sporočilo pošljemo naprej samo, če je drugačno od zadnjega poslanega. To prepreči duplikate, ker generator drži isti podatek v pomnilniku 2 sekundi, mi pa beremo vsako sekundo.</p>
+
+            <h5>5. Pošiljanje sporočila</h5>
+            <div class="code-snippet">msgsnd(msgid, &buf, sizeof(buf.msg), 0);</div>
+            <ul>
+                <li><strong>msgid</strong>: ID sporočilne vrste</li>
+                <li><strong>&buf</strong>: Kazalec na msgbuf strukturo</li>
+                <li><strong>sizeof(buf.msg)</strong>: POZOR! Velikost BEZ mtype polja!</li>
+                <li><strong>0</strong>: Zastavice (0 = blokiraj, če je vrsta polna)</li>
+            </ul>
+
+            <h5>6. Čiščenje virov</h5>
+            <div class="code-snippet">shmctl(shmid, IPC_RMID, NULL);  // Pobriši deljeni pomnilnik
+semctl(semid, 0, IPC_RMID);     // Pobriši semafor</div>
+            <p>Ko posrednik zaključi, počisti VSE vire, ki jih deli z generatorjem. Generator se je medtem že končal.</p>
+
+            <div class="flow-box">
+                <h5>📊 Časovnica izvajanja</h5>
+                <pre>T=0s:  Generator zapiše "ID 1"
+T=1s:  Posrednik prebere "ID 1" → pošlje (novo!)
+T=2s:  Posrednik prebere "ID 1" → NE pošlje (isto kot prej)
+T=4s:  Generator zapiše "ID 2"
+T=5s:  Posrednik prebere "ID 2" → pošlje (novo!)
+...</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- ZAPISOVALEC -->
+    <div class="program-section">
+        <div class="program-title">💾 zapisovalec.c</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga zapisovalca</h3>
+            <ul>
+                <li>Odpre datoteko za pisanje (ime kot argument)</li>
+                <li>Pridobi dostop do sporočilne vrste</li>
+                <li>Bere sporočila in jih zapisuje v datoteko</li>
+                <li>Ko prejme prazno sporočilo, zapre datoteko in pobriše sporočilno vrsto</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;sys/ipc.h&gt;
+#include &lt;sys/msg.h&gt;
+
+#define MSG_KEY 0x5678
+
+struct message {
+    int id;
+    char text[100];
+};
+
+struct msgbuf {
+    long mtype;
+    struct message msg;
+};
+
+int main(int argc, char** argv) {
+    if (argc != 2) {
+        printf("Uporaba: %s <izhodna_datoteka>\n", argv[0]);
+        exit(1);
+    }
+
+    FILE* out = fopen(argv[1], "w");
+    if (!out) { perror("fopen"); exit(1); }
+
+    int msgid = msgget(MSG_KEY, 0666);
+    if (msgid < 0) { perror("msgget"); exit(1); }
+
+    struct msgbuf buf;
+
+    while (1) {
+        msgrcv(msgid, &buf, sizeof(buf.msg), 1, 0);
+
+        fprintf(out, "ID %d: %s\n", buf.msg.id, buf.msg.text);
+        printf("[ZAPISOVALEC] Prejel: ID %d | '%s'\n",
+               buf.msg.id, buf.msg.text);
+
+        if (buf.msg.text[0] == '\0')
+            break;
+    }
+
+    fclose(out);
+    msgctl(msgid, IPC_RMID, NULL);
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga</h4>
+
+            <h5>1. Branje argumentov</h5>
+            <div class="code-snippet">if (argc != 2) {
+    printf("Uporaba: %s <izhodna_datoteka>\n", argv[0]);
+    exit(1);
+}</div>
+            <p>Zapisovalec pričakuje ime izhodne datoteke kot argument v ukazni vrstici.</p>
+
+            <h5>2. Odpiranje datoteke</h5>
+            <div class="code-snippet">FILE* out = fopen(argv[1], "w");</div>
+            <p>Odpremo datoteko za pisanje ("w" = write). Če datoteka obstaja, se prepiše.</p>
+
+            <h5>3. Branje sporočil</h5>
+            <div class="code-snippet">msgrcv(msgid, &buf, sizeof(buf.msg), 1, 0);</div>
+            <ul>
+                <li><strong>msgid</strong>: ID sporočilne vrste</li>
+                <li><strong>&buf</strong>: Kje shranimo prebrano sporočilo</li>
+                <li><strong>sizeof(buf.msg)</strong>: Velikost (brez mtype)</li>
+                <li><strong>1</strong>: Beremo samo sporočila tipa 1</li>
+                <li><strong>0</strong>: Zastavice (0 = blokiraj, če ni sporočil)</li>
+            </ul>
+
+            <h5>4. Zapis v datoteko</h5>
+            <div class="code-snippet">fprintf(out, "ID %d: %s\n", buf.msg.id, buf.msg.text);</div>
+            <p>Sporočilo zapišemo v datoteko. Tudi prazno sporočilo (ID 5, "") se zapiše!</p>
+
+            <h5>5. Zaključek</h5>
+            <div class="code-snippet">if (buf.msg.text[0] == '\0')
+    break;</div>
+            <p>Ko naletimo na prazno sporočilo, prekinemo zanko. Nato zapremo datoteko in pobrišemo sporočilno vrsto.</p>
+
+            <div class="highlight-box">
+                <h5>📁 Izhodna datoteka</h5>
+                <p>Vsebina datoteke bo videti takole:</p>
+                <pre>ID 1: To je sporocilo.
+ID 2: To je sporocilo.
+ID 3: To je sporocilo.
+ID 4: To je sporocilo.
+ID 5: </pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- PRACTICAL USAGE -->
+    <div class="program-section">
+        <div class="program-title">🚀 Praktična uporaba</div>
+
+        <div class="explanation">
+            <h4>Kako pognati programe</h4>
+
+            <h5>1. Kompilacija</h5>
+            <div class="code-snippet">gcc generator.c -o generator
+gcc posrednik.c -o posrednik
+gcc zapisovalec.c -o zapisovalec</div>
+
+            <h5>2. Zagon v PRAVILNEM VRSTNEM REDU</h5>
+            <div class="code-snippet"># Terminal 1 - Najprej zaženi zapisovalec
+./zapisovalec izhod.txt
+
+# Terminal 2 - Nato posrednik
+./posrednik
+
+# Terminal 3 - Nazadnje generator
+./generator</div>
+
+            <div class="warning-box">
+                <h5>⚠️ POZOR: Vrstni red je pomemben!</h5>
+                <p>Če zaženete generator pred posrednikom, bo generator ustvaril vire in poslal vsa sporočila preden se posrednik sploh zažene!</p>
+            </div>
+
+            <h5>3. Terminalski ukazi za IPC</h5>
+            <div class="code-snippet"># Prikaz vseh IPC virov
+ipcs
+
+# Prikaz samo sporočilnih vrst
+ipcs -q
+
+# Prikaz samo deljenega pomnilnika
+ipcs -m
+
+# Prikaz samo semaforjev
+ipcs -s
+
+# Brisanje sporočilne vrste (če se program sesuje)
+ipcrm -q <msgid>
+
+# Brisanje deljenega pomnilnika
+ipcrm -m <shmid>
+
+# Brisanje semaforja
+ipcrm -s <semid></div>
+
+            <h5>4. Pričakovan izpis</h5>
+            <div class="highlight-box">
+                <h5>Generator:</h5>
+                <pre>[GENERATOR] Zapisal: ID 1 | 'To je sporocilo.'
+[GENERATOR] Zapisal: ID 2 | 'To je sporocilo.'
+[GENERATOR] Zapisal: ID 3 | 'To je sporocilo.'
+[GENERATOR] Zapisal: ID 4 | 'To je sporocilo.'
+[GENERATOR] Zapisal: ID 5 | ''</pre>
+            </div>
+
+            <div class="highlight-box">
+                <h5>Posrednik:</h5>
+                <pre>[POSREDNIK] Poslal: ID 1 | 'To je sporocilo.'
+[POSREDNIK] Poslal: ID 2 | 'To je sporocilo.'
+[POSREDNIK] Poslal: ID 3 | 'To je sporocilo.'
+[POSREDNIK] Poslal: ID 4 | 'To je sporocilo.'
+[POSREDNIK] Poslal: ID 5 | ''</pre>
+            </div>
+
+            <div class="highlight-box">
+                <h5>Zapisovalec:</h5>
+                <pre>[ZAPISOVALEC] Prejel: ID 1 | 'To je sporocilo.'
+[ZAPISOVALEC] Prejel: ID 2 | 'To je sporocilo.'
+[ZAPISOVALEC] Prejel: ID 3 | 'To je sporocilo.'
+[ZAPISOVALEC] Prejel: ID 4 | 'To je sporocilo.'
+[ZAPISOVALEC] Prejel: ID 5 | ''</pre>
+            </div>
+        </div>
+    </div>
+
+    <!-- KEY CONCEPTS -->
+    <div class="program-section">
+        <div class="program-title">💡 Ključni koncepti</div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga - Vrstica za vrstico</h4>
+
+            <h5>📦 Vključene knjižnice</h5>
+            <div class="code-snippet">#include &lt;stdio.h&gt;      // printf, perror
+                #include &lt;stdlib.h&gt;     // exit, NULL
+                #include &lt;string.h&gt;     // snprintf
+                #include &lt;sys/ipc.h&gt;    // IPC konstante (IPC_CREAT)
+                #include &lt;sys/shm.h&gt;    // Shared memory funkcije (shmget, shmat)
+                #include &lt;sys/sem.h&gt;    // Semaphore funkcije (semget, semctl, semop)
+                #include &lt;unistd.h&gt;     // sleep funkcija</div>
+
+            <h5>🔑 Definirane konstante</h5>
+            <div class="code-snippet">#define SHM_KEY 0x1234  // Ključ za deljeni pomnilnik (heksadecimalno)
+                #define SEM_KEY 0x1234  // Ključ za semafor (lahko isti kot SHM_KEY)</div>
+            <p>Ključi so "imena", ki jih kernel uporablja za identifikacijo IPC virov. Procesi, ki uporabljajo isti ključ, dostopajo do istega vira.</p>
+
+            <h5>📋 Struktura sporočila</h5>
+            <div class="code-snippet">struct message {
+                int id;          // Unikatni identifikator sporočila
+                char text[100];  // Besedilo sporočila (max 99 znakov + '\0')
+                };</div>
+            <p>To je podatkovni tip, ki se bo nahajal v deljenem pomnilniku. Oba procesa (generator in posrednik) morata imeti <strong>identično definicijo</strong> te strukture!</p>
+
+            <h5>🔒 Funkcija za zaklepanje (sem_lock)</h5>
+            <div class="code-snippet">void sem_lock(int semid) {</div>
+            <p>Funkcija, ki zaklene semafor. Parameter <span class="inline-code">semid</span> je identifikator semaforja.</p>
+
+            <div class="code-snippet">    struct sembuf sb = {0, -1, 0};</div>
+            <p><strong>struct sembuf</strong> opisuje semaforsko operacijo:</p>
+            <ul>
+                <li><strong>0</strong> (prvo polje): indeks semaforja v polju (uporabljamo 0, ker imamo samo 1 semafor)</li>
+                <li><strong>-1</strong> (drugo polje): operacija - "zmanjšaj za 1" (dekrement)</li>
+                <li><strong>0</strong> (tretje polje): zastavice (0 = blokiraj, če ne moreš izvesti)</li>
+            </ul>
+
+            <div class="code-snippet">    semop(semid, &sb, 1);</div>
+            <p><strong>semop</strong> izvede semaforsko operacijo:</p>
+            <ul>
+                <li><strong>semid</strong>: na katerem semaforju delamo</li>
+                <li><strong>&sb</strong>: kazalec na strukturo sembuf</li>
+                <li><strong>1</strong>: število operacij (lahko bi jih bilo več naenkrat)</li>
+            </ul>
+            <p><strong>Kaj se zgodi:</strong> Če je semafor = 1, postane 0 (zaklenjen). Če je že 0, proces čaka (blokira) dokler ne postane ≥ 1.</p>
+
+            <h5>🔓 Funkcija za odklepanje (sem_unlock)</h5>
+            <div class="code-snippet">void sem_unlock(int semid) {
+                struct sembuf sb = {0, 1, 0};  // +1 namesto -1!</div>
+            <p>Enako kot sem_lock, samo da <strong>povečamo za 1</strong>. To "sprosti" semafor in prebudi morebitne čakajoče procese.</p>
+
+            <h5>🚀 Glavna funkcija - main()</h5>
+            <div class="code-snippet">int main() {</div>
+
+            <h5>🗂️ Ustvarjanje deljenega pomnilnika</h5>
+            <div class="code-snippet">    int shmid = shmget(SHM_KEY, sizeof(struct message), 0666 | IPC_CREAT);</div>
+            <p><strong>shmget</strong> ustvari ali odpre segment deljenega pomnilnika:</p>
+            <ul>
+                <li><strong>SHM_KEY (0x1234)</strong>: ključ za identifikacijo</li>
+                <li><strong>sizeof(struct message)</strong>: koliko bajtov potrebujemo (4 + 100 = 104 bajta)</li>
+                <li><strong>0666</strong>: dostopne pravice v oktalnem zapisu (rw-rw-rw-)</li>
+                <li><strong>IPC_CREAT</strong>: če ne obstaja, ga ustvari; če obstaja, ga odpri</li>
+            </ul>
+            <p><strong>Vrne:</strong> ID deljenega pomnilnika (pozitivno število) ali -1 ob napaki.</p>
+
+            <div class="code-snippet">    if (shmid < 0) { perror("shmget"); exit(1); }</div>
+            <p>Preverjanje napake. <strong>perror</strong> izpiše razlog napake.</p>
+
+            <h5>🚦 Ustvarjanje semaforja</h5>
+            <div class="code-snippet">    int semid = semget(SEM_KEY, 1, 0666 | IPC_CREAT);</div>
+            <p><strong>semget</strong> ustvari ali odpre semaforsko polje:</p>
+            <ul>
+                <li><strong>SEM_KEY (0x1234)</strong>: ključ</li>
+                <li><strong>1</strong>: število semaforjev v polju (potrebujemo samo 1)</li>
+                <li><strong>0666 | IPC_CREAT</strong>: pravice in ustvari če ne obstaja</li>
+            </ul>
+
+            <div class="code-snippet">    if (semid < 0) { perror("semget"); exit(1); }</div>
+
+            <div class="code-snippet">    semctl(semid, 0, SETVAL, 1);</div>
+            <p><strong>semctl</strong> je kontrolna funkcija za semaforje. Tukaj nastavimo začetno vrednost:</p>
+            <ul>
+                <li><strong>semid</strong>: ID semaforskega polja</li>
+                <li><strong>0</strong>: indeks semaforja (prvi in edini)</li>
+                <li><strong>SETVAL</strong>: operacija "nastavi vrednost"</li>
+                <li><strong>1</strong>: nastavi na 1 (odklenjen)</li>
+            </ul>
+            <p><strong>Ključno:</strong> Novo ustvarjen semafor ima naključno vrednost! MORAMO ga inicializirati.</p>
+
+            <h5>🔗 Priklop na deljeni pomnilnik</h5>
+            <div class="code-snippet">    struct message* shm = shmat(shmid, NULL, 0);</div>
+            <p><strong>shmat</strong> ("shared memory attach") priklopi deljeni pomnilnik v naslovni prostor procesa:</p>
+            <ul>
+                <li><strong>shmid</strong>: kateri segment</li>
+                <li><strong>NULL</strong>: kernel sam izbere naslov v pomnilniku</li>
+                <li><strong>0</strong>: zastavice (0 = read/write dostop)</li>
+            </ul>
+            <p><strong>Vrne:</strong> Kazalec na začetek deljenega pomnilnika. Od zdaj lahko <span class="inline-code">shm->id</span> in <span class="inline-code">shm->text</span> uporabljamo kot običajno!</p>
+
+            <div class="code-snippet">    if (shm == (void*) -1) { perror("shmat"); exit(1); }</div>
+            <p>shmat vrne (void*)-1 ob napaki (ne NULL!).</p>
+
+            <h5>🔄 Glavna zanka - pošiljanje 5 sporočil</h5>
+            <div class="code-snippet">    for (int i = 1; i <= 5; i++) {</div>
+            <p>Pošljemo 5 sporočil z ID-ji 1, 2, 3, 4, 5.</p>
+
+            <div class="code-snippet">        sleep(2); // 2 sekundi IZVEN semaforja</div>
+            <p><strong>Pomembno:</strong> Čakamo PREDEN zaklenemo semafor. To daje posredniku čas, da prebere prejšnje sporočilo, medtem ko generator NE drži zaklepa.</p>
+
+            <div class="code-snippet">        sem_lock(semid);</div>
+            <p>Zdaj zaklenemo semafor. Če ga že drži posrednik, čakamo tukaj.</p>
+
+            <div class="code-snippet">        if (i == 5) {
+                shm->id = 5;
+                shm->text[0] = '\0'; // prazno sporočilo</div>
+            <p>Zadnje (5.) sporočilo je <strong>prazno</strong> - signal, da je konec. Postavi ID na 5 in besedilo na prazen string.</p>
+
+            <div class="code-snippet">        } else {
+                shm->id = i;
+                snprintf(shm->text, sizeof(shm->text), "To je sporocilo.");</div>
+            <p>Za sporočila 1-4: nastavi ID in enako besedilo. <strong>snprintf</strong> varno kopira string (prepreči buffer overflow).</p>
+
+            <div class="code-snippet">        }
+
+                printf("[GENERATOR] Zapisal: ID %d | '%s'\n", shm->id, shm->text);</div>
+            <p>Debug izpis - pove nam, kaj je bilo zapisano.</p>
+
+            <div class="code-snippet">        sleep(2); // 2 sekundi ZNOTRAJ semaforja</div>
+            <p><strong>Kritično:</strong> Držimo zaklepanje 2 sekundi! To simulira počasen zapis. Posrednik ne more dostopati do podatkov v tem času.</p>
+
+            <div class="code-snippet">        sem_unlock(semid);</div>
+            <p>Odklenemo semafor - posrednik lahko zdaj vstopi.</p>
+
+            <div class="code-snippet">    }
+
+                shmdt(shm);</div>
+            <p><strong>shmdt</strong> ("shared memory detach") odklopi segment iz našega naslovnega prostora. <strong>NE</strong> pobriše segmenta - to mora narediti posrednik!</p>
+
+            <div class="code-snippet">    return 0;
+                }</div>
+
+            <div class="warning-box">
+                <h5>⚠️ Zakaj ne brišemo deljenega pomnilnika?</h5>
+                <p>Generator NE kliče <span class="inline-code">shmctl(shmid, IPC_RMID, NULL)</span>, ker mora deljeni pomnilnik ostati za posrednika! Če bi ga zbrisali, posrednik ne bi mogel dostopati do podatkov.</p>
+            </div>
+
+            <div class="flow-box">
+                <h5>⏱️ Časovni potek generatorja</h5>
+                <pre>T=0s:  Ustvari vire, zapiše ID 1, drži semafor 2s
+T=2s:  Sprosti semafor
+T=4s:  Zaklene semafor, zapiše ID 2, drži 2s
+T=6s:  Sprosti
+T=8s:  Zaklene, zapiše ID 3, drži 2s
+T=10s: Sprosti
+T=12s: Zaklene, zapiše ID 4, drži 2s
+T=14s: Sprosti
+T=16s: Zaklene, zapiše ID 5 (prazno), drži 2s
+T=18s: Sprosti in konča</pre>
+            </div>
+        </div>
+
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</html>
