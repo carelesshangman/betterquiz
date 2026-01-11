@@ -1,0 +1,387 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 5 - Ukazna Vrstica</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-purple);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .code-block pre {
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .explanation {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 5px solid var(--accent-purple);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .explanation h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .explanation h5 {
+            color: var(--accent-orange);
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .explanation p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.9;
+        }
+
+        .explanation strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation ul {
+            margin: 15px 0 15px 30px;
+        }
+
+        .explanation li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            border: 1px solid var(--accent-blue);
+            overflow-x: auto;
+        }
+
+        .highlight-box {
+            background: rgba(246, 173, 85, 0.1);
+            border: 2px solid var(--accent-orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .inline-code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 SPO Vaja 5: Preprosta Ukazna Lupina</h1>
+        <p>Implementacija preproste lupine (shell) z uporabo fork, exec in razčlenjevanjem nizov</p>
+    </div>
+
+    <div class="program-section">
+        <div class="program-title">💻 ukaznaVrstica.c</div>
+
+        <div class="task-box">
+            <h3>🎯 Navodila naloge</h3>
+            <ul>
+                <li><strong>Glavna zanka:</strong> Program bere ukaze s standardnega vhoda, dokler ne zazna CTRL+D.</li>
+                <li><strong>Izvajanje:</strong> Vsak ukaz se izvede v novem procesu (otroku) s <span class="inline-code">fork()</span> in <span class="inline-code">execvp()</span>.</li>
+                <li><strong>Zombie procesi:</strong> Starš mora počakati na otroka (<span class="inline-code">waitpid</span>), da ne nastajajo zombiji.</li>
+                <li><strong>Argumenti:</strong> Program mora podpirati argumente (npr. <span class="inline-code">ls -l</span>).</li>
+                <li><strong>Parsing (Točkovanje):</strong>
+                    <ul>
+                        <li>Soda zaporedna št. ukazov: Uporabi lastno funkcijo <span class="inline-code">parse()</span>.</li>
+                        <li>Liha zaporedna št. ukazov: Uporabi <span class="inline-code">strtok()</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+
+#define MAX_ARGS 32
+#define MAX_CMD  128
+
+// lastna parse funkcija (za sode ukaze)
+int parse(char *cmd, char *args[]) {
+    int count = 0;
+    int i = 0;
+
+    while (cmd[i] != '\0') {
+        while (cmd[i] == ' ') i++;      // preskoči presledke
+        if (cmd[i] == '\0') break;
+
+        args[count++] = &cmd[i];         // začetek argumenta
+
+        // poišči konec argumenta
+        while (cmd[i] != '\0' && cmd[i] != ' ') i++;
+
+        // zamenjaj presledek z '\0'
+        if (cmd[i] == ' ') {
+            cmd[i] = '\0';
+            i++;
+        }
+    }
+
+    args[count] = NULL;
+    return count;
+}
+
+// parser z strtok (za lihe ukaze)
+int parse_strtok(char *cmd, char *args[]) {
+    int count = 0;
+    char *token = strtok(cmd, " ");
+
+    while (token != NULL && count < MAX_ARGS - 1) {
+        args[count++] = token;
+        token = strtok(NULL, " ");
+    }
+
+    args[count] = NULL;
+    return count;
+}
+
+int main() {
+    char cmd[MAX_CMD];
+    char *args[MAX_ARGS];
+    int ukaz_st = 0;
+
+    while (1) {
+        printf("> ");
+        fflush(stdout);
+
+        // Branje vrstice. Če vrne NULL (CTRL+D), končaj.
+        if (fgets(cmd, sizeof(cmd), stdin) == NULL) {
+            printf("\nExiting...\n");
+            break;
+        }
+
+        // odstrani '\n' na koncu
+        size_t len = strlen(cmd);
+        if (len > 0 && cmd[len - 1] == '\n') cmd[len - 1] = '\0';
+
+        if (cmd[0] == '\0') continue;      // prazna vrstica
+
+        // sodo -> parse(), liho -> strtok()
+        ukaz_st++;
+        if (ukaz_st % 2 == 0) {
+            parse(cmd, args);
+        } else {
+            parse_strtok(cmd, args);
+        }
+
+        pid_t pid = fork();
+        if (pid < 0) {
+            perror("fork");
+            continue;
+        }
+
+        if (pid == 0) {
+            // ---- OTROK ----
+            // execvp avtomatsko išče program v PATH
+            execvp(args[0], args);
+
+            // Če pridemo do sem, je šlo nekaj narobe (ukaz ne obstaja)
+            perror("execvp");
+            exit(1);
+        } else {
+            // ---- STARŠ ----
+            // počaka na konec otroka
+            waitpid(pid, NULL, 0);
+        }
+    }
+
+    return 0;
+}</pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Ključni koncepti in razlaga</h4>
+
+            <h5>1. Branje vhoda in novi vrstici (Newlines)</h5>
+            <div class="code-snippet">if (fgets(cmd, sizeof(cmd), stdin) == NULL) break;
+size_t len = strlen(cmd);
+if (len > 0 && cmd[len - 1] == '\n') cmd[len - 1] = '\0';</div>
+            <p><strong>fgets()</strong> je varnejši kot gets(), ker preverja dolžino bufferja. Vendar pa ohrani znak za novo vrstico <span class="inline-code">\n</span> na koncu niza.</p>
+            <ul>
+                <li>Če vpišemo "ls\n", bo <span class="inline-code">execvp</span> iskal program z imenom točno "ls\n", ki pa ne obstaja.</li>
+                <li>Zato moramo ročno zamenjati <span class="inline-code">\n</span> z <span class="inline-code">\0</span> (null terminator).</li>
+                <li><span class="inline-code">strtok</span> kasneje tega ne bi nujno sam uredil, če je le en argument.</li>
+            </ul>
+
+
+            <h5>2. Vzorec Fork-Exec</h5>
+            <div class="code-snippet">pid_t pid = fork();
+if (pid == 0) { execvp(...); exit(1); }
+else { waitpid(pid, NULL, 0); }</div>
+            <p>To je standardni način za poganjanje zunanjih programov v Unixu:</p>
+            <ul>
+                <li><strong>fork()</strong>: Klonira trenutni proces. Dobimo dva identična procesa.</li>
+                <li><strong>Otrok (pid == 0)</strong>: Pokliče <span class="inline-code">execvp</span>, da zamenja svojo pomnilniško sliko z novim programom.</li>
+                <li><strong>Starš (pid > 0)</strong>: Nadaljuje z izvajanjem zanke lupine.</li>
+            </ul>
+
+            <div class="highlight-box">
+                <h5>⚠️ Opozorilo o zombijih (Zombie Process)</h5>
+                <p>Če starš ne pokliče <span class="inline-code">wait()</span> ali <span class="inline-code">waitpid()</span>, otrok po končanju postane <strong>zombi</strong> ("defunct"). Ostane v tabeli procesov, dokler starš ne prevzame njegovega izhodnega statusa.</p>
+            </div>
+
+            <h5>3. Strategije razčlenjevanja (Parsing)</h5>
+
+            <p><strong>Ročno razčlenjevanje (parse funkcija):</strong></p>
+            <ul>
+                <li>Iterira čez znake v nizu.</li>
+                <li>Preskoči začetne presledke.</li>
+                <li>Shrani naslov (<span class="inline-code">&cmd[i]</span>) kot začetek argumenta v tabelo <span class="inline-code">args</span>.</li>
+                <li>Poišče naslednji presledek in ga zamenja z <span class="inline-code">\0</span>. S tem "odreže" niz.</li>
+                <li>To je odličen prikaz, kako delujejo C nizi v pomnilniku!</li>
+            </ul>
+
+            <p><strong>Uporaba strtok (parse_strtok funkcija):</strong></p>
+            <ul>
+                <li><span class="inline-code">strtok(str, " ")</span> razbije niz na žetone (tokens) glede na ločila.</li>
+                <li>Prvi klic vzame niz, vsi naslednji klici vzamejo <span class="inline-code">NULL</span>, da nadaljujejo tam, kjer so ostali.</li>
+                <li><strong>Opozorilo:</strong> <span class="inline-code">strtok</span> uniči originalni niz (vstavlja \0) in ni varen za večnitno delo (thread-safe).</li>
+            </ul>
+
+            <h5>4. execvp proti execlp</h5>
+            <p>V prejšnjih vajah smo omenjali <span class="inline-code">execlp</span>, vendar je za lupino <span class="inline-code">execvp</span> boljši.</p>
+            <ul>
+                <li><strong>l (list)</strong>: Argumenti so podani kot ločeni parametri (<span class="inline-code">execlp("ls", "ls", "-l", NULL)</span>). Uporabno, če poznamo argumente med pisanjem kode.</li>
+                <li><strong>v (vector)</strong>: Argumenti so podani kot tabela nizov (<span class="inline-code">execvp("ls", args_array)</span>). Nujno za lupino, kjer ne vemo, koliko argumentov bo uporabnik vpisal.</li>
+                <li><strong>p (path)</strong>: Išče izvršljivo datoteko v okoljski spremenljivki PATH (tako lahko pišemo "ls" namesto "/bin/ls").</li>
+            </ul>
+        </div>
+    </div>
+</div>
+</body>
+</html>
