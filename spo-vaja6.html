@@ -1,0 +1,623 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 6 - Signali in Cevi</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin-bottom: 10px;
+            line-height: 1.8;
+        }
+
+        .code-block {
+            background: #1e1e1e;
+            border-radius: 12px;
+            padding: 25px;
+            margin: 25px 0;
+            border: 2px solid var(--accent-purple);
+            overflow-x: auto;
+            position: relative;
+        }
+
+        .code-block h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-size: 1.2em;
+        }
+
+        .code-block pre {
+            color: #d4d4d4;
+            font-family: 'Courier New', monospace;
+            font-size: 0.95em;
+            line-height: 1.6;
+            overflow-x: auto;
+        }
+
+        .explanation {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 5px solid var(--accent-purple);
+            padding: 25px;
+            margin: 25px 0;
+            border-radius: 10px;
+        }
+
+        .explanation h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.5em;
+        }
+
+        .explanation h5 {
+            color: var(--accent-orange);
+            margin: 25px 0 15px 0;
+            font-size: 1.3em;
+        }
+
+        .explanation p {
+            color: var(--text-secondary);
+            margin-bottom: 15px;
+            line-height: 1.9;
+        }
+
+        .explanation strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation ul, .explanation ol {
+            margin: 15px 0 15px 30px;
+        }
+
+        .explanation li {
+            margin-bottom: 12px;
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            margin: 15px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            border: 1px solid var(--accent-blue);
+            overflow-x: auto;
+        }
+
+        .highlight-box {
+            background: rgba(246, 173, 85, 0.1);
+            border: 2px solid var(--accent-orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box h5 {
+            color: var(--accent-orange);
+            margin-bottom: 12px;
+        }
+
+        .warning-box {
+            background: rgba(252, 129, 129, 0.1);
+            border: 2px solid var(--accent-red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box h5 {
+            color: var(--accent-red);
+            margin-bottom: 12px;
+        }
+
+        .inline-code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+
+        .diagram {
+            text-align: center;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--accent-green);
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 SPO Vaja 6: Signali in Cevi</h1>
+        <p>Nadgradnja lupine z obravnavo signalov (CTRL+C) in preusmerjanjem (Pipes)</p>
+    </div>
+
+    <div class="program-section">
+        <div class="program-title">💻 ukaznaVrstica_v6.c</div>
+
+        <div class="task-box">
+            <h3>🎯 Navodila naloge</h3>
+            <ul>
+                <li><strong>NALOGA 1 (Signali):</strong>
+                    <ul>
+                        <li>Ujemite signal <strong>SIGINT</strong> (sproži ga CTRL+C).</li>
+                        <li>Ob prvem pritisku: Izpiši opozorilo in nastavi "časovnik" za 4 sekunde (z uporabo <span class="inline-code">alarm()</span>).</li>
+                        <li>Če uporabnik pritisne drugič v roku 4 sekund: Izhod iz programa.</li>
+                        <li>Če poteče 4 sekunde brez novega pritiska: Stanje se ponastavi (uporaba <strong>SIGALRM</strong>).</li>
+                    </ul>
+                </li>
+                <li><strong>NALOGA 2 (Cevi / Pipes):</strong>
+                    <ul>
+                        <li>Podpora sintaksi <span class="inline-code">ukaz1 => ukaz2</span> (namesto običajnega <code>|</code>).</li>
+                        <li>Ustvari hierarhijo treh procesov: P1 (lupina) → P2 (levi ukaz) → P3 (desni ukaz).</li>
+                        <li>P2 piše v cev, P3 bere iz cevi.</li>
+                        <li>Uporaba <span class="inline-code">pipe()</span> in <span class="inline-code">dup2()</span>.</li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre>#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;sys/wait.h&gt;
+#include &lt;signal.h&gt;
+
+#define MAX_ARGS 32
+#define MAX_CMD  128
+
+volatile sig_atomic_t sigint_pending = 0;
+
+void sigint_handler(int signo) {
+    if (!sigint_pending) {
+        sigint_pending = 1;
+        printf("\nZa izhod iz programa ponovno pritisnite CTRL+C v roku 4 sekund.\n");
+        fflush(stdout);
+        alarm(4);
+    } else {
+        printf("\nNasvidenje!\n");
+        fflush(stdout);
+        exit(0);
+    }
+}
+
+void alarm_handler(int signo) {
+    sigint_pending = 0;
+}
+
+int parse(char *cmd, char *args[]) {
+    int count = 0;
+    int i = 0;
+    while (cmd[i] != '\0') {
+        while (cmd[i] == ' ') i++;
+        if (cmd[i] == '\0') break;
+        args[count++] = &cmd[i];
+        while (cmd[i] != '\0' && cmd[i] != ' ') i++;
+        if (cmd[i] == ' ') {
+            cmd[i] = '\0';
+            i++;
+        }
+    }
+    args[count] = NULL;
+    return count;
+}
+
+int parse_strtok(char *cmd, char *args[]) {
+    int count = 0;
+    char *token = strtok(cmd, " ");
+    while (token != NULL && count < MAX_ARGS - 1) {
+        args[count++] = token;
+        token = strtok(NULL, " ");
+    }
+    args[count] = NULL;
+    return count;
+}
+
+int main() {
+    signal(SIGINT, sigint_handler);
+    signal(SIGALRM, alarm_handler);
+
+    char cmd[MAX_CMD];
+    char *args[MAX_ARGS];
+    int ukaz_st = 0;
+
+    while (1) {
+        printf("> ");
+        fflush(stdout);
+
+        if (fgets(cmd, sizeof(cmd), stdin) == NULL) {
+            printf("\nExiting...\n");
+            break;
+        }
+
+        size_t len = strlen(cmd);
+        if (len > 0 && cmd[len - 1] == '\n')
+            cmd[len - 1] = '\0';
+
+        if (cmd[0] == '\0')
+            continue;
+
+        char *pipe_pos = strstr(cmd, "=>");
+
+        if (pipe_pos == NULL) {
+            // Navaden ukaz brez cevi
+            ukaz_st++;
+            if (ukaz_st % 2 == 0) parse(cmd, args);
+            else parse_strtok(cmd, args);
+
+            pid_t pid = fork();
+            if (pid == 0) {
+                execvp(args[0], args);
+                perror("execvp");
+                exit(1);
+            }
+            waitpid(pid, NULL, 0);
+            continue;
+        }
+
+        // Ukaz s cevjo: ukaz1 => ukaz2
+        *pipe_pos = '\0';
+        char *left = cmd;
+        char *right = pipe_pos + 2;
+        while (*right == ' ') right++;
+
+        char *args_left[MAX_ARGS];
+        char *args_right[MAX_ARGS];
+
+        ukaz_st++;
+        if (ukaz_st % 2 == 0) {
+            parse(left, args_left);
+            parse(right, args_right);
+        } else {
+            parse_strtok(left, args_left);
+            parse_strtok(right, args_right);
+        }
+
+        int fd[2];
+        if (pipe(fd) < 0) {
+            perror("pipe");
+            continue;
+        }
+
+        pid_t p2 = fork();
+        if (p2 < 0) {
+            perror("fork");
+            continue;
+        }
+
+        if (p2 == 0) {
+            pid_t p3 = fork();
+            if (p3 < 0) {
+                perror("fork");
+                exit(1);
+            }
+
+            if (p3 == 0) {
+                // P3: desni ukaz (bere iz cevi)
+                close(fd[1]);
+                dup2(fd[0], STDIN_FILENO);
+                close(fd[0]);
+                execvp(args_right[0], args_right);
+                perror("execvp");
+                exit(1);
+            }
+
+            // P2: levi ukaz (piše v cev)
+            close(fd[0]);
+            dup2(fd[1], STDOUT_FILENO);
+            close(fd[1]);
+            execvp(args_left[0], args_left);
+            perror("execvp");
+            exit(1);
+        }
+
+        // P1: lupina
+        close(fd[0]);
+        close(fd[1]);
+        waitpid(p2, NULL, 0);
+    }
+
+    return 0;
+}</pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga po delih</h4>
+
+            <h5>1. Globalna spremenljivka za signal</h5>
+            <div class="code-snippet">volatile sig_atomic_t sigint_pending = 0;</div>
+
+            <p><strong>volatile sig_atomic_t</strong> je posebna kombinacija:</p>
+            <ul>
+                <li><strong>sig_atomic_t</strong>: Tip, ki zagotavlja atomične operacije (branje/pisanje ne more biti prekinjeno).</li>
+                <li><strong>volatile</strong>: Pove prevajalniku: "Ta spremenljivka se lahko spremeni kadarkoli (tudi med signali), ne optimiziraj dostopov do nje".</li>
+                <li>To je EDINA varna metoda za komunikacijo med glavnim programom in signal handlerji.</li>
+            </ul>
+
+            <h5>2. Handler za SIGINT (Ctrl+C)</h5>
+            <div class="code-snippet">void sigint_handler(int signo) {
+    if (!sigint_pending) {
+        sigint_pending = 1;
+        printf("\n...");
+        fflush(stdout);
+        alarm(4);
+    } else {
+        printf("\nNasvidenje!\n");
+        exit(0);
+    }
+}</div>
+
+            <p><strong>Logika po korakih:</strong></p>
+            <ol>
+                <li><strong>if (!sigint_pending)</strong>: Ali je to PRVI pritisk Ctrl+C?
+                    <ul>
+                        <li>Če ja → nastavimo <span class="inline-code">sigint_pending = 1</span> (zdaj vemo, da smo "v čakanju").</li>
+                        <li>Izpišemo opozorilo uporabniku.</li>
+                        <li><strong>fflush(stdout)</strong>: NUJNO! Printf bufferja (ne izpiše takoj). Brez fflush bi uporabnik sporočila ne videl.</li>
+                        <li><strong>alarm(4)</strong>: "Operacijski sistem, pošlji mi signal SIGALRM čez 4 sekunde".</li>
+                    </ul>
+                </li>
+                <li><strong>else</strong>: To je DRUGI pritisk (pending je že 1).
+                    <ul>
+                        <li>Izpišemo "Nasvidenje" in končamo program.</li>
+                    </ul>
+                </li>
+            </ol>
+
+            <div class="highlight-box">
+                <h5>💡 Zakaj fflush(stdout)?</h5>
+                <p>Printf ne izpisuje TAKOJ na ekran. Podatke shrani v buffer (pomnilnik) in jih izpiše šele, ko:</p>
+                <ul>
+                    <li>Naletimo na <span class="inline-code">\n</span> (line buffering).</li>
+                    <li>Buffer je poln.</li>
+                    <li>Program se konča.</li>
+                    <li><strong>ALI</strong> pokličemo <span class="inline-code">fflush(stdout)</span> (prisilni izpis).</li>
+                </ul>
+                <p>V signal handlerju MORAMO uporabiti fflush, ker lahko program takoj nadaljuje ali se celo konča, preden bi buffer postal poln.</p>
+            </div>
+
+            <h5>3. Handler za SIGALRM (alarm reset)</h5>
+            <div class="code-snippet">void alarm_handler(int signo) {
+    sigint_pending = 0;
+}</div>
+
+            <p>To je najenostavnejši handler. Ko poteče 4 sekunde (od klica <span class="inline-code">alarm(4)</span>), OS pošlje SIGALRM. Handler samo resetira stanje nazaj na 0. Uporabnik mora zdaj spet dvakrat pritisniti Ctrl+C.</p>
+
+            <h5>4. Registracija handlerjev</h5>
+            <div class="code-snippet">signal(SIGINT, sigint_handler);
+signal(SIGALRM, alarm_handler);</div>
+
+            <p><strong>signal(kateri_signal, funkcija)</strong> pove OS-u: "Ko pride ta signal, ne ubij programa, ampak pokliči TO funkcijo".</p>
+            <ul>
+                <li><strong>SIGINT</strong>: Signal ob pritisku Ctrl+C (interrupt).</li>
+                <li><strong>SIGALRM</strong>: Signal ob poteku časa (alarm clock).</li>
+            </ul>
+
+            <h5>5. Iskanje operatorja => za cev</h5>
+            <div class="code-snippet">char *pipe_pos = strstr(cmd, "=>");
+if (pipe_pos == NULL) {
+    // Normalen ukaz
+} else {
+    // Ukaz s cevjo
+}</div>
+
+            <p><strong>strstr(niz, podniz)</strong> vrne kazalec na prvo pojavitev "=>" v nizu <span class="inline-code">cmd</span>.</p>
+            <ul>
+                <li>Če vrne NULL → znak => ni v ukazu → običajen ukaz brez cevi.</li>
+                <li>Če vrne kazalec → našli smo cev → razdelimo ukaz na levo in desno stran.</li>
+            </ul>
+
+            <h5>6. Razdelitev ukaza na levo in desno</h5>
+            <div class="code-snippet">*pipe_pos = '\0';            // Prereži niz
+char *left = cmd;            // Začetek levega dela
+char *right = pipe_pos + 2;  // Preskoči "=>" (2 znaka)</div>
+
+            <p>Primer: <span class="inline-code">"ps -ef => grep root"</span></p>
+            <ul>
+                <li><span class="inline-code">pipe_pos</span> kaže na '=' v "=>".</li>
+                <li><span class="inline-code">*pipe_pos = '\0'</span> spremeni niz v: <code>"ps -ef\0=> grep root"</code>.</li>
+                <li><span class="inline-code">left</span> kaže na začetek → vidi "ps -ef" (do \0).</li>
+                <li><span class="inline-code">right = pipe_pos + 2</span> preskočimo '=' in '>' → kaže na " grep root".</li>
+            </ul>
+
+            <h5>7. Ustvarjanje cevi (pipe)</h5>
+            <div class="code-snippet">int fd[2];
+pipe(fd);</div>
+
+            <p><strong>pipe(fd)</strong> ustvari cev z dvema koncema:</p>
+            <ul>
+                <li><strong>fd[0]</strong>: Bralni konec (read end).</li>
+                <li><strong>fd[1]</strong>: Pisalni konec (write end).</li>
+                <li>Kar napišemo v fd[1], lahko preberemo iz fd[0].</li>
+            </ul>
+
+            <h5>8. Hierarhija procesov P1 → P2 → P3</h5>
+            <div class="diagram">
+        P1 (lupina - shell)
+            |
+        fork() → P2
+            |
+            └─ P2 (izvede levi ukaz, npr. "ps -ef")
+                |
+                └─ fork() → P3
+                    |
+                    └─ P3 (izvede desni ukaz, npr. "grep root")
+            </div>
+
+            <p><strong>Zakaj P3 ustvarimo ZNOTRAJ P2?</strong></p>
+            <ul>
+                <li>Navodila zahtevajo, da je P3 otrok od P2.</li>
+                <li>To pomeni: P2 naredi fork() in ustvari P3.</li>
+                <li>Po fork() se P2 in P3 razdelita - vsak izvede svojo vejo if stavka.</li>
+            </ul>
+
+            <h5>9. Proces P3 (desni ukaz - BERE)</h5>
+            <div class="code-snippet">if (p3 == 0) {
+    close(fd[1]);            // P3 ne piše, samo bere
+    dup2(fd[0], STDIN_FILENO); // stdin (0) naj kaže na bralni konec cevi
+    close(fd[0]);            // Zapri originalni fd[0]
+    execvp(args_right[0], args_right);
+}</div>
+
+            <p><strong>Korak po korak:</strong></p>
+            <ol>
+                <li><strong>close(fd[1])</strong>: P3 ne rabi pisati v cev. Zapremo pisalni konec.</li>
+                <li><strong>dup2(fd[0], STDIN_FILENO)</strong>:
+                    <ul>
+                        <li>STDIN_FILENO je konstanta 0 (standardni vhod).</li>
+                        <li>Privzeto številka 0 kaže na tipkovnico.</li>
+                        <li>dup2 preusmeri: "Zdaj naj številka 0 kaže na fd[0] (bralni konec cevi)".</li>
+                        <li>Ko grep pokliče <span class="inline-code">scanf</span> ali <span class="inline-code">getchar</span>, ne bere s tipkovnice, ampak iz cevi!</li>
+                    </ul>
+                </li>
+                <li><strong>close(fd[0])</strong>: Originalni deskriptor ni več potreben (imamo ga "duplikiranega" na 0).</li>
+                <li><strong>execvp</strong>: Zamenjamo proces z ukazom (npr. grep). Grep zdaj bere iz cevi.</li>
+            </ol>
+
+            <h5>10. Proces P2 (levi ukaz - PIŠE)</h5>
+            <div class="code-snippet">// P2 (po forku P3)
+close(fd[0]);               // P2 ne bere, samo piše
+dup2(fd[1], STDOUT_FILENO); // stdout (1) naj kaže na pisalni konec cevi
+close(fd[1]);
+execvp(args_left[0], args_left);</div>
+
+            <p><strong>Analogno kot P3:</strong></p>
+            <ol>
+                <li><strong>close(fd[0])</strong>: Ne rabimo brati.</li>
+                <li><strong>dup2(fd[1], STDOUT_FILENO)</strong>:
+                    <ul>
+                        <li>STDOUT_FILENO = 1 (standardni izhod, privzeto ekran).</li>
+                        <li>Preusmeri: "Naj številka 1 kaže na fd[1] (pisalni konec cevi)".</li>
+                        <li>Ko ps pokliče <span class="inline-code">printf</span>, ne piše na ekran, ampak v cev!</li>
+                    </ul>
+                </li>
+                <li><strong>execvp</strong>: Zažene ps. Vse, kar ps izpiše, gre v cev.</li>
+            </ol>
+
+            <h5>11. Proces P1 (lupina) - KRITIČNO!</h5>
+            <div class="code-snippet">// P1 (po forku P2)
+close(fd[0]);
+close(fd[1]);
+waitpid(p2, NULL, 0);</div>
+
+            <div class="warning-box">
+                <h5>⚠️ NAJPOGOSTEJŠA NAPAKA: Pozabljeno zapiranje cevi v P1</h5>
+                <p><strong>Zakaj mora P1 zapreti OBA konca cevi?</strong></p>
+                <ul>
+                    <li>Ko pokličemo <span class="inline-code">fork()</span>, otrok PODEDUJE vse odprte deskriptorje.</li>
+                    <li>To pomeni: po <span class="inline-code">fork()</span> imata P1 in P2 OBA odprta fd[0] in fd[1].</li>
+                    <li>Če P1 ne zapre fd[1], sistem vidi: "Cev ima še vedno 2 pisalce (P2 in P1)".</li>
+                    <li>Ko P2 konča in zapre fd[1], cev ŠE VEDNO NI zaprta (ker jo ima P1).</li>
+                    <li>P3 (grep) čaka na EOF (end-of-file), a ga nikoli ne dobi → program visi v neskončnost!</li>
+                </ul>
+                <p><strong>Pravilo:</strong> Vsak proces, ki ne uporablja konca cevi, ga mora TAKOJ zapreti.</p>
+            </div>
+
+            <p><strong>waitpid(p2, NULL, 0)</strong>: Čakamo, da se P2 konča. P3 je "vnuk" P1, zato nanj ne moremo čakati direktno (postane sirota in ga posvoji init proces).</p>
+        </div>
+    </div>
+</div>
+</body>
+</html>
