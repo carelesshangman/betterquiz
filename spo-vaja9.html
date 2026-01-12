@@ -1,0 +1,1053 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 9 - TCP Strežnik in Odjemalec</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+            --accent-yellow: #fbd38d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin: 8px 0;
+        }
+
+        .code-block {
+            margin: 30px 0;
+        }
+
+        .code-block h4 {
+            color: var(--accent-orange);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        pre {
+            background: #1e1e1e !important;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        code {
+            font-family: 'Courier New', Monaco, monospace;
+            font-size: 0.95em;
+        }
+
+        .highlight-box {
+            background: rgba(99, 179, 237, 0.1);
+            border: 2px solid var(--accent-blue);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box h5 {
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .explanation {
+            background: rgba(183, 148, 246, 0.05);
+            padding: 30px;
+            border-radius: 15px;
+            margin: 25px 0;
+        }
+
+        .explanation h4 {
+            color: var(--accent-purple);
+            font-size: 1.8em;
+            margin-bottom: 20px;
+        }
+
+        .explanation h5 {
+            color: var(--accent-orange);
+            font-size: 1.3em;
+            margin: 25px 0 15px 0;
+        }
+
+        .explanation p {
+            color: var(--text-secondary);
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        .explanation strong {
+            color: var(--accent-blue);
+        }
+
+        .explanation ul, .explanation ol {
+            margin: 15px 0 15px 25px;
+        }
+
+        .explanation li {
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+            margin: 15px 0;
+            border-left: 4px solid var(--accent-purple);
+            overflow-x: auto;
+        }
+
+        .warning-box {
+            background: rgba(252, 129, 129, 0.1);
+            border: 2px solid var(--accent-red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box h5 {
+            color: var(--accent-red);
+            margin-bottom: 12px;
+        }
+
+        .inline-code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+
+        .diagram {
+            text-align: center;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--accent-green);
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .flow-box {
+            background: rgba(251, 211, 141, 0.1);
+            border: 2px solid var(--accent-yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .flow-box h5 {
+            color: var(--accent-yellow);
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .program-title {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .program-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>📚 SPO Vaja 9: TCP Strežnik in Odjemalec</h1>
+        <p>Omrežno programiranje z vtičnicami (sockets) - kalkulator preko TCP</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="program-section">
+        <div class="program-title">🎯 Pregled naloge</div>
+
+        <div class="task-box">
+            <h3>Arhitektura sistema</h3>
+            <p>Sistem sestavljata dva programa, ki komunicirata preko TCP protokola:</p>
+            <ul>
+                <li><strong>STREŽNIK (server.c)</strong> → sprejema povezave in računa rezultate matematičnih operacij</li>
+                <li><strong>ODJEMALEC (client.c)</strong> → pošilja računske operacije in prejema rezultate</li>
+            </ul>
+        </div>
+
+        <div class="diagram">
+┌──────────────────┐                    ┌──────────────────┐
+│   ODJEMALEC      │                    │    STREŽNIK      │
+│   (client.c)     │                    │    (server.c)    │
+└────────┬─────────┘                    └────────┬─────────┘
+         │                                       │
+         │   1. Povezava (TCP socket)           │
+         │──────────────────────────────────────>│
+         │                                       │
+         │   2. Pošlje izraz "3.5 * 2"          │
+         │──────────────────────────────────────>│
+         │                                       │
+         │                                       │ 3. Razčleni (sscanf)
+         │                                       │ 4. Izračuna rezultat
+         │                                       │
+         │   5. Vrne "Rezultat: 7.000000"       │
+         │<──────────────────────────────────────│
+         │                                       │
+         │   6. Pošlje nov izraz ali zapre      │
+         │                                       │
+        </div>
+
+        <div class="highlight-box">
+            <h5>🔑 Ključne značilnosti</h5>
+            <ul>
+                <li><strong>TCP protokol</strong>: Zanesljiva, povezavno orientirana komunikacija</li>
+                <li><strong>Vtičnice (sockets)</strong>: Programski vmesnik za omrežno komunikacijo</li>
+                <li><strong>Podprti operatorji</strong>: + (seštevanje), - (odštevanje), * (množenje), / (deljenje)</li>
+                <li><strong>Decimalna števila</strong>: Podpora za računanje z double (npr. 1.2 + 3.4)</li>
+                <li><strong>Neskončna zanka</strong>: Strežnik sprejema več povezav zaporedoma</li>
+                <li><strong>Parametri</strong>: Port (strežnik) ali IP in port (odjemalec) preko ukazne vrstice</li>
+            </ul>
+        </div>
+    </div>
+    <!-- SERVER -->
+    <div class="program-section">
+        <div class="program-title">🖥️ server.c - TCP Strežnik</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga strežnika</h3>
+            <ul>
+                <li>Ustvari vtičnico (socket) in jo poveže (bind) na določen port</li>
+                <li>Posluša (listen) za dohodne povezave</li>
+                <li>V neskončni zanki sprejema (accept) nove odjemalce</li>
+                <li>Prebira izraze, jih razčleni s sscanf</li>
+                <li>Izračuna rezultat in ga pošlje nazaj</li>
+                <li>Podpira decimalna števila (double)</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;netinet/in.h&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc != 2) {
+        fprintf(stderr, "Uporaba: %s &lt;port&gt;\n", argv[0]);
+        return 1;
+    }
+
+    int port = atoi(argv[1]);
+
+    int server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        perror("socket");
+        return 1;
+    }
+
+    struct sockaddr_in addr;
+    addr.sin_family = AF_INET;
+    addr.sin_addr.s_addr = INADDR_ANY;
+    addr.sin_port = htons(port);
+
+    if (bind(server_fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+        perror("bind");
+        return 1;
+    }
+
+    if (listen(server_fd, 5) < 0) {
+        perror("listen");
+        return 1;
+    }
+
+    printf("Strežnik posluša na portu %d...\n", port);
+
+    while (1) {
+        int client_fd = accept(server_fd, NULL, NULL);
+        if (client_fd < 0) {
+            perror("accept");
+            continue;
+        }
+        printf("Povezan odjemalec.\n");
+
+        char buffer[256];
+        int n;
+
+        while ((n = read(client_fd, buffer, sizeof(buffer)-1)) > 0) {
+            buffer[n] = '\0';
+            printf("Prejel: %s", buffer);
+
+            double a, b, result = 0.0;
+            char op;
+
+            if (sscanf(buffer, "%lf %c %lf", &a, &op, &b) != 3) {
+                char *err = "Napaka pri razčlenjevanju izraza.\n";
+                write(client_fd, err, strlen(err));
+                continue;
+            }
+
+            switch (op) {
+                case '+': result = a + b; break;
+                case '-': result = a - b; break;
+                case '*': result = a * b; break;
+                case '/': 
+                    if (b == 0) {
+                        char *err = "Napaka: deljenje z 0.\n";
+                        write(client_fd, err, strlen(err));
+                        continue;
+                    }
+                    result = a / b;
+                    break;
+                default:
+                    {
+                        char *err = "Neznan operator.\n";
+                        write(client_fd, err, strlen(err));
+                        continue;
+                    }
+            }
+
+            char out[256];
+            snprintf(out, sizeof(out), "Rezultat: %.6f\n", result);
+            write(client_fd, out, strlen(out));
+        }
+
+        close(client_fd);
+        printf("Odjemalec prekinil povezavo.\n");
+    }
+
+    close(server_fd);
+    return 0;
+}
+</code></pre>
+        </div>
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga - Vrstica za vrstico</h4>
+
+            <h5>📦 Vključene knjižnice</h5>
+            <div class="code-snippet">#include &lt;stdio.h&gt;      // printf, perror, fprintf
+#include &lt;stdlib.h&gt;     // atoi, exit
+#include &lt;string.h&gt;     // strlen, strcpy
+#include &lt;unistd.h&gt;     // read, write, close
+#include &lt;netinet/in.h&gt; // sockaddr_in, htons, INADDR_ANY</div>
+            <p>Te knjižnice so potrebne za delo z vhodno/izhodnimi operacijami, pretvarjanje nizov, omrežne operacije in upravljanje vtičnic.</p>
+
+            <h5>🚀 Glavna funkcija - main()</h5>
+            <div class="code-snippet">int main(int argc, char *argv[]) {</div>
+            <p><strong>argc</strong> je število argumentov ukazne vrstice, <strong>argv</strong> je polje kazalcev na argumente.</p>
+
+            <h5>✅ Preverjanje argumentov</h5>
+            <div class="code-snippet">    if (argc != 2) {
+        fprintf(stderr, "Uporaba: %s &lt;port&gt;\n", argv[0]);
+        return 1;
+    }</div>
+            <p>Strežnik zahteva natanko 1 argument (poleg imena programa): številko porta.</p>
+            <ul>
+                <li><strong>argc != 2</strong>: Program ime + 1 argument = 2 skupaj</li>
+                <li><strong>fprintf(stderr, ...)</strong>: Izpiše sporočilo o napaki na standardni izhod za napake</li>
+                <li><strong>argv[0]</strong>: Ime programa</li>
+                <li><strong>return 1</strong>: Vrne kodo napake (0 = uspeh, 1 = napaka)</li>
+            </ul>
+
+            <h5>🔢 Pretvorba porta</h5>
+            <div class="code-snippet">    int port = atoi(argv[1]);</div>
+            <p><strong>atoi</strong> (ASCII to Integer) pretvori niz (string) v celo število. <span class="inline-code">argv[1]</span> je prvi argument po imenu programa - številka porta kot niz (npr. "8080").</p>
+
+            <h5>🔌 Ustvarjanje vtičnice</h5>
+            <div class="code-snippet">    int server_fd = socket(AF_INET, SOCK_STREAM, 0);</div>
+            <p><strong>socket()</strong> ustvari novo vtičnico (socket) - končno točko za komunikacijo:</p>
+            <ul>
+                <li><strong>AF_INET</strong>: Address Family = Internet (IPv4 protokol)</li>
+                <li><strong>SOCK_STREAM</strong>: TCP vtičnica (zanesljiv, povezavno orientiran tok podatkov)</li>
+                <li><strong>0</strong>: Privzeti protokol za TCP (lahko bi bil tudi IPPROTO_TCP)</li>
+                <li><strong>Vrne</strong>: Deskriptor datoteke (file descriptor) za vtičnico ali -1 ob napaki</li>
+            </ul>
+
+            <div class="code-snippet">    if (server_fd < 0) {
+        perror("socket");
+        return 1;
+    }</div>
+            <p>Preverjanje napake. <strong>perror("socket")</strong> izpiše sistemsko sporočilo o napaki s predpono "socket".</p>
+
+            <h5>📍 Nastavitev naslova</h5>
+            <div class="code-snippet">    struct sockaddr_in addr;</div>
+            <p><strong>sockaddr_in</strong> je struktura za IPv4 naslove. Definirana v <span class="inline-code">&lt;netinet/in.h&gt;</span>.</p>
+
+            <div class="code-snippet">    addr.sin_family = AF_INET;</div>
+            <p><strong>sin_family</strong>: Družina naslovov - nastavljeno na AF_INET (IPv4).</p>
+
+            <div class="code-snippet">    addr.sin_addr.s_addr = INADDR_ANY;</div>
+            <p><strong>sin_addr.s_addr</strong>: IP naslov na katerem bo strežnik poslušal:</p>
+            <ul>
+                <li><strong>INADDR_ANY</strong>: Posebna vrednost (0.0.0.0) = sprejemaj na vseh omrežnih vmesnikih</li>
+                <li>To pomeni, da bo strežnik dostopen preko kateregakoli IP naslova računalnika</li>
+            </ul>
+
+            <div class="code-snippet">    addr.sin_port = htons(port);</div>
+            <p><strong>sin_port</strong>: Številka porta. <strong>htons</strong> (Host TO Network Short) pretvori port iz lokalnega vrstnega reda bajtov v omrežni vrstni red (big-endian). To je potrebno zaradi razlik v arhitekturah.</p>
+
+            <h5>🔗 Povezava vtičnice na naslov (bind)</h5>
+            <div class="code-snippet">    if (bind(server_fd, (struct sockaddr*)&addr, sizeof(addr)) < 0) {
+        perror("bind");
+        return 1;
+    }</div>
+            <p><strong>bind()</strong> poveže vtičnico na določen naslov in port:</p>
+            <ul>
+                <li><strong>server_fd</strong>: Deskriptor vtičnice</li>
+                <li><strong>(struct sockaddr*)&addr</strong>: Kazalec na strukturo naslova, pretvorten v generični tip sockaddr</li>
+                <li><strong>sizeof(addr)</strong>: Velikost strukture naslova</li>
+                <li><strong>Vrne</strong>: 0 ob uspehu, -1 ob napaki</li>
+            </ul>
+            <p>Po uspešnem bind() je vtičnica "vezana" na port in lahko sprejema povezave.</p>
+
+            <h5>👂 Poslušanje za povezave</h5>
+            <div class="code-snippet">    if (listen(server_fd, 5) < 0) {
+        perror("listen");
+        return 1;
+    }</div>
+            <p><strong>listen()</strong> nastavi vtičnico v način poslušanja:</p>
+            <ul>
+                <li><strong>server_fd</strong>: Vtičnica, ki bo poslušala</li>
+                <li><strong>5</strong>: Backlog - maksimalno število čakajočih povezav v vrsti (preden jih accept() sprejme)</li>
+                <li>Po klicu listen() lahko odjemalci začnejo vzpostavljati povezave</li>
+            </ul>
+
+            <div class="code-snippet">    printf("Strežnik posluša na portu %d...\n", port);</div>
+            <p>Informativno sporočilo, da je strežnik pripravljen sprejemati povezave.</p>
+
+            <h5>🔄 Neskončna zanka - sprejemanje odjemalcev</h5>
+            <div class="code-snippet">    while (1) {</div>
+            <p>Neskončna zanka - strežnik bo deloval, dokler ga ne ustavimo (Ctrl+C).</p>
+
+            <div class="code-snippet">        int client_fd = accept(server_fd, NULL, NULL);</div>
+            <p><strong>accept()</strong> čaka na dohodno povezavo in jo sprejme:</p>
+            <ul>
+                <li><strong>server_fd</strong>: Vtičnica, ki posluša</li>
+                <li><strong>NULL, NULL</strong>: Parametra za naslov odjemalca (ne potrebujemo te informacije)</li>
+                <li><strong>Blokira</strong>: accept() se ustavi in čaka, dokler se odjemalec ne poveže</li>
+                <li><strong>Vrne</strong>: Nov deskriptor vtičnice za komunikacijo s tem specifičnim odjemalcem</li>
+            </ul>
+
+            <div class="code-snippet">        if (client_fd < 0) {
+            perror("accept");
+            continue;
+        }</div>
+            <p>Če accept() ne uspe, izpišemo napako in nadaljujemo z zanko (poskusimo sprejeti naslednjega odjemalca).</p>
+
+            <div class="code-snippet">        printf("Povezan odjemalec.\n");</div>
+            <p>Informativno sporočilo o novi povezavi.</p>
+            <h5>📨 Branje in obdelava zahtevkov</h5>
+            <div class="code-snippet">        char buffer[256];
+        int n;</div>
+            <p>Deklaracija medpomnilnika (buffer) za prejem podatkov in spremenljivke n za število prebranih bajtov.</p>
+
+            <div class="code-snippet">        while ((n = read(client_fd, buffer, sizeof(buffer)-1)) > 0) {</div>
+            <p><strong>read()</strong> prebere podatke iz vtičnice:</p>
+            <ul>
+                <li><strong>client_fd</strong>: Vtičnica odjemalca</li>
+                <li><strong>buffer</strong>: Kam shranimo podatke</li>
+                <li><strong>sizeof(buffer)-1</strong>: Maksimalno 255 bajtov (pustimo prostor za '\0')</li>
+                <li><strong>Vrne</strong>: Število prebranih bajtov, 0 če je odjemalec zaprl povezavo, -1 ob napaki</li>
+                <li><strong>Pogoj > 0</strong>: Zanka deluje, dokler prejemamo podatke</li>
+            </ul>
+
+            <div class="code-snippet">            buffer[n] = '\0';</div>
+            <p>Dodamo ničelni terminator na konec prebranega niza, da ga lahko uporabljamo kot običajen C string.</p>
+
+            <div class="code-snippet">            printf("Prejel: %s", buffer);</div>
+            <p>Debug izpis - prikažemo, kaj je strežnik prejel od odjemalca.</p>
+
+            <h5>🧮 Razčlenjevanje izraza</h5>
+            <div class="code-snippet">            double a, b, result = 0.0;
+            char op;</div>
+            <p>Deklaracija spremenljivk:</p>
+            <ul>
+                <li><strong>a, b</strong>: Operanda (števili) - tip double za decimalna števila</li>
+                <li><strong>result</strong>: Rezultat operacije, inicializiran na 0.0</li>
+                <li><strong>op</strong>: Operator (+, -, *, /)</li>
+            </ul>
+
+            <div class="code-snippet">            if (sscanf(buffer, "%lf %c %lf", &a, &op, &b) != 3) {
+                char *err = "Napaka pri razčlenjevanju izraza.\n";
+                write(client_fd, err, strlen(err));
+                continue;
+            }</div>
+            <p><strong>sscanf()</strong> prebere formatirane podatke iz niza:</p>
+            <ul>
+                <li><strong>buffer</strong>: Vhodni niz (npr. "3.5 * 2")</li>
+                <li><strong>"%lf %c %lf"</strong>: Format - double, presledek, znak, presledek, double</li>
+                <li><strong>&a, &op, &b</strong>: Kazalci na spremenljivke, kjer shranimo prebrane vrednosti</li>
+                <li><strong>Vrne</strong>: Število uspešno prebranih elementov (pričakujemo 3)</li>
+                <li>Če razčlenjevanje ne uspe (npr. napačen format), pošljemo sporočilo o napaki in nadaljujemo</li>
+            </ul>
+
+            <h5>🔢 Računanje rezultata</h5>
+            <div class="code-snippet">            switch (op) {
+                case '+': result = a + b; break;</div>
+            <p><strong>switch</strong> stavek preverja vrednost operatorja <span class="inline-code">op</span>. Če je '+', seštejemo a in b.</p>
+
+            <div class="code-snippet">                case '-': result = a - b; break;</div>
+            <p>Če je operator '-', odštejemo b od a.</p>
+
+            <div class="code-snippet">                case '*': result = a * b; break;</div>
+            <p>Če je operator '*', množimo a in b.</p>
+
+            <div class="code-snippet">                case '/': 
+                    if (b == 0) {
+                        char *err = "Napaka: deljenje z 0.\n";
+                        write(client_fd, err, strlen(err));
+                        continue;
+                    }
+                    result = a / b;
+                    break;</div>
+            <p>Če je operator '/', najprej preverimo deljenje z 0:</p>
+            <ul>
+                <li>Če je <strong>b == 0</strong>, pošljemo sporočilo o napaki in preskočimo to iteracijo</li>
+                <li>Sicer delimo a z b</li>
+                <li>To je pomembna varnostna preverka!</li>
+            </ul>
+
+            <div class="code-snippet">                default:
+                    {
+                        char *err = "Neznan operator.\n";
+                        write(client_fd, err, strlen(err));
+                        continue;
+                    }
+            }</div>
+            <p><strong>default</strong>: Če operator ni noben od podprtih (+, -, *, /), pošljemo sporočilo o napaki in nadaljujemo.</p>
+
+            <h5>📤 Pošiljanje rezultata</h5>
+            <div class="code-snippet">            char out[256];
+            snprintf(out, sizeof(out), "Rezultat: %.6f\n", result);</div>
+            <p><strong>snprintf()</strong> formatira niz v medpomnilnik:</p>
+            <ul>
+                <li><strong>out</strong>: Ciljni medpomnilnik</li>
+                <li><strong>sizeof(out)</strong>: Maksimalna velikost (preprečuje buffer overflow)</li>
+                <li><strong>"Rezultat: %.6f\n"</strong>: Format niza - izpiše rezultat s 6 decimalkami</li>
+                <li><strong>result</strong>: Vrednost, ki jo vstavimo</li>
+            </ul>
+
+            <div class="code-snippet">            write(client_fd, out, strlen(out));</div>
+            <p><strong>write()</strong> pošlje podatke preko vtičnice:</p>
+            <ul>
+                <li><strong>client_fd</strong>: Vtičnica odjemalca</li>
+                <li><strong>out</strong>: Podatki za pošiljanje</li>
+                <li><strong>strlen(out)</strong>: Dolžina niza</li>
+            </ul>
+
+            <div class="code-snippet">        }</div>
+            <p>Konec notranje while zanke - nadaljujemo z branjem naslednjih zahtevkov od istega odjemalca.</p>
+
+            <h5>🔚 Zapiranje povezave z odjemalcem</h5>
+            <div class="code-snippet">        close(client_fd);
+        printf("Odjemalec prekinil povezavo.\n");</div>
+            <p><strong>close()</strong> zapre vtičnico odjemalca. To se zgodi, ko odjemalec zapre povezavo ali če read() vrne <= 0.</p>
+
+            <div class="code-snippet">    }</div>
+            <p>Konec zunanje while(1) zanke - vrnemo se na accept() in čakamo na naslednjega odjemalca.</p>
+
+            <h5>🛑 Čiščenje (nikoli ne doseže)</h5>
+            <div class="code-snippet">    close(server_fd);
+    return 0;
+}</div>
+            <p>Ta koda se ne izvede, ker je while(1) neskončna zanka. Če bi želeli elegantno zaustavitev, bi potrebovali signal handler.</p>
+
+            <div class="warning-box">
+                <h5>⚠️ Pomembno o vtičnicah</h5>
+                <p>Vsak klic <span class="inline-code">accept()</span> ustvari NOVO vtičnico (<span class="inline-code">client_fd</span>) za komunikacijo s posameznim odjemalcem. Prvotna vtičnica (<span class="inline-code">server_fd</span>) ostane za poslušanje novih povezav.</p>
+            </div>
+
+            <div class="flow-box">
+                <h5>⏱️ Potek delovanja strežnika</h5>
+                <pre>1. Ustvari vtičnico (socket)
+2. Poveži na port (bind)
+3. Začni poslušati (listen)
+4. ZANKA:
+   a. Čakaj na odjemalca (accept) ← BLOKIRA
+   b. Odjemalec se poveže
+   c. ZANKA:
+      - Prejmi izraz (read)
+      - Razčleni (sscanf)
+      - Izračunaj rezultat
+      - Pošlji nazaj (write)
+   d. Odjemalec zapre → close(client_fd)
+   e. Vrni se na korak 4a (čakaj na naslednjega)</pre>
+            </div>
+        </div>
+    </div>
+    <!-- CLIENT -->
+    <div class="program-section">
+        <div class="program-title">💻 client.c - TCP Odjemalec</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga odjemalca</h3>
+            <ul>
+                <li>Ustvari vtičnico (socket)</li>
+                <li>Poveži se (connect) na strežnik na podanem IP naslovu in portu</li>
+                <li>V zanki prebira izraze iz standardnega vhoda</li>
+                <li>Pošilja izraze strežniku</li>
+                <li>Sprejema in izpisuje rezultate</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;string.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+int main(int argc, char *argv[]) {
+    if (argc != 3) {
+        fprintf(stderr, "Uporaba: %s &lt;ip&gt; &lt;port&gt;\n", argv[0]);
+        return 1;
+    }
+
+    char *ip = argv[1];
+    int port = atoi(argv[2]);
+
+    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("socket");
+        return 1;
+    }
+
+    struct sockaddr_in server_addr;
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(port);
+    inet_pton(AF_INET, ip, &server_addr.sin_addr);
+
+    if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("connect");
+        return 1;
+    }
+
+    printf("Povezano na %s:%d\n", ip, port);
+
+    char buffer[256];
+    char recvbuf[256];
+    int n;
+
+    while (1) {
+        printf("Vnesi izraz (npr. 3.5 * 2): ");
+        if (!fgets(buffer, sizeof(buffer), stdin))
+            break;
+
+        if (write(sock, buffer, strlen(buffer)) < 0) {
+            perror("write");
+            break;
+        }
+
+        n = read(sock, recvbuf, sizeof(recvbuf)-1);
+        if (n <= 0) {
+            printf("Povezava zaprta.\n");
+            break;
+        }
+
+        recvbuf[n] = '\0';
+        printf("%s", recvbuf);
+    }
+
+    close(sock);
+    return 0;
+}
+</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga - Vrstica za vrstico</h4>
+
+            <h5>📦 Vključene knjižnice</h5>
+            <div class="code-snippet">#include &lt;stdio.h&gt;      // printf, perror, fprintf, fgets
+#include &lt;stdlib.h&gt;     // atoi, exit
+#include &lt;string.h&gt;     // strlen
+#include &lt;unistd.h&gt;     // read, write, close
+#include &lt;arpa/inet.h&gt;  // inet_pton, htons, sockaddr_in</div>
+            <p>Knjižnica <strong>arpa/inet.h</strong> vsebuje funkcije za pretvarjanje IP naslovov.</p>
+
+            <h5>🚀 Glavna funkcija - main()</h5>
+            <div class="code-snippet">int main(int argc, char *argv[]) {</div>
+            <p>Začetek glavne funkcije.</p>
+
+            <h5>✅ Preverjanje argumentov</h5>
+            <div class="code-snippet">    if (argc != 3) {
+        fprintf(stderr, "Uporaba: %s &lt;ip&gt; &lt;port&gt;\n", argv[0]);
+        return 1;
+    }</div>
+            <p>Odjemalec zahteva natanko 2 argumenta:</p>
+            <ul>
+                <li><strong>argv[1]</strong>: IP naslov strežnika (npr. "127.0.0.1")</li>
+                <li><strong>argv[2]</strong>: Številka porta (npr. "8080")</li>
+                <li><strong>argc != 3</strong>: Ime programa + 2 argumenta = 3 skupaj</li>
+            </ul>
+
+            <h5>📝 Shranjevanje parametrov</h5>
+            <div class="code-snippet">    char *ip = argv[1];
+    int port = atoi(argv[2]);</div>
+            <p>Shranimo IP naslov kot niz in pretvorimo port iz niza v celo število.</p>
+
+            <h5>🔌 Ustvarjanje vtičnice</h5>
+            <div class="code-snippet">    int sock = socket(AF_INET, SOCK_STREAM, 0);
+    if (sock < 0) {
+        perror("socket");
+        return 1;
+    }</div>
+            <p>Enako kot pri strežniku - ustvarimo TCP vtičnico. <strong>sock</strong> je deskriptor vtičnice odjemalca.</p>
+
+            <h5>📍 Nastavitev naslova strežnika</h5>
+            <div class="code-snippet">    struct sockaddr_in server_addr;</div>
+            <p>Struktura za IPv4 naslov strežnika.</p>
+
+            <div class="code-snippet">    server_addr.sin_family = AF_INET;</div>
+            <p>Nastavi družino naslovov na IPv4.</p>
+
+            <div class="code-snippet">    server_addr.sin_port = htons(port);</div>
+            <p>Nastavi številko porta. <strong>htons</strong> pretvori v omrežni vrstni red bajtov.</p>
+
+            <div class="code-snippet">    inet_pton(AF_INET, ip, &server_addr.sin_addr);</div>
+            <p><strong>inet_pton</strong> (Presentation TO Network) pretvori IP naslov iz teksta v binarno obliko:</p>
+            <ul>
+                <li><strong>AF_INET</strong>: IPv4 format</li>
+                <li><strong>ip</strong>: Vhodni niz (npr. "127.0.0.1")</li>
+                <li><strong>&server_addr.sin_addr</strong>: Kam shranimo rezultat</li>
+                <li>Ta funkcija omogoča pisanje IP naslovov v berljivi obliki</li>
+            </ul>
+
+            <h5>🔗 Povezava na strežnik</h5>
+            <div class="code-snippet">    if (connect(sock, (struct sockaddr*)&server_addr, sizeof(server_addr)) < 0) {
+        perror("connect");
+        return 1;
+    }</div>
+            <p><strong>connect()</strong> vzpostavi povezavo s strežnikom:</p>
+            <ul>
+                <li><strong>sock</strong>: Naša vtičnica</li>
+                <li><strong>&server_addr</strong>: Naslov strežnika (IP + port)</li>
+                <li><strong>sizeof(server_addr)</strong>: Velikost strukture</li>
+                <li><strong>Blokira</strong>: Čaka, dokler se povezava ne vzpostavi ali ne uspe</li>
+                <li><strong>Vrne</strong>: 0 ob uspehu, -1 ob napaki</li>
+            </ul>
+            <p>Po uspešnem connect() lahko začnemo pošiljati in prejemati podatke.</p>
+
+            <div class="code-snippet">    printf("Povezano na %s:%d\n", ip, port);</div>
+            <p>Informativno sporočilo o uspešni povezavi.</p>
+
+            <h5>📝 Priprava medpomnilnikov</h5>
+            <div class="code-snippet">    char buffer[256];
+    char recvbuf[256];
+    int n;</div>
+            <p>Deklaracija medpomnilnikov:</p>
+            <ul>
+                <li><strong>buffer</strong>: Za vhod od uporabnika (izrazi za računanje)</li>
+                <li><strong>recvbuf</strong>: Za prejete podatke od strežnika (rezultati)</li>
+                <li><strong>n</strong>: Število prebranih bajtov</li>
+            </ul>
+
+            <h5>🔄 Glavna zanka - komunikacija s strežnikom</h5>
+            <div class="code-snippet">    while (1) {</div>
+            <p>Neskončna zanka - odjemalec deluje, dokler ga ne ustavimo ali ne zapre povezave.</p>
+
+            <div class="code-snippet">        printf("Vnesi izraz (npr. 3.5 * 2): ");</div>
+            <p>Poziv uporabniku za vnos izraza.</p>
+
+            <div class="code-snippet">        if (!fgets(buffer, sizeof(buffer), stdin))
+            break;</div>
+            <p><strong>fgets()</strong> prebere vrstico iz standardnega vhoda:</p>
+            <ul>
+                <li><strong>buffer</strong>: Kam shranimo prebrano vrstico</li>
+                <li><strong>sizeof(buffer)</strong>: Maksimalna dolžina (255 znakov + '\0')</li>
+                <li><strong>stdin</strong>: Standardni vhod (tipkovnica)</li>
+                <li><strong>Vrne</strong>: Kazalec na buffer ob uspehu, NULL ob napaki ali EOF (Ctrl+D)</li>
+                <li>Če vrne NULL, prekinemo zanko</li>
+            </ul>
+
+            <h5>📤 Pošiljanje izraza strežniku</h5>
+            <div class="code-snippet">        if (write(sock, buffer, strlen(buffer)) < 0) {
+            perror("write");
+            break;
+        }</div>
+            <p><strong>write()</strong> pošlje izraz strežniku:</p>
+            <ul>
+                <li><strong>sock</strong>: Naša vtičnica povezana s strežnikom</li>
+                <li><strong>buffer</strong>: Podatki za pošiljanje (izraz)</li>
+                <li><strong>strlen(buffer)</strong>: Dolžina niza</li>
+                <li>Če write() ne uspe (vrne < 0), izpišemo napako in prekinemo</li>
+            </ul>
+
+            <h5>📥 Prejemanje rezultata</h5>
+            <div class="code-snippet">        n = read(sock, recvbuf, sizeof(recvbuf)-1);</div>
+            <p><strong>read()</strong> prebere odgovor od strežnika:</p>
+            <ul>
+                <li><strong>sock</strong>: Naša vtičnica</li>
+                <li><strong>recvbuf</strong>: Medpomnilnik za prejete podatke</li>
+                <li><strong>sizeof(recvbuf)-1</strong>: Maksimalno 255 bajtov</li>
+                <li><strong>Vrne</strong>: Število prebranih bajtov, 0 če je strežnik zaprl, -1 ob napaki</li>
+            </ul>
+
+            <div class="code-snippet">        if (n <= 0) {
+            printf("Povezava zaprta.\n");
+            break;
+        }</div>
+            <p>Če read() vrne 0 ali negativno vrednost, je povezava prekinjena - izpišemo sporočilo in zaključimo.</p>
+
+            <div class="code-snippet">        recvbuf[n] = '\0';</div>
+            <p>Dodamo ničelni terminator, da lahko recvbuf uporabimo kot C string.</p>
+
+            <div class="code-snippet">        printf("%s", recvbuf);</div>
+            <p>Izpišemo prejeti rezultat od strežnika (npr. "Rezultat: 7.000000\n").</p>
+
+            <div class="code-snippet">    }</div>
+            <p>Konec while zanke - vrnemo se na začetek in prosimo za nov izraz.</p>
+
+            <h5>🔚 Zapiranje povezave</h5>
+            <div class="code-snippet">    close(sock);
+    return 0;
+}</div>
+            <p><strong>close()</strong> zapre vtičnico. Program se konča.</p>
+
+            <div class="highlight-box">
+                <h5>💡 Razlika med strežnikom in odjemalcem</h5>
+                <ul>
+                    <li><strong>Strežnik</strong>: Uporablja <span class="inline-code">bind()</span>, <span class="inline-code">listen()</span> in <span class="inline-code">accept()</span></li>
+                    <li><strong>Odjemalec</strong>: Uporablja samo <span class="inline-code">connect()</span></li>
+                    <li>Strežnik čaka (pasiven), odjemalec iniciira povezavo (aktiven)</li>
+                </ul>
+            </div>
+
+            <div class="flow-box">
+                <h5>⏱️ Potek delovanja odjemalca</h5>
+                <pre>1. Ustvari vtičnico (socket)
+2. Poveži se na strežnik (connect)
+3. ZANKA:
+   a. Preberi izraz od uporabnika (fgets)
+   b. Pošlji strežniku (write)
+   c. Prejmi rezultat (read)
+   d. Izpiši rezultat (printf)
+4. Zapri vtičnico (close)</pre>
+            </div>
+        </div>
+    </div>
+    <!-- KEY CONCEPTS -->
+    <div class="program-section">
+        <div class="program-title">💡 Ključni koncepti TCP programiranja</div>
+
+        <div class="explanation">
+            <h5>🌐 Kaj je TCP?</h5>
+            <p><strong>TCP (Transmission Control Protocol)</strong> je protokol transportne plasti, ki zagotavlja:</p>
+            <ul>
+                <li><strong>Zanesljivost</strong>: Podatki prispejo v celoti in brez napak</li>
+                <li><strong>Vrstni red</strong>: Paketi prispejo v enakem vrstnem redu kot so bili poslani</li>
+                <li><strong>Povezavno orientiranost</strong>: Pred komunikacijo se vzpostavi povezava</li>
+                <li><strong>Nadzor pretoka</strong>: Preprečuje preobremenitev prejemnika</li>
+            </ul>
+
+            <h5>🔌 Kaj je vtičnica (socket)?</h5>
+            <p>Vtičnica je programski vmesnik za omrežno komunikacijo. Deluje podobno kot datoteka:</p>
+            <ul>
+                <li>Ustvarimo jo s <span class="inline-code">socket()</span></li>
+                <li>Pišemo z <span class="inline-code">write()</span></li>
+                <li>Beremo z <span class="inline-code">read()</span></li>
+                <li>Zapremo jo s <span class="inline-code">close()</span></li>
+            </ul>
+
+            <h5>📊 Struktura sockaddr_in</h5>
+            <div class="code-snippet">struct sockaddr_in {
+    short sin_family;        // Družina naslovov (AF_INET)
+    unsigned short sin_port; // Številka porta (v omrežnem vrstnem redu)
+    struct in_addr sin_addr; // IP naslov
+    char sin_zero[8];        // Padding
+};</div>
+
+            <h5>🔄 Vrstni red bajtov</h5>
+            <p>Različni računalniki shranjujejo večbajtna števila različno:</p>
+            <ul>
+                <li><strong>Little-endian</strong>: Najmanj pomemben bajt prvi (večina osebnih računalnikov)</li>
+                <li><strong>Big-endian</strong>: Najbolj pomemben bajt prvi (omrežni standard)</li>
+                <li><strong>htons/htonl</strong>: Host TO Network (pretvori v big-endian)</li>
+                <li><strong>ntohs/ntohl</strong>: Network TO Host (pretvori iz big-endian)</li>
+            </ul>
+
+            <h5>🎯 Formati za sscanf in printf</h5>
+            <div class="code-snippet">%d    - int (celo število)
+%f    - float (decimalno število enojne natančnosti)
+%lf   - double (decimalno število dvojne natančnosti)
+%c    - char (en znak)
+%s    - string (niz)
+%.6f  - float/double s 6 decimalkami</div>
+
+            <h5>⚠️ Pogoste napake</h5>
+            <div class="warning-box">
+                <ul>
+                    <li><strong>Pozabljen htons/htonl</strong>: Port ali IP v napačnem vrstnem redu</li>
+                    <li><strong>Pozabljen '\0' terminator</strong>: Buffer overflow ali nepravilni nizi</li>
+                    <li><strong>Ne preverjanje povratnih vrednosti</strong>: Napake ostanejo neopažene</li>
+                    <li><strong>Deljenje z 0</strong>: Lahko povzroči crash programa</li>
+                    <li><strong>Buffer overflow</strong>: Uporaba strcpy namesto snprintf</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <!-- USAGE EXAMPLES -->
+    <div class="program-section">
+        <div class="program-title">🚀 Primeri uporabe</div>
+
+        <div class="highlight-box">
+            <h5>�� Prevajanje programov</h5>
+            <div class="code-snippet">gcc server.c -o server
+gcc client.c -o client</div>
+        </div>
+
+        <div class="highlight-box">
+            <h5>▶️ Zagon strežnika</h5>
+            <div class="code-snippet">./server 8080</div>
+            <p>Strežnik se zažene in posluša na portu 8080.</p>
+        </div>
+
+        <div class="highlight-box">
+            <h5>▶️ Zagon odjemalca</h5>
+            <div class="code-snippet">./client 127.0.0.1 8080</div>
+            <p>Odjemalec se poveže na strežnik na lokalnem računalniku (127.0.0.1) na portu 8080.</p>
+        </div>
+
+        <div class="highlight-box">
+            <h5>📝 Primeri izrazov</h5>
+            <div class="code-snippet">Vnesi izraz (npr. 3.5 * 2): 5 + 3
+Rezultat: 8.000000
+
+Vnesi izraz (npr. 3.5 * 2): 10.5 - 2.3
+Rezultat: 8.200000
+
+Vnesi izraz (npr. 3.5 * 2): 4.5 * 2
+Rezultat: 9.000000
+
+Vnesi izraz (npr. 3.5 * 2): 10 / 4
+Rezultat: 2.500000
+
+Vnesi izraz (npr. 3.5 * 2): 1 / 0
+Napaka: deljenje z 0.</div>
+        </div>
+
+        <div class="flow-box">
+            <h5>🔄 Celoten potek komunikacije</h5>
+            <pre>Terminal 1 (Strežnik):              Terminal 2 (Odjemalec):
+$ ./server 8080                     
+Strežnik posluša na portu 8080...   $ ./client 127.0.0.1 8080
+                                    Povezano na 127.0.0.1:8080
+Povezan odjemalec.                  
+                                    Vnesi izraz: 3.5 * 2
+Prejel: 3.5 * 2                     Rezultat: 7.000000
+                                    
+                                    Vnesi izraz: 10 + 5
+Prejel: 10 + 5                      Rezultat: 15.000000
+                                    
+                                    Vnesi izraz: ^D (Ctrl+D)
+Odjemalec prekinil povezavo.        Povezava zaprta.</pre>
+        </div>
+    </div>
+
+</div>
+</body>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
+</html>
