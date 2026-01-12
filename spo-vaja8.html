@@ -1,0 +1,913 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 8 - Monte Carlo Paralelizacija</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+            --accent-yellow: #fbd38d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin: 10px 0;
+            line-height: 1.8;
+        }
+
+        .task-box code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 2px 8px;
+            border-radius: 4px;
+            color: var(--accent-purple);
+            font-family: 'Courier New', monospace;
+        }
+
+        .explanation-box {
+            background: rgba(99, 179, 237, 0.1);
+            border-left: 5px solid var(--accent-blue);
+            padding: 25px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .explanation-box h4 {
+            color: var(--accent-blue);
+            margin-bottom: 10px;
+            font-size: 1.2em;
+        }
+
+        .explanation-box p {
+            color: var(--text-secondary);
+            margin: 8px 0;
+        }
+
+        .line-explanation {
+            background: var(--bg-primary);
+            border-radius: 8px;
+            padding: 15px;
+            margin: 10px 0;
+            border: 1px solid rgba(183, 148, 246, 0.3);
+        }
+
+        .line-number {
+            color: var(--accent-yellow);
+            font-weight: bold;
+            margin-right: 10px;
+        }
+
+        .code-line {
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+            background: rgba(0, 0, 0, 0.3);
+            padding: 8px;
+            border-radius: 4px;
+            margin: 5px 0;
+            display: block;
+        }
+
+        .explanation-text {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            padding-left: 15px;
+            border-left: 2px solid var(--accent-purple);
+        }
+
+        pre[class*="language-"] {
+            background: var(--bg-primary);
+            border-radius: 15px;
+            padding: 25px;
+            margin: 20px 0;
+            border: 1px solid rgba(183, 148, 246, 0.3);
+            font-size: 0.95em;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-top: 30px;
+            padding: 15px 30px;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            color: white;
+            text-decoration: none;
+            border-radius: 10px;
+            transition: transform 0.2s;
+        }
+
+        .back-link:hover {
+            transform: translateY(-2px);
+        }
+
+        .note-box {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 5px solid var(--accent-orange);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .note-box h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .section-divider {
+            height: 2px;
+            background: linear-gradient(90deg, transparent, var(--accent-purple), transparent);
+            margin: 40px 0;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎲 Vaja 8: Monte Carlo Paralelizacija</h1>
+            <p>Izračun prostornine krogle z večnitnim pristopom</p>
+        </div>
+
+        <div class="program-section">
+            <h2 class="program-title">📋 NALOGA</h2>
+
+            <div class="task-box">
+                <h3>Cilj</h3>
+                <ul>
+                    <li>Z metodo Monte Carlo paralelno večnitno izračunajte približek za prostornino krogle polmera 1.</li>
+                </ul>
+            </div>
+
+            <div class="task-box">
+                <h3>Zahteve implementacije</h3>
+                <ul>
+                    <li><strong>Preberite iz ukazne vrstice število N</strong> in ustvarite toliko niti</li>
+                    <li><strong>Vsaka nit lokalno računa približek integrala:</strong>
+                        <ul style="margin-left: 25px; margin-top: 10px;">
+                            <li>Izvedite <code>P</code> (npr. 1e6) lokalnih (tj., v eni niti) poskusov:</li>
+                            <li>Izberite naključna števila <code>x</code>, <code>y</code> in <code>z</code> (vektor r) med 0 in 1</li>
+                            <li>Če je dolžina vektorja r manjša od 1, inkrementirajte lokalni števec zadetkov <code>Z</code></li>
+                        </ul>
+                    </li>
+                    <li><strong>Lokalna Z in P prištejte globalnima:</strong>
+                        <ul style="margin-left: 25px; margin-top: 10px;">
+                            <li><code>Zs += Z</code> in <code>Ps += P</code></li>
+                            <li><code>Zs</code> je skupno št. zadetkov, <code>Ps</code> pa skupno št. poskusov</li>
+                            <li>Globalne spremenljivke varujte z mutexom</li>
+                            <li>Ko je <code>Ps >= Ps_MAX</code> (npr. 1e9), se nit konča, sicer se vrne na izvajanje P poskusov</li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+
+            <div class="task-box">
+                <h3>⏱️ Merjenje časa</h3>
+                <ul>
+                    <li><code>clock_gettime</code> uporablja <code>struct timespec</code>, ki vsebuje <code>tv_sec</code> in <code>tv_nsec</code></li>
+                    <li>Pretečen čas = <code>(konec.tv_sec - zacetek.tv_sec) + (konec.tv_nsec - zacetek.tv_nsec) * 1e-9</code></li>
+                </ul>
+            </div>
+
+            <div class="note-box">
+                <h4>🔬 Eksperiment</h4>
+                <p>Preizkusite, koliko niti je na vašem računalniku najbolje izbrati za optimalno hitrost izvajanja.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="program-section">
+            <h2 class="program-title">💻 montecarlo_sphere.c - Kompletna koda</h2>
+
+            <pre><code class="language-c">// montecarlo_sphere.c
+#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;math.h&gt;
+#include &lt;time.h&gt;
+
+#define P_LOCAL 1000000LL     // poskusov na nit v enem ciklu
+#define PS_MAX 1000000000LL   // skupno poskusov (1e9)
+
+long long Zs = 0;   // globalni zadetki
+long long Ps = 0;   // globalni poskusi
+
+pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;
+
+double rand01() {
+    return rand() / (double)RAND_MAX;
+}
+
+void* worker(void* arg) {
+    while (1) {
+        long long Z_local = 0;
+
+        // 1) Lokalni Monte Carlo poskusi
+        for (long long i = 0; i &lt; P_LOCAL; i++) {
+            double x = rand01();
+            double y = rand01();
+            double z = rand01();
+
+            double r2 = x*x + y*y + z*z;
+            if (r2 &lt;= 1.0)
+                Z_local++;
+        }
+
+        // 2) Dodaj v globalne spremenljivke (z zaklepanjem)
+        pthread_mutex_lock(&amp;mtx);
+        Zs += Z_local;
+        Ps += P_LOCAL;
+
+        int done = (Ps &gt;= PS_MAX);
+        pthread_mutex_unlock(&amp;mtx);
+
+        if (done) break;
+    }
+
+    return NULL;
+}
+
+int main(int argc, char* argv[]) {
+    if (argc != 2) {
+        printf("Uporaba: %s &lt;stevilo_niti&gt;\n", argv[0]);
+        return 1;
+    }
+
+    int N = atoi(argv[1]);
+    if (N &lt;= 0) {
+        printf("Napacno stevilo niti.\n");
+        return 1;
+    }
+
+    srand(time(NULL));
+
+    pthread_t* threads = malloc(sizeof(pthread_t) * N);
+
+    struct timespec start, end;
+    clock_gettime(CLOCK_MONOTONIC, &amp;start);
+
+    // Ustvari niti
+    for (int i = 0; i &lt; N; i++)
+        pthread_create(&amp;threads[i], NULL, worker, NULL);
+
+    // Pocakaj niti
+    for (int i = 0; i &lt; N; i++)
+        pthread_join(threads[i], NULL);
+
+    clock_gettime(CLOCK_MONOTONIC, &amp;end);
+
+    double elapsed =
+        (end.tv_sec - start.tv_sec) +
+        (end.tv_nsec - start.tv_nsec) * 1e-9;
+
+    // Izracun prostornine
+    // Delamo le 1/8 enotske krogle (r med 0..1 v 3D prostornini kocke 1x1x1)
+    // Zato množimo z 8.
+    double approx_volume = 8.0 * ((double)Zs / (double)Ps);
+
+    printf("--------------------------------------------------\n");
+    printf("Stevilo niti:         %d\n", N);
+    printf("Skupni poskusi:       %lld\n", Ps);
+    printf("Zadetki:              %lld\n", Zs);
+    printf("Priblizek volumna:    %.10f\n", approx_volume);
+    printf("Napaka:               %.10f\n",
+           fabs((4.0/3.0)*M_PI - approx_volume));
+    printf("Cas izvajanja:        %.6f s\n", elapsed);
+    printf("--------------------------------------------------\n");
+
+    free(threads);
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="program-section">
+            <h2 class="program-title">📖 Razlaga vsake vrstice kode</h2>
+
+            <div class="explanation-box">
+                <h4>Vključene knjižnice in začetek programa</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 1:</span>
+                    <code class="code-line">// montecarlo_sphere.c</code>
+                    <p class="explanation-text">Komentar, ki označuje ime programa - Monte Carlo simulacija za izračun prostornine krogle.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 2:</span>
+                    <code class="code-line">#include &lt;stdio.h&gt;</code>
+                    <p class="explanation-text">Vključi standardno knjižnico za vhod/izhod - potrebujemo jo za funkcije <code>printf()</code> in izpisovanje rezultatov.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 3:</span>
+                    <code class="code-line">#include &lt;stdlib.h&gt;</code>
+                    <p class="explanation-text">Vključi knjižnico za splošne operacije - potrebujemo jo za <code>malloc()</code>, <code>free()</code>, <code>rand()</code>, <code>atoi()</code> in <code>RAND_MAX</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 4:</span>
+                    <code class="code-line">#include &lt;pthread.h&gt;</code>
+                    <p class="explanation-text">Vključi knjižnico POSIX niti - omogoča uporabo več niti (threads), mutexov in funkcij <code>pthread_create()</code>, <code>pthread_join()</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 5:</span>
+                    <code class="code-line">#include &lt;math.h&gt;</code>
+                    <p class="explanation-text">Vključi matematično knjižnico - potrebujemo jo za konstanto <code>M_PI</code> (število π) in funkcijo <code>fabs()</code> (absolutna vrednost).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 6:</span>
+                    <code class="code-line">#include &lt;time.h&gt;</code>
+                    <p class="explanation-text">Vključi knjižnico za merjenje časa - potrebujemo jo za <code>clock_gettime()</code>, <code>struct timespec</code> in <code>srand(time(NULL))</code>.</p>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Definicije konstant</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 8:</span>
+                    <code class="code-line">#define P_LOCAL 1000000LL</code>
+                    <p class="explanation-text">Definira konstantno vrednost 1,000,000 (1e6) - to je število poskusov, ki jih vsaka nit izvede v enem ciklu, preden posodobi globalne spremenljivke. <code>LL</code> označuje podatkovni tip <code>long long</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 9:</span>
+                    <code class="code-line">#define PS_MAX 1000000000LL</code>
+                    <p class="explanation-text">Definira maksimalno število poskusov 1,000,000,000 (1e9) - ko skupno število poskusov doseže to vrednost, se niti ustavijo. <code>LL</code> označuje <code>long long</code>.</p>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Globalne spremenljivke</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 11:</span>
+                    <code class="code-line">long long Zs = 0;</code>
+                    <p class="explanation-text">Globalna spremenljivka, ki šteje skupno število zadetkov (ko točka pade znotraj krogle). Inicializirana na 0. Vse niti dostopajo do te spremenljivke (zaščitena z mutexom).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 12:</span>
+                    <code class="code-line">long long Ps = 0;</code>
+                    <p class="explanation-text">Globalna spremenljivka, ki šteje skupno število vseh poskusov. Inicializirana na 0. Vse niti dostopajo do te spremenljivke (zaščitena z mutexom).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 14:</span>
+                    <code class="code-line">pthread_mutex_t mtx = PTHREAD_MUTEX_INITIALIZER;</code>
+                    <p class="explanation-text">Definira in inicializira mutex (mutual exclusion lock) - uporablja se za zaščito dostopa do globalnih spremenljivk <code>Zs</code> in <code>Ps</code>, da preprečimo race conditions (hkratno pisanje iz več niti).</p>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Funkcija za generiranje naključnih števil</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 16:</span>
+                    <code class="code-line">double rand01() {</code>
+                    <p class="explanation-text">Začetek definicije pomožne funkcije <code>rand01()</code>, ki vrne naključno decimalno število tipa <code>double</code> med 0 in 1.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 17:</span>
+                    <code class="code-line">    return rand() / (double)RAND_MAX;</code>
+                    <p class="explanation-text">Generira naključno število med 0 in 1. <code>rand()</code> vrne celo število med 0 in <code>RAND_MAX</code>, ki ga delimo z <code>RAND_MAX</code> (pretvorjenim v <code>double</code>), da dobimo število med 0.0 in 1.0.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 18:</span>
+                    <code class="code-line">}</code>
+                    <p class="explanation-text">Konec funkcije <code>rand01()</code>.</p>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Funkcija delavca (worker thread)</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 20:</span>
+                    <code class="code-line">void* worker(void* arg) {</code>
+                    <p class="explanation-text">Začetek funkcije, ki jo bo izvajala vsaka nit. Sprejme <code>void*</code> (kazalec na katerikoli tip) kot argument in vrne <code>void*</code> - to je standardna oblika za pthread funkcije. Argument <code>arg</code> tukaj ne uporabljamo.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 21:</span>
+                    <code class="code-line">    while (1) {</code>
+                    <p class="explanation-text">Začetek neskončne zanke - nit bo izvajala poskuse v zankah, dokler skupno število poskusov ne doseže <code>PS_MAX</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 22:</span>
+                    <code class="code-line">        long long Z_local = 0;</code>
+                    <p class="explanation-text">Lokalna spremenljivka za štetje zadetkov v trenutnem ciklu te niti. Vsak cikel se resetira na 0. To zmanjša število zaklepanj mutexa - štejemo lokalno in nato enkrat prištejemo globalni vrednosti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 24:</span>
+                    <code class="code-line">        // 1) Lokalni Monte Carlo poskusi</code>
+                    <p class="explanation-text">Komentar, ki označuje začetek faze lokalnega računanja (brez dostopa do globalnih spremenljivk).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 25:</span>
+                    <code class="code-line">        for (long long i = 0; i &lt; P_LOCAL; i++) {</code>
+                    <p class="explanation-text">Zanka, ki izvede <code>P_LOCAL</code> (1,000,000) Monte Carlo poskusov. Vsak poskus testira eno naključno točko v prostoru.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 26:</span>
+                    <code class="code-line">            double x = rand01();</code>
+                    <p class="explanation-text">Generira naključno x-koordinato med 0 in 1 za točko v 3D prostoru.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 27:</span>
+                    <code class="code-line">            double y = rand01();</code>
+                    <p class="explanation-text">Generira naključno y-koordinato med 0 in 1 za točko v 3D prostoru.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 28:</span>
+                    <code class="code-line">            double z = rand01();</code>
+                    <p class="explanation-text">Generira naključno z-koordinato med 0 in 1 za točko v 3D prostoru. Vektor (x, y, z) predstavlja naključno točko v kocki [0,1]³.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 30:</span>
+                    <code class="code-line">            double r2 = x*x + y*y + z*z;</code>
+                    <p class="explanation-text">Izračuna kvadrat razdalje točke od izhodišča (0, 0, 0). Formula r² = x² + y² + z² - to je kvadrat dolžine vektorja. Ne računamo kvadratnega korena, ker primerjamo z 1.0 (kar je enako kot primerjati √r² s √1).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 31:</span>
+                    <code class="code-line">            if (r2 &lt;= 1.0)</code>
+                    <p class="explanation-text">Preveri, ali je točka znotraj krogle polmera 1. Če je r² ≤ 1, potem je r ≤ 1, kar pomeni, da točka leži znotraj ali na krogli.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 32:</span>
+                    <code class="code-line">                Z_local++;</code>
+                    <p class="explanation-text">Če je točka znotraj krogle, povečaj lokalni števec zadetkov za 1. To je "zadetek" v Monte Carlo simulaciji.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 33:</span>
+                    <code class="code-line">        }</code>
+                    <p class="explanation-text">Konec for zanke - vseh <code>P_LOCAL</code> poskusov je izvedenih.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 35:</span>
+                    <code class="code-line">        // 2) Dodaj v globalne spremenljivke (z zaklepanjem)</code>
+                    <p class="explanation-text">Komentar - zdaj moramo posodobiti globalne spremenljivke, kar zahteva sinhronizacijo (mutex).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 36:</span>
+                    <code class="code-line">        pthread_mutex_lock(&amp;mtx);</code>
+                    <p class="explanation-text">Zakleni mutex - od te točke naprej ima samo ta nit ekskluziven dostop do zaščitenih globalnih spremenljivk. Če je mutex že zaklenjen, nit počaka.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 37:</span>
+                    <code class="code-line">        Zs += Z_local;</code>
+                    <p class="explanation-text">Prištej lokalne zadetke trenutnega cikla k skupnemu številu zadetkov. To je kritična sekcija - zaščitena z mutexom.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 38:</span>
+                    <code class="code-line">        Ps += P_LOCAL;</code>
+                    <p class="explanation-text">Prištej število izvedenih poskusov (P_LOCAL) k skupnemu številu poskusov. Tudi to je kritična sekcija.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 40:</span>
+                    <code class="code-line">        int done = (Ps &gt;= PS_MAX);</code>
+                    <p class="explanation-text">Preveri, ali smo dosegli maksimalno število poskusov. Rezultat (true/false) shrani v lokalno spremenljivko <code>done</code>. To preverimo znotraj zaklenjenega območja, da dobimo pravilno vrednost <code>Ps</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 41:</span>
+                    <code class="code-line">        pthread_mutex_unlock(&amp;mtx);</code>
+                    <p class="explanation-text">Odkleni mutex - omogoči drugim niti dostop do globalnih spremenljivk. Kritična sekcija se konča.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 43:</span>
+                    <code class="code-line">        if (done) break;</code>
+                    <p class="explanation-text">Če smo dosegli maksimalno število poskusov (<code>PS_MAX</code>), prekini neskončno zanko while in zaključi nit.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 44:</span>
+                    <code class="code-line">    }</code>
+                    <p class="explanation-text">Konec while zanke - če ni <code>break</code>, se nit vrne nazaj in izvede še en cikel <code>P_LOCAL</code> poskusov.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 46:</span>
+                    <code class="code-line">    return NULL;</code>
+                    <p class="explanation-text">Nit vrne <code>NULL</code> (ni povratne vrednosti) in se konča. To je zahtevano za pthread funkcije.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 47:</span>
+                    <code class="code-line">}</code>
+                    <p class="explanation-text">Konec funkcije <code>worker()</code>.</p>
+                </div>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Glavna funkcija (main)</h4>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 49:</span>
+                    <code class="code-line">int main(int argc, char* argv[]) {</code>
+                    <p class="explanation-text">Začetek glavne funkcije programa. <code>argc</code> je število argumentov ukazne vrstice, <code>argv</code> pa polje nizov (argumentov). Program pričakuje en argument: število niti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 50:</span>
+                    <code class="code-line">    if (argc != 2) {</code>
+                    <p class="explanation-text">Preveri, ali je bilo podano točno 2 argumenta (ime programa + število niti). Če ni, je uporaba napačna.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 51:</span>
+                    <code class="code-line">        printf("Uporaba: %s &lt;stevilo_niti&gt;\n", argv[0]);</code>
+                    <p class="explanation-text">Izpiše navodila za uporabo programa. <code>%s</code> se zamenja z imenom programa (<code>argv[0]</code>).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 52:</span>
+                    <code class="code-line">        return 1;</code>
+                    <p class="explanation-text">Vrne 1 (napaka) in zaključi program, ker argumenti niso pravilni.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 53:</span>
+                    <code class="code-line">    }</code>
+                    <p class="explanation-text">Konec if bloka za preverjanje števila argumentov.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 55:</span>
+                    <code class="code-line">    int N = atoi(argv[1]);</code>
+                    <p class="explanation-text">Pretvori prvi argument (ki je niz) v celo število s funkcijo <code>atoi()</code> (ASCII to Integer). To je število niti, ki jih bomo ustvarili.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 56:</span>
+                    <code class="code-line">    if (N &lt;= 0) {</code>
+                    <p class="explanation-text">Preveri, ali je število niti veljavno (mora biti pozitivno). Če je 0 ali negativno, je neveljavno.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 57:</span>
+                    <code class="code-line">        printf("Napacno stevilo niti.\n");</code>
+                    <p class="explanation-text">Izpiše sporočilo o napaki, če je število niti neveljavno.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 58:</span>
+                    <code class="code-line">        return 1;</code>
+                    <p class="explanation-text">Vrne 1 (napaka) in zaključi program.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 59:</span>
+                    <code class="code-line">    }</code>
+                    <p class="explanation-text">Konec if bloka za preverjanje veljavnosti števila niti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 61:</span>
+                    <code class="code-line">    srand(time(NULL));</code>
+                    <p class="explanation-text">Inicializira generator naključnih števil z trenutnim časom. <code>time(NULL)</code> vrne trenutni čas v sekundah, <code>srand()</code> pa nastavi seme za <code>rand()</code>. Brez tega bi dobili vedno enaka naključna števila.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 63:</span>
+                    <code class="code-line">    pthread_t* threads = malloc(sizeof(pthread_t) * N);</code>
+                    <p class="explanation-text">Dinamično alocira polje za shranjevanje N thread identifikatorjev. <code>sizeof(pthread_t) * N</code> izračuna potrebno količino spomina.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 65:</span>
+                    <code class="code-line">    struct timespec start, end;</code>
+                    <p class="explanation-text">Deklarirata dve strukturi za merjenje časa. <code>timespec</code> vsebuje <code>tv_sec</code> (sekunde) in <code>tv_nsec</code> (nanosekunde).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 66:</span>
+                    <code class="code-line">    clock_gettime(CLOCK_MONOTONIC, &amp;start);</code>
+                    <p class="explanation-text">Zabeleži začetni čas. <code>CLOCK_MONOTONIC</code> je ura, ki vedno napreduje (ni pod vplivom sprememb sistemskega časa). Rezultat se shrani v strukturo <code>start</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 68:</span>
+                    <code class="code-line">    // Ustvari niti</code>
+                    <p class="explanation-text">Komentar - naslednji del kode ustvarja delavske niti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 69:</span>
+                    <code class="code-line">    for (int i = 0; i &lt; N; i++)</code>
+                    <p class="explanation-text">Zanka, ki se izvede N-krat (enkrat za vsako nit, ki jo želimo ustvariti).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 70:</span>
+                    <code class="code-line">        pthread_create(&amp;threads[i], NULL, worker, NULL);</code>
+                    <p class="explanation-text">Ustvari novo nit. Parametri: kazalec na mesto za shranitev ID niti, atributi niti (NULL = privzeto), funkcija ki jo bo nit izvajala (<code>worker</code>), argument za funkcijo (NULL). Nova nit začne izvajati funkcijo <code>worker()</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 72:</span>
+                    <code class="code-line">    // Pocakaj niti</code>
+                    <p class="explanation-text">Komentar - naslednji del kode čaka, da se vse niti zaključijo.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 73:</span>
+                    <code class="code-line">    for (int i = 0; i &lt; N; i++)</code>
+                    <p class="explanation-text">Zanka, ki se izvede N-krat (enkrat za vsako ustvarjeno nit).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 74:</span>
+                    <code class="code-line">        pthread_join(threads[i], NULL);</code>
+                    <p class="explanation-text">Počaka, da se i-ta nit zaključi. Glavna nit blokira na tem mestu, dokler se nit ne konča. Drugi parameter (NULL) pomeni, da ne potrebujemo povratne vrednosti niti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 76:</span>
+                    <code class="code-line">    clock_gettime(CLOCK_MONOTONIC, &amp;end);</code>
+                    <p class="explanation-text">Zabeleži končni čas po tem, ko so se vse niti zaključile. Rezultat se shrani v strukturo <code>end</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 78-79:</span>
+                    <code class="code-line">    double elapsed =<br>        (end.tv_sec - start.tv_sec) +<br>        (end.tv_nsec - start.tv_nsec) * 1e-9;</code>
+                    <p class="explanation-text">Izračuna pretečen čas v sekundah. Odšteje sekunde in nanosekunde začetnega časa od končnega. Nanosekunde pomnoži z 1e-9 (0.000000001), da jih pretvori v sekunde. Sešteje obe komponenti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 81:</span>
+                    <code class="code-line">    // Izracun prostornine</code>
+                    <p class="explanation-text">Komentar - naslednji del izračuna približek za prostornino krogle.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 82-83:</span>
+                    <code class="code-line">    // Delamo le 1/8 enotske krogle (r med 0..1 v 3D prostornini kocke 1x1x1)<br>    // Zato množimo z 8.</code>
+                    <p class="explanation-text">Komentar - razlaga, da vzorčimo samo pozitivni oktant (x,y,z vsi med 0 in 1), kar predstavlja 1/8 celotne krogle. Zato moramo rezultat pomnožiti z 8, da dobimo celotno prostornino.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 84:</span>
+                    <code class="code-line">    double approx_volume = 8.0 * ((double)Zs / (double)Ps);</code>
+                    <p class="explanation-text">Izračuna približek prostornine. Razmerje Zs/Ps je delež točk, ki so padle znotraj krogle - to je približek za prostornino 1/8 krogle v kocki 1×1×1. Množimo z 8, da dobimo celotno prostornino krogle polmera 1.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 86:</span>
+                    <code class="code-line">    printf("--------------------------------------------------\n");</code>
+                    <p class="explanation-text">Izpiše črto ločila za lepši izgled izpisa rezultatov.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 87:</span>
+                    <code class="code-line">    printf("Stevilo niti:         %d\n", N);</code>
+                    <p class="explanation-text">Izpiše število uporabljenih niti.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 88:</span>
+                    <code class="code-line">    printf("Skupni poskusi:       %lld\n", Ps);</code>
+                    <p class="explanation-text">Izpiše skupno število izvedenih Monte Carlo poskusov. <code>%lld</code> je format za <code>long long</code>.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 89:</span>
+                    <code class="code-line">    printf("Zadetki:              %lld\n", Zs);</code>
+                    <p class="explanation-text">Izpiše skupno število zadetkov (točk, ki so padle znotraj krogle).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 90:</span>
+                    <code class="code-line">    printf("Priblizek volumna:    %.10f\n", approx_volume);</code>
+                    <p class="explanation-text">Izpiše izračunani približek prostornine krogle z 10 decimalnimi mesti. Točna vrednost je 4π/3 ≈ 4.1887902.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 91-92:</span>
+                    <code class="code-line">    printf("Napaka:               %.10f\n",<br>           fabs((4.0/3.0)*M_PI - approx_volume));</code>
+                    <p class="explanation-text">Izpiše absolutno napako približka. <code>fabs()</code> vrne absolutno vrednost razlike med točno vrednostjo (4π/3) in našim približkom. <code>M_PI</code> je konstanta π.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 93:</span>
+                    <code class="code-line">    printf("Cas izvajanja:        %.6f s\n", elapsed);</code>
+                    <p class="explanation-text">Izpiše čas izvajanja v sekundah s 6 decimalnimi mesti (mikrosekundna natančnost).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 94:</span>
+                    <code class="code-line">    printf("--------------------------------------------------\n");</code>
+                    <p class="explanation-text">Izpiše spodnjo črto ločila za lepši izgled.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 96:</span>
+                    <code class="code-line">    free(threads);</code>
+                    <p class="explanation-text">Sprosti dinamično alocirani pomnilnik za polje thread identifikatorjev. To preprečuje uhajanje pomnilnika (memory leak).</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 97:</span>
+                    <code class="code-line">    return 0;</code>
+                    <p class="explanation-text">Vrne 0, kar pomeni uspešen zaključek programa.</p>
+                </div>
+
+                <div class="line-explanation">
+                    <span class="line-number">Vrstica 98:</span>
+                    <code class="code-line">}</code>
+                    <p class="explanation-text">Konec glavne funkcije <code>main()</code> in konec programa.</p>
+                </div>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="program-section">
+            <h2 class="program-title">🔬 Kako deluje Monte Carlo metoda</h2>
+
+            <div class="explanation-box">
+                <h4>Princip delovanja</h4>
+                <p>Monte Carlo metoda je statistična tehnika za približno izračunavanje vrednosti s pomočjo naključnega vzorčenja:</p>
+
+                <ol style="margin-left: 25px; color: var(--text-secondary); margin-top: 15px;">
+                    <li><strong>Vzorčimo točke:</strong> Generiramo naključne točke v znanem prostoru (kocka 1×1×1)</li>
+                    <li><strong>Testiramo pogoj:</strong> Preverimo, ali točka ustreza pogoju (ali je znotraj krogle)</li>
+                    <li><strong>Štejemo:</strong> Razmerje točk znotraj/skupno ≈ razmerje prostornin</li>
+                    <li><strong>Računamo:</strong> Volumen krogle ≈ volumen kocke × (zadetki / poskusi)</li>
+                </ol>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Zakaj množimo z 8?</h4>
+                <p>Program vzorči samo pozitivni oktant (x, y, z ∈ [0,1]), kar je 1/8 celotne krogle:</p>
+                <ul style="margin-left: 25px; color: var(--text-secondary); margin-top: 10px;">
+                    <li>Celotna krogla ima 8 oktantov (kombinacije ±x, ±y, ±z)</li>
+                    <li>Mi vzorčimo samo en oktant (kjer so vse koordinate pozitivne)</li>
+                    <li>Zato moramo rezultat pomnožiti z 8, da dobimo celotno prostornino</li>
+                    <li>Formula: V = 8 × V_kocke × (Zs / Ps) = 8 × 1 × (Zs / Ps)</li>
+                </ul>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Paralelizacija</h4>
+                <p>Program uporablja večnitnost za pohitritev računanja:</p>
+                <ul style="margin-left: 25px; color: var(--text-secondary); margin-top: 10px;">
+                    <li><strong>Lokalno računanje:</strong> Vsaka nit samostojno izvaja Monte Carlo poskuse brez sinhronizacije</li>
+                    <li><strong>批量 posodabljanje:</strong> Niti prištevajo rezultate globalnima spremenljivkama v paketih (na vsakih P_LOCAL poskusov)</li>
+                    <li><strong>Mutex zaščita:</strong> Globalne spremenljivke Zs in Ps so zaščitene z mutexom proti race conditions</li>
+                    <li><strong>Dinamično ustavitev:</strong> Niti se ustavijo, ko skupno Ps doseže PS_MAX</li>
+                </ul>
+            </div>
+
+            <div class="note-box">
+                <h4>💡 Optimizacija števila niti</h4>
+                <p>Optimalno število niti običajno ustreza številu procesorskih jeder. Preveč niti povzroči overhead zaradi preklapljanja konteksta (context switching), premalo pa ne izkoristi celotne procesorske moči. Tipično testiranje: 1, 2, 4, 8, 16 niti.</p>
+            </div>
+        </div>
+
+        <div class="section-divider"></div>
+
+        <div class="program-section">
+            <h2 class="program-title">🔧 Kompilacija in izvajanje</h2>
+
+            <div class="explanation-box">
+                <h4>Kompilacija</h4>
+                <pre><code class="language-bash">gcc -o montecarlo montecarlo_sphere.c -lpthread -lm</code></pre>
+                <ul style="margin-left: 25px; color: var(--text-secondary); margin-top: 10px;">
+                    <li><code>-lpthread</code>: poveži knjižnico za POSIX niti</li>
+                    <li><code>-lm</code>: poveži matematično knjižnico (za M_PI in fabs)</li>
+                </ul>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Izvajanje</h4>
+                <pre><code class="language-bash">./montecarlo 4</code></pre>
+                <p style="margin-top: 10px; color: var(--text-secondary);">Zažene program s 4 nitmi. Preizkusite različna števila niti (1, 2, 4, 8, ...) in primerjajte čase izvajanja.</p>
+            </div>
+
+            <div class="explanation-box">
+                <h4>Primer izpisa</h4>
+                <pre><code class="language-plaintext">--------------------------------------------------
+Stevilo niti:         4
+Skupni poskusi:       1000000000
+Zadetki:              523598745
+Priblizek volumna:    4.1887899200
+Napaka:               0.0000003147
+Cas izvajanja:        12.453821 s
+--------------------------------------------------</code></pre>
+            </div>
+        </div>
+
+        <a href="spo-docs-index.html" class="back-link">← Nazaj na kazalo</a>
+    </div>
+
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
