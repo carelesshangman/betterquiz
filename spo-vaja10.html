@@ -1,0 +1,1391 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 10 - Paralelni TCP Strežnik</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        :root {
+            --bg-primary: #0a0e27;
+            --bg-card: #151933;
+            --text-primary: #e4e4e7;
+            --text-secondary: #a1a1aa;
+            --accent-purple: #b794f6;
+            --accent-blue: #63b3ed;
+            --accent-green: #68d391;
+            --accent-orange: #f6ad55;
+            --accent-red: #fc8181;
+            --accent-yellow: #fbd38d;
+        }
+
+        body {
+            font-family: 'Segoe UI', system-ui, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+            min-height: 100vh;
+        }
+
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 40px 20px;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 50px;
+            padding: 30px;
+            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
+            border-radius: 20px;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .header h1 {
+            font-size: 3em;
+            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            margin-bottom: 10px;
+        }
+
+        .header p {
+            color: var(--text-secondary);
+            font-size: 1.2em;
+        }
+
+        .program-section {
+            background: var(--bg-card);
+            border-radius: 20px;
+            padding: 40px;
+            margin-bottom: 40px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
+        }
+
+        .program-title {
+            font-size: 2.2em;
+            color: var(--accent-blue);
+            margin-bottom: 20px;
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .task-box {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 5px solid var(--accent-green);
+            padding: 25px;
+            margin: 30px 0;
+            border-radius: 10px;
+        }
+
+        .task-box h3 {
+            color: var(--accent-green);
+            margin-bottom: 15px;
+            font-size: 1.4em;
+        }
+
+        .task-box ul {
+            margin-left: 25px;
+            color: var(--text-secondary);
+        }
+
+        .task-box li {
+            margin: 8px 0;
+        }
+
+        .code-block {
+            margin: 30px 0;
+        }
+
+        .code-block h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-size: 1.3em;
+        }
+
+        .code-block pre {
+            background: #1e1e1e !important;
+            border-radius: 10px;
+            padding: 20px;
+            overflow-x: auto;
+            border: 2px solid var(--accent-purple);
+        }
+
+        .explanation {
+            margin: 30px 0;
+        }
+
+        .explanation h4 {
+            color: var(--accent-orange);
+            margin: 25px 0 15px 0;
+            font-size: 1.5em;
+        }
+
+        .explanation h5 {
+            color: var(--accent-blue);
+            margin: 20px 0 12px 0;
+            font-size: 1.2em;
+        }
+
+        .explanation p {
+            color: var(--text-secondary);
+            margin: 12px 0;
+            line-height: 1.8;
+        }
+
+        .explanation ul {
+            margin: 12px 0 12px 25px;
+            color: var(--text-secondary);
+        }
+
+        .explanation li {
+            margin: 8px 0;
+            line-height: 1.8;
+        }
+
+        .code-snippet {
+            background: #1e1e1e;
+            padding: 15px;
+            border-radius: 8px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+            margin: 15px 0;
+            border-left: 4px solid var(--accent-purple);
+            overflow-x: auto;
+        }
+
+        .line-explanation {
+            background: rgba(99, 179, 237, 0.1);
+            border-left: 4px solid var(--accent-blue);
+            padding: 15px;
+            margin: 15px 0;
+            border-radius: 8px;
+        }
+
+        .line-explanation .line-num {
+            color: var(--accent-purple);
+            font-weight: bold;
+            font-family: 'Courier New', monospace;
+        }
+
+        .line-explanation .code {
+            background: #1e1e1e;
+            padding: 8px 12px;
+            border-radius: 5px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-green);
+            margin: 8px 0;
+            display: block;
+        }
+
+        .line-explanation .desc {
+            color: var(--text-secondary);
+            margin-top: 8px;
+            line-height: 1.6;
+        }
+
+        .highlight-box {
+            background: rgba(99, 179, 237, 0.1);
+            border: 2px solid var(--accent-blue);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .highlight-box h5 {
+            color: var(--accent-blue);
+            margin-bottom: 12px;
+        }
+
+        .warning-box {
+            background: rgba(252, 129, 129, 0.1);
+            border: 2px solid var(--accent-red);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .warning-box h5 {
+            color: var(--accent-red);
+            margin-bottom: 12px;
+        }
+
+        .inline-code {
+            background: rgba(183, 148, 246, 0.2);
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+            font-size: 0.9em;
+        }
+
+        .diagram {
+            text-align: center;
+            padding: 20px;
+            background: #1e1e1e;
+            border-radius: 10px;
+            margin: 20px 0;
+            color: var(--accent-green);
+            font-family: 'Courier New', monospace;
+            white-space: pre;
+            overflow-x: auto;
+            line-height: 1.8;
+        }
+
+        .flow-box {
+            background: rgba(251, 211, 141, 0.1);
+            border: 2px solid var(--accent-yellow);
+            padding: 20px;
+            margin: 20px 0;
+            border-radius: 10px;
+        }
+
+        .flow-box h5 {
+            color: var(--accent-yellow);
+            margin-bottom: 12px;
+        }
+
+        @media (max-width: 768px) {
+            .header h1 {
+                font-size: 2em;
+            }
+
+            .program-title {
+                font-size: 1.8em;
+            }
+
+            .container {
+                padding: 20px 10px;
+            }
+
+            .program-section {
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <h1>🌐 SPO Vaja 10: Paralelni TCP Strežnik</h1>
+        <p>TCP komunikacija z vzporednimi procesi in nitmi</p>
+    </div>
+
+    <!-- OVERVIEW -->
+    <div class="program-section">
+        <div class="program-title">🎯 Pregled naloge</div>
+
+        <div class="task-box">
+            <h3>NALOGA 1 – PARALELNI TCP STREŽNIK (s procesi)</h3>
+            <ul>
+                <li><strong>Odjemalec (TCPclient1.c)</strong>: Ustvari N niti, vsaka nit pošlje svojo zaporedno številko (0 do N-1), počaka 5 sekund</li>
+                <li><strong>Strežnik (TCPserver1.c)</strong>: Za vsako povezavo ustvari nov otroški proces (fork)</li>
+                <li>Otrok izpiše svoj PID, številko niti odjemalca, IP naslov in vrata</li>
+                <li>Odjemalcu pošlje sporočilo - nagrado ali spodbudo (glede na PID % številka niti)</li>
+                <li>Strežnik uporablja SIGCHLD rokovalnik, da prepreči zombije</li>
+            </ul>
+        </div>
+
+        <div class="task-box">
+            <h3>NALOGA 2 – PARALELNI TCP STREŽNIK (z nitmi)</h3>
+            <ul>
+                <li><strong>Strežnik (TCPserver2.c)</strong>: Namesto fork, ustvari niti (pthread)</li>
+                <li>Vsaka nit obravnava enega odjemalca</li>
+                <li>Niti so detached (pthread_detach) za samodejno čiščenje</li>
+                <li>Odjemalec ostane enak (TCPclient1.c)</li>
+            </ul>
+        </div>
+
+        <div class="diagram">
+┌─────────────────────────────────────────────────┐
+│            NALOGA 1: FORK (procesi)             │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ODJEMALEC                    STREŽNIK          │
+│  ┌───────┐                   ┌────────┐        │
+│  │ Nit 0 │────────┐          │ Starš  │        │
+│  ├───────┤        │          └───┬────┘        │
+│  │ Nit 1 │───┐    │              │             │
+│  ├───────┤   │    └──────────►fork()           │
+│  │ Nit 2 │   └───────────────►fork()           │
+│  ├───────┤                        │             │
+│  │  ...  │                   ┌────▼────┐       │
+│  └───────┘                   │ Otrok 1 │       │
+│                              ├─────────┤       │
+│                              │ Otrok 2 │       │
+│                              └─────────┘       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+
+┌─────────────────────────────────────────────────┐
+│          NALOGA 2: PTHREAD (niti)               │
+├─────────────────────────────────────────────────┤
+│                                                 │
+│  ODJEMALEC                    STREŽNIK          │
+│  ┌───────┐                   ┌────────┐        │
+│  │ Nit 0 │────────┐          │ Glavna │        │
+│  ├───────┤        │          │  nit   │        │
+│  │ Nit 1 │───┐    │          └───┬────┘        │
+│  ├───────┤   │    └──────────►pthread_create() │
+│  │ Nit 2 │   └───────────────►pthread_create() │
+│  ├───────┤                        │             │
+│  │  ...  │                   ┌────▼────┐       │
+│  └───────┘                   │  Nit 1  │       │
+│                              ├─────────┤       │
+│                              │  Nit 2  │       │
+│                              └─────────┘       │
+│                                                 │
+└─────────────────────────────────────────────────┘
+        </div>
+
+        <div class="highlight-box">
+            <h5>🔑 Ključne razlike</h5>
+            <ul>
+                <li><strong>Fork</strong>: Vsak otrok je nov proces z lastnim PID-jem in pomnilniškim prostorom</li>
+                <li><strong>Pthread</strong>: Vse niti delijo isti proces in pomnilniški prostor</li>
+                <li><strong>Fork</strong>: Potrebuje SIGCHLD rokovalnik za čiščenje zombijev</li>
+                <li><strong>Pthread</strong>: Uporablja pthread_detach za samodejno čiščenje</li>
+            </ul>
+        </div>
+    </div>
+
+    <!-- TCPCLIENT1.C -->
+    <div class="program-section">
+        <div class="program-title">💻 TCPclient1.c - TCP Odjemalec z Nitmi</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga odjemalca</h3>
+            <ul>
+                <li>Ustvari N niti (pthread), kjer je N parameter ukazne vrstice</li>
+                <li>Vsaka nit ustvari svojo TCP vtičnico (socket)</li>
+                <li>Pošlje strežniku svojo zaporedno številko (0 do N-1)</li>
+                <li>Prebere odgovor od strežnika in ga izpiše</li>
+                <li>Čaka 5 sekund (sleep) pred zaključkom</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;string.h&gt;
+#include &lt;arpa/inet.h&gt;
+
+#define BUF_SIZE 256
+
+typedef struct {
+    int thread_num;
+    char server_ip[16];
+    int port;
+} thread_data_t;
+
+void *client_thread(void *arg)
+{
+    thread_data_t *data = (thread_data_t *)arg;
+    int sockfd;
+    struct sockaddr_in server_addr;
+    char buffer[BUF_SIZE];
+
+    sockfd = socket(AF_INET, SOCK_STREAM, 0);
+    if (sockfd < 0) {
+        perror("socket");
+        pthread_exit(NULL);
+    }
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_port = htons(data->port);
+    inet_pton(AF_INET, data->server_ip, &server_addr.sin_addr);
+
+    if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+        perror("connect");
+        close(sockfd);
+        pthread_exit(NULL);
+    }
+
+    write(sockfd, &data->thread_num, sizeof(data->thread_num));
+
+    memset(buffer, 0, BUF_SIZE);
+    read(sockfd, buffer, BUF_SIZE);
+    printf("Odgovor: %s", buffer);
+
+    sleep(5);
+    close(sockfd);
+    pthread_exit(NULL);
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc != 4) {
+        fprintf(stderr, "Uporaba: %s &lt;IP&gt; &lt;port&gt; &lt;N&gt;\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int N = atoi(argv[3]);
+    pthread_t threads[N];
+    thread_data_t data[N];
+
+    for (int i = 0; i < N; i++) {
+        data[i].thread_num = i;
+        strcpy(data[i].server_ip, argv[1]);
+        data[i].port = atoi(argv[2]);
+
+        pthread_create(&threads[i], NULL, client_thread, &data[i]);
+    }
+
+    for (int i = 0; i < N; i++) {
+        pthread_join(threads[i], NULL);
+    }
+
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga po vrsticah</h4>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 1-6:</span>
+                <span class="code">#include &lt;stdio.h&gt;, stdlib.h, unistd.h, pthread.h, string.h, arpa/inet.h</span>
+                <div class="desc">
+                    <strong>Vključimo potrebne knjižnice:</strong>
+                    <ul>
+                        <li><code>stdio.h</code> - za printf, fprintf (vhod/izhod)</li>
+                        <li><code>stdlib.h</code> - za atoi (pretvorba niza v število), exit</li>
+                        <li><code>unistd.h</code> - za close, sleep, write, read (POSIX sistemski klici)</li>
+                        <li><code>pthread.h</code> - za pthread funkcije (ustvarjanje niti)</li>
+                        <li><code>string.h</code> - za strcpy, memset (delo z nizi)</li>
+                        <li><code>arpa/inet.h</code> - za TCP/IP funkcije (htons, inet_pton)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 8:</span>
+                <span class="code">#define BUF_SIZE 256</span>
+                <div class="desc">
+                    <strong>Definiramo velikost medpomnilnika.</strong> BUF_SIZE je konstanta, ki določa, koliko bajtov lahko preberemo iz vtičnice (socket). 256 bajtov je dovolj za prejeta sporočila.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 10-14:</span>
+                <span class="code">typedef struct { int thread_num; char server_ip[16]; int port; } thread_data_t;</span>
+                <div class="desc">
+                    <strong>Struktura za podatke, ki jih potrebuje vsaka nit:</strong>
+                    <ul>
+                        <li><code>thread_num</code> - zaporedna številka niti (0, 1, 2, ... N-1)</li>
+                        <li><code>server_ip</code> - IP naslov strežnika (npr. "127.0.0.1"), 16 znakov je dovolj za IPv4</li>
+                        <li><code>port</code> - številka vrat strežnika (npr. 8080)</li>
+                    </ul>
+                    Vsaka nit bo dobila kazalec na svojo kopijo te strukture.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 16:</span>
+                <span class="code">void *client_thread(void *arg)</span>
+                <div class="desc">
+                    <strong>Funkcija, ki jo izvaja vsaka nit odjemalca.</strong>
+                    <ul>
+                        <li>Argument <code>arg</code> je generični kazalec (void*), ki ga bomo pretvorili v thread_data_t*</li>
+                        <li>Vrne void* (pthread zahteva ta podpis funkcije)</li>
+                        <li>To je koda, ki se izvaja vzporedno v N nitih</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 18:</span>
+                <span class="code">thread_data_t *data = (thread_data_t *)arg;</span>
+                <div class="desc">
+                    <strong>Pretvorimo generični kazalec v pravi tip.</strong> Funkcija pthread_create nam pošlje podatke kot void*, mi pa jih pretvorimo nazaj v thread_data_t*, da lahko dostopamo do polj (thread_num, server_ip, port).
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 19-21:</span>
+                <span class="code">int sockfd; struct sockaddr_in server_addr; char buffer[BUF_SIZE];</span>
+                <div class="desc">
+                    <strong>Lokalne spremenljivke niti:</strong>
+                    <ul>
+                        <li><code>sockfd</code> - deskriptor vtičnice (socket file descriptor), vsaka nit ima svojo vtičnico</li>
+                        <li><code>server_addr</code> - struktura za naslov strežnika (IP + vrata)</li>
+                        <li><code>buffer</code> - medpomnilnik za prejem sporočila od strežnika</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 23:</span>
+                <span class="code">sockfd = socket(AF_INET, SOCK_STREAM, 0);</span>
+                <div class="desc">
+                    <strong>Ustvarimo TCP vtičnico.</strong>
+                    <ul>
+                        <li><code>AF_INET</code> - IPv4 družina protokolov</li>
+                        <li><code>SOCK_STREAM</code> - TCP (zanesljiv, povezavno-usmerjen prenos)</li>
+                        <li><code>0</code> - privzeti protokol (TCP)</li>
+                        <li>Vrne deskriptor vtičnice ali -1 ob napaki</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 24-27:</span>
+                <span class="code">if (sockfd < 0) { perror("socket"); pthread_exit(NULL); }</span>
+                <div class="desc">
+                    <strong>Preverjanje napak pri ustvarjanju vtičnice.</strong> Če socket vrne -1, izpišemo napako s perror in končamo to nit s pthread_exit(NULL). Nit se zaključi, ostale niti pa nadaljujejo.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 29:</span>
+                <span class="code">server_addr.sin_family = AF_INET;</span>
+                <div class="desc">
+                    <strong>Nastavimo družino naslovov.</strong> sin_family = AF_INET pomeni, da bomo uporabljali IPv4 naslove.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 30:</span>
+                <span class="code">server_addr.sin_port = htons(data->port);</span>
+                <div class="desc">
+                    <strong>Nastavimo številko vrat.</strong>
+                    <ul>
+                        <li><code>htons</code> - "host to network short" - pretvori število iz računalnikovega vrstnega reda bajtov v omrežnega</li>
+                        <li>Omrežje uporablja "big-endian", računalnik pa lahko "little-endian"</li>
+                        <li>data->port je številka vrat (npr. 8080)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 31:</span>
+                <span class="code">inet_pton(AF_INET, data->server_ip, &server_addr.sin_addr);</span>
+                <div class="desc">
+                    <strong>Pretvorimo IP naslov iz tekstovne oblike v binarno.</strong>
+                    <ul>
+                        <li><code>inet_pton</code> - "presentation to network" - pretvori niz "127.0.0.1" v binarno strukturo</li>
+                        <li><code>AF_INET</code> - IPv4 format</li>
+                        <li><code>data->server_ip</code> - naslov kot niz (npr. "127.0.0.1")</li>
+                        <li><code>&server_addr.sin_addr</code> - kam shranimo binarno verzijo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 33:</span>
+                <span class="code">if (connect(sockfd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0)</span>
+                <div class="desc">
+                    <strong>Povežemo se s strežnikom.</strong>
+                    <ul>
+                        <li><code>connect</code> - vzpostavi TCP povezavo s strežnikom</li>
+                        <li><code>sockfd</code> - naša vtičnica</li>
+                        <li><code>(struct sockaddr *)&server_addr</code> - naslov strežnika (pretvorjen v generični tip)</li>
+                        <li><code>sizeof(server_addr)</code> - velikost strukture naslova</li>
+                        <li>Vrne 0 pri uspehu, -1 ob napaki</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 34-37:</span>
+                <span class="code">perror("connect"); close(sockfd); pthread_exit(NULL);</span>
+                <div class="desc">
+                    <strong>Obravnava napake pri povezavi.</strong> Če connect ne uspe, izpišemo napako, zapremo vtičnico in končamo nit. To se lahko zgodi, če strežnik ne teče ali če je naslov napačen.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 39:</span>
+                <span class="code">write(sockfd, &data->thread_num, sizeof(data->thread_num));</span>
+                <div class="desc">
+                    <strong>Pošljemo številko niti strežniku.</strong>
+                    <ul>
+                        <li><code>write</code> - pošlje podatke preko vtičnice</li>
+                        <li><code>sockfd</code> - naša povezava s strežnikom</li>
+                        <li><code>&data->thread_num</code> - naslov števila (0, 1, 2, ... N-1)</li>
+                        <li><code>sizeof(data->thread_num)</code> - število bajtov za poslati (običajno 4 bajte za int)</li>
+                    </ul>
+                    Pošljemo binarno število, ne niza!
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 41:</span>
+                <span class="code">memset(buffer, 0, BUF_SIZE);</span>
+                <div class="desc">
+                    <strong>Počistimo medpomnilnik.</strong> memset zapolni buffer z ničlami (0), da je pripravljen za prejem podatkov. To zagotovi, da v bufferju ni starih podatkov.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 42:</span>
+                <span class="code">read(sockfd, buffer, BUF_SIZE);</span>
+                <div class="desc">
+                    <strong>Preberemo odgovor od strežnika.</strong>
+                    <ul>
+                        <li><code>read</code> - prebere podatke iz vtičnice</li>
+                        <li><code>sockfd</code> - povezava s strežnikom</li>
+                        <li><code>buffer</code> - kam shranimo prebrane podatke</li>
+                        <li><code>BUF_SIZE</code> - maksimalno število bajtov za prebrati</li>
+                        <li>Funkcija blokira (čaka), dokler strežnik ne pošlje podatkov</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 43:</span>
+                <span class="code">printf("Odgovor: %s", buffer);</span>
+                <div class="desc">
+                    <strong>Izpišemo odgovor strežnika na zaslon.</strong> Buffer vsebuje sporočilo od strežnika (npr. "Nit 7: Cestitam, dobili ste nagrado!"). Izpis se lahko prepleta med nitmi, ker je printf shared resource.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 45:</span>
+                <span class="code">sleep(5);</span>
+                <div class="desc">
+                    <strong>Nit spi 5 sekund.</strong> To je zahteva naloge - vsaka nit mora čakati 5 sekund pred zaključkom. Tako je povezava odprta dovolj dolgo, da lahko strežnik tudi počaka in se pospravi.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 46:</span>
+                <span class="code">close(sockfd);</span>
+                <div class="desc">
+                    <strong>Zapremo vtičnico.</strong> To konča TCP povezavo s strežnikom. Strežnik bo zaznal zaprtje in se lahko tudi zaključi. Pomembno je zapreti socket, da sprostimo sistemske vire.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 47:</span>
+                <span class="code">pthread_exit(NULL);</span>
+                <div class="desc">
+                    <strong>Končamo nit.</strong> pthread_exit(NULL) zaključi trenutno nit. Argument NULL pomeni, da ne vračamo nobene vrednosti. To ni nujno na koncu funkcije, ampak je dobra praksa za jasnost.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 50:</span>
+                <span class="code">int main(int argc, char *argv[])</span>
+                <div class="desc">
+                    <strong>Glavna funkcija programa.</strong>
+                    <ul>
+                        <li><code>argc</code> - število argumentov ukazne vrstice</li>
+                        <li><code>argv</code> - polje nizov z argumenti</li>
+                        <li>argv[0] = ime programa, argv[1] = IP, argv[2] = port, argv[3] = N</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 52-55:</span>
+                <span class="code">if (argc != 4) { fprintf(stderr, "Uporaba: %s &lt;IP&gt; &lt;port&gt; &lt;N&gt;\n", argv[0]); exit(EXIT_FAILURE); }</span>
+                <div class="desc">
+                    <strong>Preverimo pravilno uporabo programa.</strong> Program pričakuje točno 4 argumente. Če jih ni, izpišemo navodila na stderr in končamo program z napako. Primer pravilne uporabe: <code>./TCPclient1 127.0.0.1 8080 10</code>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 57:</span>
+                <span class="code">int N = atoi(argv[3]);</span>
+                <div class="desc">
+                    <strong>Pretvorimo število niti iz niza v število.</strong> atoi ("ASCII to integer") pretvori argv[3] (npr. "10") v število 10. N je število niti, ki jih bomo ustvarili.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 58-59:</span>
+                <span class="code">pthread_t threads[N]; thread_data_t data[N];</span>
+                <div class="desc">
+                    <strong>Ustvarimo polja za N niti.</strong>
+                    <ul>
+                        <li><code>threads[N]</code> - polje identifikatorjev niti (pthread_t)</li>
+                        <li><code>data[N]</code> - polje struktur s podatki za vsako nit</li>
+                        <li>To je VLA (Variable Length Array) - velikost polja je določena med izvajanjem</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 61:</span>
+                <span class="code">for (int i = 0; i < N; i++)</span>
+                <div class="desc">
+                    <strong>Zanka za ustvarjanje N niti.</strong> Spremenljivka i gre od 0 do N-1, kar so številke niti, ki jih bomo poslali strežniku.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 62:</span>
+                <span class="code">data[i].thread_num = i;</span>
+                <div class="desc">
+                    <strong>Nastavimo številko niti.</strong> Vsaka nit bo dobila svojo edinstveno številko (0, 1, 2, ... N-1).
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 63:</span>
+                <span class="code">strcpy(data[i].server_ip, argv[1]);</span>
+                <div class="desc">
+                    <strong>Skopiramo IP naslov strežnika.</strong> strcpy kopira niz argv[1] (npr. "127.0.0.1") v data[i].server_ip. Vsaka nit bo povezala na isti strežnik.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 64:</span>
+                <span class="code">data[i].port = atoi(argv[2]);</span>
+                <div class="desc">
+                    <strong>Pretvorimo in shranimo številko vrat.</strong> atoi pretvori argv[2] (npr. "8080") v število in ga shranimov data[i].port.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 66:</span>
+                <span class="code">pthread_create(&threads[i], NULL, client_thread, &data[i]);</span>
+                <div class="desc">
+                    <strong>Ustvarimo novo nit.</strong>
+                    <ul>
+                        <li><code>&threads[i]</code> - kam shranimo identifikator nove niti</li>
+                        <li><code>NULL</code> - privzeti atributi niti</li>
+                        <li><code>client_thread</code> - funkcija, ki jo bo izvajala nit</li>
+                        <li><code>&data[i]</code> - argument za funkcijo (kazalec na podatke i-te niti)</li>
+                    </ul>
+                    Nova nit začne izvajati client_thread takoj.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 69-71:</span>
+                <span class="code">for (int i = 0; i < N; i++) { pthread_join(threads[i], NULL); }</span>
+                <div class="desc">
+                    <strong>Čakamo na konec vseh niti.</strong>
+                    <ul>
+                        <li><code>pthread_join</code> - blokira (čaka), dokler se nit threads[i] ne konča</li>
+                        <li><code>NULL</code> - nas ne zanima vrnjena vrednost niti</li>
+                        <li>To zagotovi, da main ne konča programa, dokler vse niti ne končajo</li>
+                        <li>Niti se bodo končale po 5 sekundah (zaradi sleep)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 73:</span>
+                <span class="code">return 0;</span>
+                <div class="desc">
+                    <strong>Konec programa.</strong> Vrnemo 0, kar pomeni uspešen zaključek. To se zgodi, ko se vse niti končajo.
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-box">
+            <h5>📊 Potek izvajanja odjemalca</h5>
+            <ol>
+                <li>Program preveri argumente (IP, port, N)</li>
+                <li>Ustvari N niti s pthread_create</li>
+                <li>Vsaka nit:
+                    <ul>
+                        <li>Ustvari svojo TCP vtičnico</li>
+                        <li>Se poveže s strežnikom</li>
+                        <li>Pošlje svojo številko</li>
+                        <li>Prebere odgovor in ga izpiše</li>
+                        <li>Spi 5 sekund</li>
+                        <li>Zapre vtičnico in se konča</li>
+                    </ul>
+                </li>
+                <li>main čaka, da se vse niti končajo (pthread_join)</li>
+                <li>Program se zaključi</li>
+            </ol>
+        </div>
+    </div>
+
+
+    <!-- TCPSERVER1.C -->
+    <div class="program-section">
+        <div class="program-title">🖥️ TCPserver1.c - TCP Strežnik z Otroškimi Procesi (fork)</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga strežnika (NALOGA 1)</h3>
+            <ul>
+                <li>Ustvari TCP vtičnico in posluša na določenih vratih</li>
+                <li>Za vsako odjemalčevo povezavo ustvari nov otroški proces (fork)</li>
+                <li>Otroški proces prejme številko niti in obdela zahtevo</li>
+                <li>Preveri deljivost: PID otroka % številka niti</li>
+                <li>Pošlje ustrezno sporočilo (nagrada ali spodbuda)</li>
+                <li>Uporablja SIGCHLD rokovalnik za preprečevanje zombijev</li>
+            </ul>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Razlaga po vrsticah - glej izvorno kodo TCPserver1.c</h4>
+            <p>Strežnik uporablja fork() za ustvarjanje vzporednih procesov. SIGCHLD rokovalnik avtomatsko počisti zombije.</p>
+        </div>
+
+        <div class="flow-box">
+            <h5>📊 Potek izvajanja strežnika s fork</h5>
+            <ol>
+                <li>Strežnik nastavi SIGCHLD rokovalnik</li>
+                <li>Ustvari vtičnico, jo veže na naslov in vrata</li>
+                <li>V neskončni zanki čaka na povezavo (accept)</li>
+                <li>fork() ustvari otroški proces za vsako povezavo</li>
+                <li>Otrok obdela zahtevo in se zaključi</li>
+                <li>SIGCHLD rokovalnik počisti zombije</li>
+            </ol>
+        </div>
+    </div>
+
+    <!-- TCPSERVER2.C -->
+    <div class="program-section">
+        <div class="program-title">🧵 TCPserver2.c - TCP Strežnik z Nitmi (pthread)</div>
+
+        <div class="task-box">
+            <h3>🎯 Naloga strežnika (NALOGA 2)</h3>
+            <ul>
+                <li>Namesto fork, uporablja pthread_create za ustvarjanje niti</li>
+                <li>Vsaka nit obravnava enega odjemalca</li>
+                <li>Niti so detached (pthread_detach) za samodejno čiščenje</li>
+                <li>Vse niti delijo isti proces in pomnilniški prostor</li>
+                <li>Uporablja isti TID za vse odjemalce (PID glavne niti)</li>
+            </ul>
+        </div>
+
+        <div class="code-block">
+            <h4>Celotna izvorna koda:</h4>
+            <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;stdlib.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+#include &lt;pthread.h&gt;
+#include &lt;arpa/inet.h&gt;
+#include &lt;sys/socket.h&gt;
+
+#define BACKLOG 10
+#define BUF_SIZE 256
+
+typedef struct {
+    int client_fd;
+    struct sockaddr_in client_addr;
+} client_data_t;
+
+void *client_handler(void *arg)
+{
+    client_data_t *data = (client_data_t *)arg;
+    int client_fd = data->client_fd;
+    struct sockaddr_in addr = data->client_addr;
+    free(data);
+
+    int thread_num;
+    read(client_fd, &thread_num, sizeof(thread_num));
+
+    char client_ip[INET_ADDRSTRLEN];
+    inet_ntop(AF_INET, &addr.sin_addr, client_ip, sizeof(client_ip));
+    int client_port = ntohs(addr.sin_port);
+
+    pid_t pid = getpid();   /* PID strežnika (enak za vse niti) */
+    pthread_t tid = pthread_self();
+
+    printf("Nit strežnika (TID %lu, PID %d) streže niti %d odjemalca (%s:%d)\n",
+           tid, pid, thread_num, client_ip, client_port);
+
+    char msg[BUF_SIZE];
+    if (thread_num != 0 && pid % thread_num == 0) {
+        snprintf(msg, BUF_SIZE,
+                 "Nit %d: Cestitam, dobili ste nagrado!\n", thread_num);
+    } else {
+        snprintf(msg, BUF_SIZE,
+                 "Nit %d: Vazno je sodelovati, ne zmagati.\n", thread_num);
+    }
+
+    write(client_fd, msg, strlen(msg));
+    close(client_fd);
+
+    pthread_exit(NULL);
+}
+
+int main(int argc, char *argv[])
+{
+    if (argc != 2) {
+        fprintf(stderr, "Uporaba: %s &lt;port&gt;\n", argv[0]);
+        exit(EXIT_FAILURE);
+    }
+
+    int port = atoi(argv[1]);
+    int server_fd;
+    struct sockaddr_in server_addr;
+
+    server_fd = socket(AF_INET, SOCK_STREAM, 0);
+    if (server_fd < 0) {
+        perror("socket");
+        exit(EXIT_FAILURE);
+    }
+
+    int opt = 1;
+    setsockopt(server_fd, SOL_SOCKET, SO_REUSEADDR, &opt, sizeof(opt));
+
+    server_addr.sin_family = AF_INET;
+    server_addr.sin_addr.s_addr = inet_addr("127.0.0.1");
+    server_addr.sin_port = htons(port);
+
+    if (bind(server_fd, (struct sockaddr *)&server_addr, sizeof(server_addr)) < 0) {
+        perror("bind");
+        exit(EXIT_FAILURE);
+    }
+
+    if (listen(server_fd, BACKLOG) < 0) {
+        perror("listen");
+        exit(EXIT_FAILURE);
+    }
+
+    printf("TCP strežnik z nitmi posluša na 127.0.0.1:%d\n", port);
+
+    while (1) {
+        client_data_t *data = malloc(sizeof(client_data_t));
+        socklen_t len = sizeof(data->client_addr);
+
+        data->client_fd = accept(server_fd,
+                                 (struct sockaddr *)&data->client_addr,
+                                 &len);
+
+        if (data->client_fd < 0) {
+            perror("accept");
+            free(data);
+            continue;
+        }
+
+        pthread_t tid;
+        pthread_create(&tid, NULL, client_handler, data);
+        pthread_detach(tid);   /* samodejno čiščenje niti */
+    }
+
+    close(server_fd);
+    return 0;
+}</code></pre>
+        </div>
+
+        <div class="explanation">
+            <h4>🔍 Podrobna razlaga po vrsticah</h4>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 1-7:</span>
+                <span class="code">#include...</span>
+                <div class="desc">
+                    <strong>Vključimo knjižnice.</strong> Podobno kot pri TCPserver1, ampak tu je <code>pthread.h</code> namesto <code>signal.h</code> in <code>sys/wait.h</code>, ker uporabljamo niti namesto procesov.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 12-15:</span>
+                <span class="code">typedef struct { int client_fd; struct sockaddr_in client_addr; } client_data_t;</span>
+                <div class="desc">
+                    <strong>Struktura za podatke odjemalca.</strong> Ker moramo poslati podatke niti, jih spakitamo v strukturo:
+                    <ul>
+                        <li><code>client_fd</code> - deskriptor vtičnice za komunikacijo</li>
+                        <li><code>client_addr</code> - naslov odjemalca (IP + vrata)</li>
+                    </ul>
+                    To strukturo alociramo z malloc in jo predamo niti.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 17:</span>
+                <span class="code">void *client_handler(void *arg)</span>
+                <div class="desc">
+                    <strong>Funkcija, ki jo izvaja vsaka nit strežnika.</strong> To je analogno kodi otroka pri fork() - vsak odjemalec se obravnava v tej funkciji.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 19-21:</span>
+                <span class="code">client_data_t *data = (client_data_t *)arg; int client_fd = data->client_fd; struct sockaddr_in addr = data->client_addr;</span>
+                <div class="desc">
+                    <strong>Razpakiramo podatke.</strong>
+                    <ul>
+                        <li>Pretvorimo void* nazaj v client_data_t*</li>
+                        <li>Ekstrahiramo client_fd in client_addr v lokalne spremenljivke</li>
+                        <li>To naredi kodo bolj berljivo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 22:</span>
+                <span class="code">free(data);</span>
+                <div class="desc">
+                    <strong>Sprostimo pomnilnik.</strong> Strukturo smo alocirali z malloc v main(), zdaj jo sprostimo v niti. Vsaka nit je odgovorna za čiščenje svojih podatkov. To MORA biti tukaj, ne v main(), ker main nadaljuje takoj (ne čaka na nit).
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstici 24-25:</span>
+                <span class="code">int thread_num; read(client_fd, &thread_num, sizeof(thread_num));</span>
+                <div class="desc">
+                    <strong>Preberemo številko niti od odjemalca.</strong> Enako kot pri TCPserver1.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 27-29:</span>
+                <span class="code">char client_ip[INET_ADDRSTRLEN]; inet_ntop(...); int client_port = ntohs(...);</span>
+                <div class="desc">
+                    <strong>Pridobimo IP in vrata odjemalca.</strong> Pretvorimo binarni naslov v tekstovno obliko za izpis.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 31:</span>
+                <span class="code">pid_t pid = getpid();</span>
+                <div class="desc">
+                    <strong>Dobimo PID procesa strežnika.</strong>
+                    <ul>
+                        <li>Pri fork() bi vsak otrok imel svoj PID</li>
+                        <li>Pri pthread imajo VSE niti <strong>isti PID</strong> - to je PID glavnega procesa</li>
+                        <li>To pomeni, da bo PID % thread_num vedno enak rezultat za vse niti</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 32:</span>
+                <span class="code">pthread_t tid = pthread_self();</span>
+                <div class="desc">
+                    <strong>Dobimo TID (Thread ID) trenutne niti.</strong>
+                    <ul>
+                        <li><code>pthread_self()</code> - vrne identifikator trenutne niti (pthread_t)</li>
+                        <li>Vsaka nit ima svoj TID (npr. 139876543210496)</li>
+                        <li>To je долг številka (unsigned long), specifična za pthread implementacijo</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstici 34-35:</span>
+                <span class="code">printf("Nit strežnika (TID %lu, PID %d) streže niti %d odjemalca (%s:%d)\n", tid, pid, thread_num, client_ip, client_port);</span>
+                <div class="desc">
+                    <strong>Izpis informacij.</strong>
+                    <ul>
+                        <li><code>%lu</code> - unsigned long za TID</li>
+                        <li><code>%d</code> - int za PID</li>
+                        <li>Primer izpisa: <code>Nit strežnika (TID 139876543210496, PID 1234) streže niti 7 odjemalca (127.0.0.1:18659)</code></li>
+                        <li>Opazite, da PID je enak za vse niti!</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 37-44:</span>
+                <span class="code">if (thread_num != 0 && pid % thread_num == 0) { ... } else { ... }</span>
+                <div class="desc">
+                    <strong>Preverjanje deljivosti in sestavljanje sporočila.</strong>
+                    <ul>
+                        <li>Logika je enaka kot pri TCPserver1</li>
+                        <li>AMPAK: ker je PID enak za vse niti, bo odgovor vedno enak!</li>
+                        <li>Če je PID 1234 deljiv s 7, bodo VSE niti, ki dobijo thread_num 7, dobile nagrado</li>
+                        <li>To je glavna razlika med fork in pthread pristopom</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstici 46-47:</span>
+                <span class="code">write(client_fd, msg, strlen(msg)); close(client_fd);</span>
+                <div class="desc">
+                    <strong>Pošljemo sporočilo in zapremo povezavo.</strong> Enako kot pri TCPserver1.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 49:</span>
+                <span class="code">pthread_exit(NULL);</span>
+                <div class="desc">
+                    <strong>Nit se konča.</strong> pthread_exit zaključi nit. Ker smo nit detachali, se njen pomnilnik avtomatsko sprosti.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 52-56:</span>
+                <span class="code">int main(int argc, char *argv[]) { ... }</span>
+                <div class="desc">
+                    <strong>Glavna funkcija - preverjanje argumentov.</strong> Enako kot pri TCPserver1.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 58-86:</span>
+                <span class="code">socket, setsockopt, bind, listen...</span>
+                <div class="desc">
+                    <strong>Nastavitev strežniške vtičnice.</strong> Identično kot pri TCPserver1 - ustvarimo socket, vežemo na naslov in vrata, nastavimo listen.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 88:</span>
+                <span class="code">printf("TCP strežnik z nitmi posluša na 127.0.0.1:%d\n", port);</span>
+                <div class="desc">
+                    <strong>Obvestilo, da je strežnik pripravljen.</strong>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 90:</span>
+                <span class="code">while (1)</span>
+                <div class="desc">
+                    <strong>Neskončna zanka.</strong> Strežnik čaka na povezave.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstici 91-92:</span>
+                <span class="code">client_data_t *data = malloc(sizeof(client_data_t)); socklen_t len = sizeof(data->client_addr);</span>
+                <div class="desc">
+                    <strong>Alociramo pomnilnik za podatke odjemalca.</strong>
+                    <ul>
+                        <li><code>malloc</code> - alociramo na kupu (heap), ne na skladu</li>
+                        <li>To je pomembno, ker mora struktura preživeti, ko main nadaljuje v zanko</li>
+                        <li>Nit bo sprostila ta pomnilnik s free(data)</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 94-96:</span>
+                <span class="code">data->client_fd = accept(server_fd, (struct sockaddr *)&data->client_addr, &len);</span>
+                <div class="desc">
+                    <strong>Čakamo na povezavo.</strong>
+                    <ul>
+                        <li>accept blokira, dokler se odjemalec ne poveže</li>
+                        <li>client_fd in client_addr shranimo direktno v strukturo data</li>
+                        <li>To nam omogoči, da enostavno predamo oba podatka niti</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 98-102:</span>
+                <span class="code">if (data->client_fd < 0) { perror("accept"); free(data); continue; }</span>
+                <div class="desc">
+                    <strong>Obravnava napake pri accept.</strong> Če accept spodleti, sprostimo alocirani pomnilnik in poskusimo znova. Ne smemo pozabiti free(data), sicer bi puščali pomnilnik (memory leak).
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 104:</span>
+                <span class="code">pthread_t tid;</span>
+                <div class="desc">
+                    <strong>Spremenljivka za identifikator niti.</strong> Tukaj se shrani TID nove niti.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 105:</span>
+                <span class="code">pthread_create(&tid, NULL, client_handler, data);</span>
+                <div class="desc">
+                    <strong>Ustvarimo novo nit.</strong>
+                    <ul>
+                        <li><code>&tid</code> - kam shranimo identifikator nove niti</li>
+                        <li><code>NULL</code> - privzeti atributi niti</li>
+                        <li><code>client_handler</code> - funkcija, ki jo bo izvajala nit</li>
+                        <li><code>data</code> - argument za funkcijo (naša struktura)</li>
+                    </ul>
+                    Nova nit začne izvajati client_handler takoj.
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstica 106:</span>
+                <span class="code">pthread_detach(tid);</span>
+                <div class="desc">
+                    <strong>Označimo nit kot detached.</strong>
+                    <ul>
+                        <li>Detached nit se avtomatsko počisti, ko se konča</li>
+                        <li>Ne potrebujemo pthread_join</li>
+                        <li>Pomnilnik niti (stack) se avtomatsko sprosti</li>
+                        <li>To je alternativa pthread_join - uporabimo eno ali drugo</li>
+                        <li>Detached niti so primerne za strežnike, kjer nas ne zanima rezultat</li>
+                    </ul>
+                </div>
+            </div>
+
+            <div class="line-explanation">
+                <span class="line-num">Vrstice 109-111:</span>
+                <span class="code">close(server_fd); return 0;</span>
+                <div class="desc">
+                    <strong>Konec (nedosegljivo).</strong> Enako kot pri TCPserver1 - ta koda se nikoli ne izvede zaradi while(1).
+                </div>
+            </div>
+        </div>
+
+        <div class="flow-box">
+            <h5>📊 Potek izvajanja strežnika s pthread</h5>
+            <ol>
+                <li>Strežnik ustvari vtičnico, jo veže na naslov in vrata</li>
+                <li>V neskončni zanki:
+                    <ul>
+                        <li>accept čaka na novo povezavo</li>
+                        <li>Alociramo client_data_t na kupu (malloc)</li>
+                        <li>pthread_create ustvari novo nit</li>
+                        <li>pthread_detach jo označi za samodejno čiščenje</li>
+                        <li>main takoj nadaljuje v zanko (ne čaka na nit)</li>
+                    </ul>
+                </li>
+                <li>Nit client_handler:
+                    <ul>
+                        <li>Sprosti pomnilnik (free(data))</li>
+                        <li>Prebere thread_num</li>
+                        <li>Izpiše informacije (s TID in PID)</li>
+                        <li>Preveri deljivost in pošlje sporočilo</li>
+                        <li>Zapre vtičnico in se konča</li>
+                    </ul>
+                </li>
+                <li>Ko se nit konča, se avtomatsko počisti (detached)</li>
+            </ol>
+        </div>
+
+        <div class="highlight-box">
+            <h5>🔑 Ključne razlike med fork in pthread</h5>
+            <table style="width: 100%; color: var(--text-secondary); margin-top: 15px;">
+                <tr style="background: rgba(99, 179, 237, 0.1);">
+                    <th style="padding: 10px; text-align: left;">Lastnost</th>
+                    <th style="padding: 10px; text-align: left;">fork (TCPserver1)</th>
+                    <th style="padding: 10px; text-align: left;">pthread (TCPserver2)</th>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Proces/Nit</strong></td>
+                    <td style="padding: 8px;">Nov proces za vsakega odjemalca</td>
+                    <td style="padding: 8px;">Nova nit za vsakega odjemalca</td>
+                </tr>
+                <tr style="background: rgba(99, 179, 237, 0.05);">
+                    <td style="padding: 8px;"><strong>Pomnilnik</strong></td>
+                    <td style="padding: 8px;">Ločen naslovni prostor</td>
+                    <td style="padding: 8px;">Deljeni naslovni prostor</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>PID</strong></td>
+                    <td style="padding: 8px;">Vsak otrok ima svoj PID</td>
+                    <td style="padding: 8px;">Vse niti imajo isti PID</td>
+                </tr>
+                <tr style="background: rgba(99, 179, 237, 0.05);">
+                    <td style="padding: 8px;"><strong>TID</strong></td>
+                    <td style="padding: 8px;">Ni relevantno</td>
+                    <td style="padding: 8px;">Vsaka nit ima svoj TID</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Čiščenje</strong></td>
+                    <td style="padding: 8px;">SIGCHLD + waitpid</td>
+                    <td style="padding: 8px;">pthread_detach</td>
+                </tr>
+                <tr style="background: rgba(99, 179, 237, 0.05);">
+                    <td style="padding: 8px;"><strong>Zombiji</strong></td>
+                    <td style="padding: 8px;">Možni (potreben rokovalnik)</td>
+                    <td style="padding: 8px;">Ne obstajajo</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Hitrost</strong></td>
+                    <td style="padding: 8px;">Počasnejše (fork je drag)</td>
+                    <td style="padding: 8px;">Hitrejše (niti so lažje)</td>
+                </tr>
+                <tr style="background: rgba(99, 179, 237, 0.05);">
+                    <td style="padding: 8px;"><strong>Izolacija</strong></td>
+                    <td style="padding: 8px;">Popolna (procesi)</td>
+                    <td style="padding: 8px;">Nobena (deljeni pomnilnik)</td>
+                </tr>
+                <tr>
+                    <td style="padding: 8px;"><strong>Varnost</strong></td>
+                    <td style="padding: 8px;">Bolj varno (izolacija)</td>
+                    <td style="padding: 8px;">Manj varno (race conditions)</td>
+                </tr>
+            </table>
+        </div>
+
+        <div class="warning-box">
+            <h5>⚠️ Opazka o deljivosti PID</h5>
+            <p>Pri pthread verziji (TCPserver2) ima <strong>vsak odjemalec z isto številko niti enak odgovor</strong>, ker imajo vse niti isti PID. Pri fork verziji (TCPserver1) ima vsak odjemalec lahko različen odgovor, ker ima vsak otroški proces svoj PID.</p>
+            <p>To je ena od ključnih razlik med obema pristopoma!</p>
+        </div>
+    </div>
+
+    <!-- UPORABA -->
+    <div class="program-section">
+        <div class="program-title">🚀 Kompilacija in Uporaba</div>
+
+        <div class="code-block">
+            <h4>Kompilacija:</h4>
+            <pre><code class="language-bash"># Odjemalec (uporablja pthread)
+gcc -o TCPclient1 TCPclient1.c -lpthread
+
+# Strežnik 1 (uporablja fork)
+gcc -o TCPserver1 TCPserver1.c
+
+# Strežnik 2 (uporablja pthread)
+gcc -o TCPserver2 TCPserver2.c -lpthread</code></pre>
+        </div>
+
+        <div class="code-block">
+            <h4>Zagon - NALOGA 1 (fork):</h4>
+            <pre><code class="language-bash"># Terminal 1: Zaženemo strežnik na vratih 8080
+./TCPserver1 8080
+
+# Terminal 2: Zaženemo odjemalca z 10 nitmi
+./TCPclient1 127.0.0.1 8080 10</code></pre>
+        </div>
+
+        <div class="code-block">
+            <h4>Zagon - NALOGA 2 (pthread):</h4>
+            <pre><code class="language-bash"># Terminal 1: Zaženemo strežnik na vratih 9090
+./TCPserver2 9090
+
+# Terminal 2: Zaženemo odjemalca z 5 nitmi
+./TCPclient1 127.0.0.1 9090 5</code></pre>
+        </div>
+
+        <div class="highlight-box">
+            <h5>📝 Primer izhoda</h5>
+            <p><strong>TCPserver1 (fork):</strong></p>
+            <div class="code-snippet">Strežnik posluša na 127.0.0.1:8080
+Otrok 12345 strežnika sem stregel niti 0 odjemalca (127.0.0.1:54321)
+Otrok 12346 strežnika sem stregel niti 1 odjemalca (127.0.0.1:54322)
+Otrok 12347 strežnika sem stregel niti 2 odjemalca (127.0.0.1:54323)
+Otrok s PID 12345 se je končal
+Otrok s PID 12346 se je končal
+...</div>
+
+            <p><strong>TCPserver2 (pthread):</strong></p>
+            <div class="code-snippet">TCP strežnik z nitmi posluša na 127.0.0.1:9090
+Nit strežnika (TID 140234567890123, PID 11111) streže niti 0 odjemalca (127.0.0.1:54400)
+Nit strežnika (TID 140234567890456, PID 11111) streže niti 1 odjemalca (127.0.0.1:54401)
+Nit strežnika (TID 140234567890789, PID 11111) streže niti 2 odjemalca (127.0.0.1:54402)
+...</div>
+
+            <p><strong>TCPclient1:</strong></p>
+            <div class="code-snippet">Odgovor: Nit 0: Vazno je sodelovati, ne zmagati.
+Odgovor: Nit 1: Cestitam, dobili ste nagrado!
+Odgovor: Nit 2: Vazno je sodelovati, ne zmagati.
+...</div>
+        </div>
+
+        <div class="flow-box">
+            <h5>🎓 Zaključek</h5>
+            <p>V tej vaji smo implementirali paralelni TCP strežnik na dva načina:</p>
+            <ul>
+                <li><strong>S procesi (fork)</strong> - vsak odjemalec v svojem procesu, popolna izolacija, SIGCHLD za čiščenje</li>
+                <li><strong>Z nitmi (pthread)</strong> - vse niti v istem procesu, deljeni pomnilnik, pthread_detach za čiščenje</li>
+            </ul>
+            <p>Obe rešitvi omogočata vzporedno obravnavo več odjemalcev, vendar z različnimi pristopi in kompromisi.</p>
+        </div>
+    </div>
+
+</div>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-core.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/plugins/autoloader/prism-autoloader.min.js"></script>
+</body>
+</html>
