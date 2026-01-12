@@ -648,7 +648,7 @@ int main(int argc, char *argv[])
                 <span class="line-num">Vrstica 43:</span>
                 <span class="code">printf("Odgovor: %s", buffer);</span>
                 <div class="desc">
-                    <strong>Izpišemo odgovor strežnika na zaslon.</strong> Buffer vsebuje sporočilo od strežnika (npr. "Nit 7: Cestitam, dobili ste nagrado!"). Izpis se lahko prepleta med nitmi, ker je printf shared resource.
+                    <strong>Izpišemo odgovor strežnika na zaslon.</strong> Buffer vsebuje sporočilo od strežnika (npr. "Nit 7: Čestitam, dobili ste nagrado!"). Izpis se lahko prepleta med nitmi, ker je printf shared resource.
                 </div>
             </div>
 
@@ -746,7 +746,7 @@ int main(int argc, char *argv[])
                 <span class="line-num">Vrstica 64:</span>
                 <span class="code">data[i].port = atoi(argv[2]);</span>
                 <div class="desc">
-                    <strong>Pretvorimo in shranimo številko vrat.</strong> atoi pretvori argv[2] (npr. "8080") v število in ga shranimov data[i].port.
+                    <strong>Pretvorimo in shranimo številko vrat.</strong> atoi pretvori argv[2] (npr. "8080") v število in ga shranimo v data[i].port.
                 </div>
             </div>
 
@@ -1062,7 +1062,7 @@ int main(int argc, char *argv[])
                     <ul>
                         <li><code>pthread_self()</code> - vrne identifikator trenutne niti (pthread_t)</li>
                         <li>Vsaka nit ima svoj TID (npr. 139876543210496)</li>
-                        <li>To je долг številka (unsigned long), specifična za pthread implementacijo</li>
+                        <li>To je dolga številka (unsigned long), specifična za pthread implementacijo</li>
                     </ul>
                 </div>
             </div>
@@ -1366,9 +1366,9 @@ Nit strežnika (TID 140234567890789, PID 11111) streže niti 2 odjemalca (127.0.
 ...</div>
 
             <p><strong>TCPclient1:</strong></p>
-            <div class="code-snippet">Odgovor: Nit 0: Vazno je sodelovati, ne zmagati.
-Odgovor: Nit 1: Cestitam, dobili ste nagrado!
-Odgovor: Nit 2: Vazno je sodelovati, ne zmagati.
+            <div class="code-snippet">Odgovor: Nit 0: Važno je sodelovati, ne zmagati.
+Odgovor: Nit 1: Čestitam, dobili ste nagrado!
+Odgovor: Nit 2: Važno je sodelovati, ne zmagati.
 ...</div>
         </div>
 
