@@ -1,0 +1,1183 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 11 - Linux Kernel Character Device Driver</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
+
+        <div class="docs-header">
+            <h1>🔧 Vaja 11: Linux Kernel Character Device Driver (qread)</h1>
+            <p class="subtitle">Creating a kernel module with quantized read functionality</p>
+        </div>
+
+        <!-- qread.c -->
+        <div class="file-card">
+            <div class="file-name">📄 qread.c</div>
+
+            <div class="task-description">
+                <h3>Naloga: Quantum Read Driver</h3>
+                <ul>
+                    <li>Napišite gonilnik (qread - quantum read) za znakovno napravo, v katero lahko vpišemo niz in iz katere ta niz lahko nato tudi preberemo</li>
+                    <li>Ko se modul inicializira, rezervirajte (kmalloc) in inicializirajte (memset) kos pomnilnika (char *ptr, velikost MEM_SIZE naj bo parameter modula, privzeta vrednost 128 B)</li>
+                    <li>Ko se modul odstrani, sprostite zaseženi pomnilnik (kfree)</li>
+                    <li>Funkcija za branje naj bere vsebino kvantizirano po BLK_SIZE bajtov ob vsakem klicu (tudi BLK_SIZE naj bo parameter modula, privzeto 32 B)</li>
+                    <li>Pisalna in bralna funkcija morata vračati število uspešno zapisanih/prebranih bajtov (ali 0, če ni bilo nobenega, in negativno vrednost ob napaki)</li>
+                    <li>Če želi uporabnik zapisati več kot MEM_SIZE bajtov, naj se zapiše samo MEM_SIZE bajtov, write pa naj vrne prvotno vrednost len</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Examples:</strong><br>
+                # Nalaganje modula z privzetimi vrednostmi<br>
+                $ sudo insmod qread.ko<br><br>
+                # Nalaganje modula s po meri parametri<br>
+                $ sudo insmod qread.ko MEM_SIZE=256 BLK_SIZE=64<br><br>
+                # Testiranje v terminalu<br>
+                $ echo "Test string for qread device" &gt; /dev/qread<br>
+                $ cat /dev/qread<br><br>
+                # Odstranitev modula<br>
+                $ sudo rmmod qread
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;linux/module.h&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/cdev.h&gt;
+
+#define DEVICE_NAME "qread"
+
+// Parametri modula
+static int MEM_SIZE = 128;
+module_param(MEM_SIZE, int, S_IRUGO);
+static int BLK_SIZE = 32;
+module_param(BLK_SIZE, int, S_IRUGO);
+
+static char *ptr = NULL;
+static dev_t dev_num;
+static struct cdev q_cdev;
+static struct class *q_class;
+
+// Funkcija za branje (kvantizirano po BLK_SIZE)
+static ssize_t q_read(struct file *filp, char __user *buf, size_t len, loff_t *off) {
+    ssize_t to_copy;
+    
+    // Če smo na koncu pomnilnika, vrnemo 0
+    if (*off &gt;= MEM_SIZE) return 0;
+
+    // Kvantizacija: beremo največ BLK_SIZE bajtov naenkrat
+    to_copy = (len &lt; BLK_SIZE) ? len : BLK_SIZE;
+
+    // Preverimo, da ne beremo čez MEM_SIZE
+    if (*off + to_copy &gt; MEM_SIZE) {
+        to_copy = MEM_SIZE - *off;
+    }
+
+    if (copy_to_user(buf, ptr + *off, to_copy)) {
+        return -EFAULT;
+    }
+
+    *off += to_copy;
+    return to_copy;
+}
+
+// Funkcija za pisanje
+static ssize_t q_write(struct file *filp, const char __user *buf, size_t len, loff_t *off) {
+    size_t actual_to_write;
+
+    if (*off &gt;= MEM_SIZE) return len; // Vrnemo len, da "zadovoljimo" aplikacijo
+
+    actual_to_write = len;
+    if (*off + len &gt; MEM_SIZE) {
+        actual_to_write = MEM_SIZE - *off;
+    }
+
+    if (copy_from_user(ptr + *off, buf, actual_to_write)) {
+        return -EFAULT;
+    }
+
+    *off += actual_to_write;
+    return len; // Vedno vrnemo prvotno len po navodilih
+}
+
+static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = q_read,
+    .write = q_write,
+};
+
+static int __init qread_init(void) {
+    // Rezervacija pomnilnika
+    ptr = kmalloc(MEM_SIZE, GFP_KERNEL);
+    if (!ptr) return -ENOMEM;
+    memset(ptr, 0, MEM_SIZE);
+
+    // Registracija naprave
+    alloc_chrdev_region(&amp;dev_num, 0, 1, DEVICE_NAME);
+    cdev_init(&amp;q_cdev, &amp;fops);
+    cdev_add(&amp;q_cdev, dev_num, 1);
+    
+    q_class = class_create("qread_class");
+    device_create(q_class, NULL, dev_num, NULL, DEVICE_NAME);
+
+    printk(KERN_INFO "qread: Naložen (MEM_SIZE=%d, BLK_SIZE=%d)\n", MEM_SIZE, BLK_SIZE);
+    return 0;
+}
+
+static void __exit qread_exit(void) {
+    device_destroy(q_class, dev_num);
+    class_destroy(q_class);
+    cdev_del(&amp;q_cdev);
+    unregister_chrdev_region(dev_num, 1);
+    kfree(ptr);
+    printk(KERN_INFO "qread: Odstranjen\n");
+}
+
+module_init(qread_init);
+module_exit(qread_exit);
+
+MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Student");</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Line-by-Line Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>📚 Vrstica 1-6: Vključevanje kernel knjižnic (Header includes)</h5>
+                    <div class="code-snippet">#include &lt;linux/module.h&gt;
+#include &lt;linux/init.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/cdev.h&gt;</div>
+                    <div class="description">
+                        To so <strong>kernel header datoteke</strong> - drugačne od običajnih C knjižnic (kot stdio.h). Opazite, da se nahajajo v mapi <code>linux/</code> in ne uporabljajo standardnih C knjižnic, ker se izvajajo v kernel prostoru, ne user prostoru!
+                        <ul>
+                            <li><strong>&lt;linux/module.h&gt;</strong>: OSNOVNA knjižnica za VSAK kernel modul. Vsebuje:
+                                <ul>
+                                    <li>Makroje MODULE_LICENSE(), MODULE_AUTHOR()</li>
+                                    <li>Definicije za module_init() in module_exit()</li>
+                                    <li>Strukture in funkcije potrebne za delovanje modula</li>
+                                    <li>THIS_MODULE - kazalec na trenutni modul</li>
+                                </ul>
+                            </li>
+                            <li><strong>&lt;linux/init.h&gt;</strong>: Makroji za inicializacijo in čiščenje modula:
+                                <ul>
+                                    <li>__init - označi funkcije, ki se izvedejo samo pri nalaganju (pomnilnik se sprosti po nalaganju)</li>
+                                    <li>__exit - označi funkcije, ki se izvedejo samo pri odstranjevanju</li>
+                                    <li>Omogoča optimizacijo pomnilnika v kernelu</li>
+                                </ul>
+                            </li>
+                            <li><strong>&lt;linux/fs.h&gt;</strong>: "File System" - vse za delo z datotekami v kernelu:
+                                <ul>
+                                    <li>struct file_operations - tabela funkcijskih kazalcev (.read, .write, .open, .release)</li>
+                                    <li>alloc_chrdev_region() - registracija character device</li>
+                                    <li>unregister_chrdev_region() - odregistracija</li>
+                                    <li>Definicije za delo z datotekami, inode-i, file descriptors</li>
+                                </ul>
+                            </li>
+                            <li><strong>&lt;linux/uaccess.h&gt;</strong>: "User Access" - KRITIČNO za komunikacijo user ↔ kernel:
+                                <ul>
+                                    <li>copy_to_user() - kopira podatke iz kernel space v user space (za branje)</li>
+                                    <li>copy_from_user() - kopira podatke iz user space v kernel space (za pisanje)</li>
+                                    <li>ZAKAJ potrebno? User in kernel prostor imata različne naslove pomnilnika - direkten dostop povzroči segfault!</li>
+                                    <li>Te funkcije preverijo tudi, ali je user space naslov veljaven</li>
+                                </ul>
+                            </li>
+                            <li><strong>&lt;linux/slab.h&gt;</strong>: Pomnilniški alokator v kernelu:
+                                <ul>
+                                    <li>kmalloc() - kernel malloc, alocira pomnilnik v kernel space</li>
+                                    <li>kfree() - kernel free, sprosti alociran pomnilnik</li>
+                                    <li>GFP_KERNEL flag - "Get Free Pages" za normalno alokacijo</li>
+                                    <li>NE SMEMO uporabljati navadnega malloc() - to je user space funkcija!</li>
+                                </ul>
+                            </li>
+                            <li><strong>&lt;linux/cdev.h&gt;</strong>: "Character Device" - za character device driverje:
+                                <ul>
+                                    <li>struct cdev - struktura, ki predstavlja character device</li>
+                                    <li>cdev_init() - inicializira cdev strukturo</li>
+                                    <li>cdev_add() - doda character device v sistem</li>
+                                    <li>cdev_del() - odstrani character device</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📛 Vrstica 8: Definicija imena naprave</h5>
+                    <div class="code-snippet">#define DEVICE_NAME "qread"</div>
+                    <div class="description">
+                        <strong>#define</strong> je preprocessor direktiva - pred kompilacijo zamenja vse instance DEVICE_NAME z "qread".<br><br>
+                        <strong>DEVICE_NAME</strong> določa:
+                        <ul>
+                            <li>Ime naprave, ki se bo pojavilo v <code>/dev/qread</code></li>
+                            <li>Uporabljeno pri alloc_chrdev_region() in device_create()</li>
+                            <li>Uporabniške aplikacije bodo lahko dostopale do naprave prek <code>open("/dev/qread", ...)</code></li>
+                            <li>Konvencija je uporabljati velika črka za konstante (#define), ampak DEVICE_NAME je string</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⚙️ Vrstica 10-14: Parametri modula</h5>
+                    <div class="code-snippet">// Parametri modula
+static int MEM_SIZE = 128;
+module_param(MEM_SIZE, int, S_IRUGO);
+static int BLK_SIZE = 32;
+module_param(BLK_SIZE, int, S_IRUGO);</div>
+                    <div class="description">
+                        Te vrstice definirajo <strong>nastavljivе parametre modula</strong> - uporabnik lahko te vrednosti spremeni pri nalaganju modula!<br><br>
+                        
+                        <strong>Vrstica 11: static int MEM_SIZE = 128;</strong>
+                        <ul>
+                            <li><strong>static</strong>: Spremenljivka je vidna SAMO v tej datoteki (ne izvažamo jo)</li>
+                            <li><strong>int MEM_SIZE</strong>: Velikost pomnilnika, ki ga bo modul alociral</li>
+                            <li><strong>= 128</strong>: Privzeta vrednost 128 bajtov</li>
+                            <li>To je "buffer" v katerem se bo hranil niz, ki ga pišemo in beremo</li>
+                        </ul>
+
+                        <strong>Vrstica 12: module_param(MEM_SIZE, int, S_IRUGO);</strong>
+                        <ul>
+                            <li><strong>module_param()</strong>: Makro, ki označi MEM_SIZE kot modul parameter</li>
+                            <li><strong>MEM_SIZE</strong>: Ime spremenljivke, ki jo lahko uporabnik nastavi</li>
+                            <li><strong>int</strong>: Tip podatka (integer)</li>
+                            <li><strong>S_IRUGO</strong>: Dovoljenja za dostop do parametra:
+                                <ul>
+                                    <li>S = "stat" struktura flag</li>
+                                    <li>I = "inode"</li>
+                                    <li>R = "read"</li>
+                                    <li>UGO = "User, Group, Other" (vsi lahko berejo)</li>
+                                    <li>Rezultat: vsi lahko BEREJO parameter v /sys/module/qread/parameters/MEM_SIZE</li>
+                                    <li>Vendar ga NE MOREJO spreminjati med izvajanjem (ni W - write)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Uporaba</strong>: <code>sudo insmod qread.ko MEM_SIZE=256</code> bo nastavilo MEM_SIZE na 256</li>
+                        </ul>
+
+                        <strong>Vrstica 13-14: BLK_SIZE parameter</strong>
+                        <ul>
+                            <li>Enaka logika kot MEM_SIZE</li>
+                            <li><strong>BLK_SIZE = 32</strong>: Privzeto 32 bajtov za "kvantum" branja</li>
+                            <li>To pomeni, da vsak klic read() prebere NAJVEČ 32 bajtov naenkrat</li>
+                            <li>Tudi če uporabnik zahteva več (npr. read(fd, buf, 1000)), bo prebral samo 32 bajtov</li>
+                            <li>To simulira "block-oriented" naprave, kot so diski</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🗂️ Vrstica 16-19: Globalne spremenljivke modula</h5>
+                    <div class="code-snippet">static char *ptr = NULL;
+static dev_t dev_num;
+static struct cdev q_cdev;
+static struct class *q_class;</div>
+                    <div class="description">
+                        Te spremenljivke so <strong>globalne v modulu</strong> (static = vidne samo v tej datoteki):<br><br>
+                        
+                        <strong>Vrstica 16: static char *ptr = NULL;</strong>
+                        <ul>
+                            <li><strong>char *ptr</strong>: Kazalec na pomnilnik, kjer se bo hranil "buffer" naprave</li>
+                            <li><strong>= NULL</strong>: Inicializiran na NULL (še ni alociran)</li>
+                            <li>V qread_init() se bo alociral s kmalloc(MEM_SIZE)</li>
+                            <li>To je OSREDNJI pomnilnik naprave - ko pišemo v /dev/qread, se podatki pišejo SEM</li>
+                            <li>Ko beremo iz /dev/qread, se podatki berejo OD TOD</li>
+                        </ul>
+
+                        <strong>Vrstica 17: static dev_t dev_num;</strong>
+                        <ul>
+                            <li><strong>dev_t</strong>: Tip za "device number" (številko naprave)</li>
+                            <li>V Linuxu ima vsaka naprava edinstveno številko sestavljen iz:
+                                <ul>
+                                    <li><strong>Major number</strong>: Identificira gonilnik (driver)</li>
+                                    <li><strong>Minor number</strong>: Identificira specifično napravo v gonilniku</li>
+                                </ul>
+                            </li>
+                            <li>Primer: /dev/sda1 ima major=8, minor=1; /dev/sda2 ima major=8, minor=2</li>
+                            <li>alloc_chrdev_region() bo dodelil naši napravi major in minor številko</li>
+                        </ul>
+
+                        <strong>Vrstica 18: static struct cdev q_cdev;</strong>
+                        <ul>
+                            <li><strong>struct cdev</strong>: "Character Device" struktura</li>
+                            <li>Predstavlja napravo v kernelu</li>
+                            <li>Povezuje device number (dev_num) s file operations (fops)</li>
+                            <li>Kernel uporablja to strukturo za preusmerjanje klicev (open, read, write) na naše funkcije</li>
+                        </ul>
+
+                        <strong>Vrstica 19: static struct class *q_class;</strong>
+                        <ul>
+                            <li><strong>struct class</strong>: Razred naprav v /sys/class/</li>
+                            <li>Uporablja se za samodejno ustvarjanje /dev/qread vozlišča</li>
+                            <li>Brez tega bi morali ročno narediti <code>mknod /dev/qread c major minor</code></li>
+                            <li>class_create() in device_create() avtomatično ustvarita /dev/qread</li>
+                            <li>udev daemon v user space "posluša" te dogodke in ustvari datoteke v /dev/</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📖 Vrstica 22-42: Funkcija q_read() - Kvantno branje</h5>
+                    <div class="code-snippet">static ssize_t q_read(struct file *filp, char __user *buf, size_t len, loff_t *off) {
+    ssize_t to_copy;
+    
+    // Če smo na koncu pomnilnika, vrnemo 0
+    if (*off &gt;= MEM_SIZE) return 0;
+
+    // Kvantizacija: beremo največ BLK_SIZE bajtov naenkrat
+    to_copy = (len &lt; BLK_SIZE) ? len : BLK_SIZE;
+
+    // Preverimo, da ne beremo čez MEM_SIZE
+    if (*off + to_copy &gt; MEM_SIZE) {
+        to_copy = MEM_SIZE - *off;
+    }
+
+    if (copy_to_user(buf, ptr + *off, to_copy)) {
+        return -EFAULT;
+    }
+
+    *off += to_copy;
+    return to_copy;
+}</div>
+                    <div class="description">
+                        To je <strong>funkcija za branje iz naprave</strong> - kliče se, ko uporabnik naredi <code>read(fd, buffer, count)</code>.<br><br>
+                        
+                        <strong>Vrstica 22: Signature funkcije</strong>
+                        <ul>
+                            <li><strong>static</strong>: Funkcija vidna samo v tej datoteki</li>
+                            <li><strong>ssize_t</strong>: "signed size_t" - vrača število prebranih bajtov (ali negativno vrednost ob napaki)</li>
+                            <li><strong>q_read</strong>: Ime funkcije (q = quantum)</li>
+                            <li><strong>struct file *filp</strong>: Kazalec na kernel-ovo "file" strukturo (vsebuje informacije o odprti datoteki)
+                                <ul>
+                                    <li>filp = "file pointer"</li>
+                                    <li>Vsebuje informacije o načinu odpiranja (read/write), flagah, itd.</li>
+                                </ul>
+                            </li>
+                            <li><strong>char __user *buf</strong>: Kazalec na buffer v USER space, kamor kopiramo podatke
+                                <ul>
+                                    <li>__user je anotacija, ki pove, da je to user space kazalec</li>
+                                    <li>NE SMEMO direktno pisati v buf - moramo uporabiti copy_to_user()!</li>
+                                </ul>
+                            </li>
+                            <li><strong>size_t len</strong>: Število bajtov, ki jih uporabnik želi prebrati</li>
+                            <li><strong>loff_t *off</strong>: Kazalec na trenutni odmik (offset) v datoteki
+                                <ul>
+                                    <li>loff_t = "long offset type" (64-bit)</li>
+                                    <li>*off je STANJE - pove, kje v datoteki smo</li>
+                                    <li>MORAMO ga posodobiti, da naslednji read() nadaljuje od tam, kjer smo končali</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 23: ssize_t to_copy;</strong>
+                        <ul>
+                            <li>Lokalna spremenljivka - hranimo število bajtov, ki jih bomo dejansko prebrali</li>
+                            <li>Lahko je različna od len zaradi kvantizacije in omejitev MEM_SIZE</li>
+                        </ul>
+
+                        <strong>Vrstica 26: if (*off &gt;= MEM_SIZE) return 0;</strong>
+                        <ul>
+                            <li>Preveri, ali smo že na koncu ali čez konec pomnilnika</li>
+                            <li>*off je trenutni odmik - če je ≥ MEM_SIZE, smo presegli mejo</li>
+                            <li><strong>return 0</strong>: Vrne 0 = "end of file" (EOF)
+                                <ul>
+                                    <li>To je standardni UNIX način za signaliziranje konca datoteke</li>
+                                    <li>Aplikacija bo vedela, da ni več podatkov za branje</li>
+                                    <li>Na primer, cat /dev/qread bo prenehal brati, ko dobi 0</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 29: to_copy = (len &lt; BLK_SIZE) ? len : BLK_SIZE;</strong>
+                        <ul>
+                            <li><strong>Ternary operator</strong>: (pogoj) ? vrednost_če_true : vrednost_če_false</li>
+                            <li><strong>KVANTIZACIJA</strong>: To je ključ vaje!
+                                <ul>
+                                    <li>Če uporabnik želi prebrati manj kot BLK_SIZE (npr. len=10, BLK_SIZE=32), preberemo len (10)</li>
+                                    <li>Če uporabnik želi prebrati več kot BLK_SIZE (npr. len=100, BLK_SIZE=32), preberemo samo BLK_SIZE (32)</li>
+                                    <li>To pomeni, da se branje izvaja v "kvantih" po BLK_SIZE bajtov</li>
+                                    <li>Če uporabnik želi prebrati 100 bajtov, bo moral klicati read() večkrat (100/32 = 4x)</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 32-34: Preverjanje meje MEM_SIZE</strong>
+                        <ul>
+                            <li>Preveri, ali bi branje preseglo MEM_SIZE</li>
+                            <li>Primer: MEM_SIZE=128, *off=120, to_copy=32
+                                <ul>
+                                    <li>120 + 32 = 152 &gt; 128 ❌</li>
+                                    <li>Lahko preberemo samo: 128 - 120 = 8 bajtov</li>
+                                    <li>to_copy = 8</li>
+                                </ul>
+                            </li>
+                            <li>Preprečuje branje izven alociranega pomnilnika (segfault!)</li>
+                        </ul>
+
+                        <strong>Vrstica 36-38: copy_to_user()</strong>
+                        <ul>
+                            <li><strong>copy_to_user(buf, ptr + *off, to_copy)</strong>: Kopira podatke iz kernel space v user space
+                                <ul>
+                                    <li><strong>buf</strong>: Destinacija v user space (kam kopiramo)</li>
+                                    <li><strong>ptr + *off</strong>: Vir v kernel space (od kod kopiramo)
+                                        <ul>
+                                            <li>ptr = začetek našega bufferja</li>
+                                            <li>*off = odmik (kjer smo trenutno)</li>
+                                            <li>ptr + *off = točen naslov, od koder začnemo kopirati</li>
+                                        </ul>
+                                    </li>
+                                    <li><strong>to_copy</strong>: Število bajtov za kopiranje</li>
+                                </ul>
+                            </li>
+                            <li><strong>Če vrne ne-nič</strong>: Kopiranje ni uspelo (neveljaven user space naslov)
+                                <ul>
+                                    <li>return -EFAULT: "Bad address" napaka</li>
+                                    <li>EFAULT = "Error Fault" - napaka v dostopanju do pomnilnika</li>
+                                    <li>Negativna vrednost signalizira napako</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 40: *off += to_copy;</strong>
+                        <ul>
+                            <li>Posodobi odmik za naslednji klic read()</li>
+                            <li>Primer: *off=0, to_copy=32 → *off=32</li>
+                            <li>Naslednji read() bo začel na poziciji 32</li>
+                            <li><strong>KRITIČNO</strong>: Brez tega bi vedno brali od začetka!</li>
+                        </ul>
+
+                        <strong>Vrstica 41: return to_copy;</strong>
+                        <ul>
+                            <li>Vrne število uspešno prebranih bajtov</li>
+                            <li>Uporabniška aplikacija bo videla: <code>n = read(fd, buf, 100);</code> → n=32 (ali manj)</li>
+                            <li>Aplikacija ve, da mora klicati read() znova, če hoče več podatkov</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>✍️ Vrstica 45-61: Funkcija q_write() - Pisanje v napravo</h5>
+                    <div class="code-snippet">static ssize_t q_write(struct file *filp, const char __user *buf, size_t len, loff_t *off) {
+    size_t actual_to_write;
+
+    if (*off &gt;= MEM_SIZE) return len; // Vrnemo len, da "zadovoljimo" aplikacijo
+
+    actual_to_write = len;
+    if (*off + len &gt; MEM_SIZE) {
+        actual_to_write = MEM_SIZE - *off;
+    }
+
+    if (copy_from_user(ptr + *off, buf, actual_to_write)) {
+        return -EFAULT;
+    }
+
+    *off += actual_to_write;
+    return len; // Vedno vrnemo prvotno len po navodilih
+}</div>
+                    <div class="description">
+                        To je <strong>funkcija za pisanje v napravo</strong> - kliče se, ko uporabnik naredi <code>write(fd, buffer, count)</code>.<br><br>
+                        
+                        <strong>Vrstica 45: Signature funkcije</strong>
+                        <ul>
+                            <li><strong>q_write</strong>: Ime funkcije</li>
+                            <li><strong>const char __user *buf</strong>: Buffer v USER space, od koder beremo podatke
+                                <ul>
+                                    <li>const = ne spreminjamo uporabniških podatkov</li>
+                                    <li>__user = user space kazalec</li>
+                                </ul>
+                            </li>
+                            <li><strong>size_t len</strong>: Število bajtov, ki jih uporabnik želi napisati</li>
+                            <li>Ostalo enako kot pri q_read</li>
+                        </ul>
+
+                        <strong>Vrstica 46: size_t actual_to_write;</strong>
+                        <ul>
+                            <li>Število bajtov, ki jih bomo DEJANSKO zapisali</li>
+                            <li>Lahko je manj od len, če ni dovolj prostora</li>
+                        </ul>
+
+                        <strong>Vrstica 48: if (*off &gt;= MEM_SIZE) return len;</strong>
+                        <ul>
+                            <li>Če smo že na koncu pomnilnika, ne pišemo nič</li>
+                            <li><strong>return len</strong>: ❗ POSEBNOST - vrnemo len, ne 0!
+                                <ul>
+                                    <li>To je po NAVODILIH naloge</li>
+                                    <li>"da je uporabniška aplikacija zadovoljna in ne poskuša zapisati preostanka"</li>
+                                    <li>Aplikacija misli, da je write uspel, čeprav nismo nič napisali</li>
+                                    <li>Preprečuje neskončno zanko v aplikaciji, ki bi poskušala pisati znova in znova</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 50-53: Izračun actual_to_write</strong>
+                        <ul>
+                            <li>Začnemo z actual_to_write = len (predpostavimo, da lahko zapišemo vse)</li>
+                            <li>Če *off + len &gt; MEM_SIZE, se ne zmesti vse:
+                                <ul>
+                                    <li>Primer: MEM_SIZE=128, *off=100, len=50</li>
+                                    <li>100 + 50 = 150 &gt; 128 ❌</li>
+                                    <li>Lahko zapišemo samo: 128 - 100 = 28 bajtov</li>
+                                    <li>actual_to_write = 28</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 55-57: copy_from_user()</strong>
+                        <ul>
+                            <li><strong>copy_from_user(ptr + *off, buf, actual_to_write)</strong>: Kopira iz user space v kernel space
+                                <ul>
+                                    <li><strong>ptr + *off</strong>: Destinacija v kernel space (kam pišemo)</li>
+                                    <li><strong>buf</strong>: Vir v user space (od kod kopiramo)</li>
+                                    <li><strong>actual_to_write</strong>: Število bajtov</li>
+                                </ul>
+                            </li>
+                            <li>Če ne uspe: return -EFAULT</li>
+                        </ul>
+
+                        <strong>Vrstica 59: *off += actual_to_write;</strong>
+                        <ul>
+                            <li>Posodobi odmik za število DEJANSKO zapisanih bajtov</li>
+                            <li>Ne len, ampak actual_to_write!</li>
+                        </ul>
+
+                        <strong>Vrstica 60: return len;</strong>
+                        <ul>
+                            <li>❗ POSEBNOST: Vrnemo len, ne actual_to_write!</li>
+                            <li>To je po NAVODILIH: "write pa naj vrne prvotno vrednost len"</li>
+                            <li>Aplikacija misli, da je vse uspešno zapisano</li>
+                            <li>V resnici smo morda zapisali manj (actual_to_write &lt; len)</li>
+                            <li>To preprečuje, da bi aplikacija poskušala pisati preostale bajte</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📋 Vrstica 63-67: Struktura file_operations</h5>
+                    <div class="code-snippet">static struct file_operations fops = {
+    .owner = THIS_MODULE,
+    .read = q_read,
+    .write = q_write,
+};</div>
+                    <div class="description">
+                        <strong>struct file_operations</strong>: To je "tabela funkcij" - povezuje operacije (open, read, write, ...) z našimi funkcijami.<br><br>
+                        
+                        <ul>
+                            <li><strong>fops</strong>: "file operations" - naša tabela</li>
+                            <li><strong>.owner = THIS_MODULE</strong>: Lastnik teh operacij je naš modul
+                                <ul>
+                                    <li>THIS_MODULE je makro, ki vrne kazalec na naš modul</li>
+                                    <li>Kernel uporabi to za reference counting (preprečuje odstranitev modula med uporabo)</li>
+                                </ul>
+                            </li>
+                            <li><strong>.read = q_read</strong>: Ko uporabnik kliče read() na /dev/qread, se pokliče NAŠA funkcija q_read
+                                <ul>
+                                    <li>Kernel preusmeri klic na našo funkcijo</li>
+                                </ul>
+                            </li>
+                            <li><strong>.write = q_write</strong>: Podobno za write()</li>
+                            <li><strong>Manjkajoče funkcije</strong>: .open, .release (close), .llseek, ...
+                                <ul>
+                                    <li>Če niso definirane, kernel uporabi privzete implementacije</li>
+                                    <li>Privzeti .open in .release ne naredita nič posebnega - samo vrnejo 0 (uspeh)</li>
+                                </ul>
+                            </li>
+                        </ul>
+                        
+                        <strong>C99 syntax</strong>: <code>.member = value</code> je imenovana inicializacija (named initialization)
+                        <ul>
+                            <li>Inicializira specifične člane strukture</li>
+                            <li>Ostali člani so avtomatično nastavljeni na 0/NULL</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🚀 Vrstica 69-85: Funkcija qread_init() - Inicializacija modula</h5>
+                    <div class="code-snippet">static int __init qread_init(void) {
+    // Rezervacija pomnilnika
+    ptr = kmalloc(MEM_SIZE, GFP_KERNEL);
+    if (!ptr) return -ENOMEM;
+    memset(ptr, 0, MEM_SIZE);
+
+    // Registracija naprave
+    alloc_chrdev_region(&amp;dev_num, 0, 1, DEVICE_NAME);
+    cdev_init(&amp;q_cdev, &amp;fops);
+    cdev_add(&amp;q_cdev, dev_num, 1);
+    
+    q_class = class_create("qread_class");
+    device_create(q_class, NULL, dev_num, NULL, DEVICE_NAME);
+
+    printk(KERN_INFO "qread: Naložen (MEM_SIZE=%d, BLK_SIZE=%d)\n", MEM_SIZE, BLK_SIZE);
+    return 0;
+}</div>
+                    <div class="description">
+                        To je <strong>inicializacijska funkcija</strong> - kliče se, ko nalagamo modul s <code>insmod qread.ko</code>.<br><br>
+                        
+                        <strong>Vrstica 69: Signature</strong>
+                        <ul>
+                            <li><strong>__init</strong>: Makro, ki označi, da se funkcija izvede SAMO pri inicializaciji
+                                <ul>
+                                    <li>Po klicu se pomnilnik funkcije lahko sprosti</li>
+                                    <li>Optimizacija - kernel ne rabi hraniti te kode po nalaganju</li>
+                                </ul>
+                            </li>
+                            <li><strong>qread_init</strong>: Ime funkcije</li>
+                            <li><strong>Vrne int</strong>: 0 = uspeh, negativno = napaka (in modul se ne naloži)</li>
+                        </ul>
+
+                        <strong>Vrstica 71: ptr = kmalloc(MEM_SIZE, GFP_KERNEL);</strong>
+                        <ul>
+                            <li><strong>kmalloc()</strong>: Kernel malloc - alocira pomnilnik v kernel space
+                                <ul>
+                                    <li>NE moremo uporabiti navadnega malloc() - to je user space funkcija!</li>
+                                </ul>
+                            </li>
+                            <li><strong>MEM_SIZE</strong>: Število bajtov (npr. 128)</li>
+                            <li><strong>GFP_KERNEL</strong>: "Get Free Pages" flag - način alokacije
+                                <ul>
+                                    <li>GFP_KERNEL = normalna alokacija, lahko "spi" (če ni prostora, čaka)</li>
+                                    <li>Uporabi se v kontekstu, kjer je spanje dovoljeno (ne v interrupt handlerjih!)</li>
+                                </ul>
+                            </li>
+                            <li><strong>ptr =</strong>: Shrani kazalec na alociran pomnilnik</li>
+                        </ul>
+
+                        <strong>Vrstica 72: if (!ptr) return -ENOMEM;</strong>
+                        <ul>
+                            <li>Preveri, ali je kmalloc() uspel</li>
+                            <li><strong>!ptr</strong>: Če je ptr NULL (alokacija ni uspela)</li>
+                            <li><strong>return -ENOMEM</strong>: Vrne "Error No Memory"
+                                <ul>
+                                    <li>ENOMEM = errno konstanta (12)</li>
+                                    <li>Negativna vrednost signalizira napako</li>
+                                    <li>Modul se NE naloži</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 73: memset(ptr, 0, MEM_SIZE);</strong>
+                        <ul>
+                            <li><strong>memset()</strong>: "Memory set" - nastavi vse bajte na določeno vrednost</li>
+                            <li><strong>ptr</strong>: Začetek pomnilnika</li>
+                            <li><strong>0</strong>: Vrednost, na katero nastavljamo (nič)</li>
+                            <li><strong>MEM_SIZE</strong>: Koliko bajtov</li>
+                            <li><strong>ZAKAJ?</strong> Inicializacija pomnilnika na 0
+                                <ul>
+                                    <li>kmalloc() ne počisti pomnilnika - lahko vsebuje stare podatke</li>
+                                    <li>memset(ptr, 0, MEM_SIZE) izbriše vse na 0</li>
+                                    <li>Varnost - preprečuje razkritje starih podatkov</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 76: alloc_chrdev_region(&amp;dev_num, 0, 1, DEVICE_NAME);</strong>
+                        <ul>
+                            <li><strong>alloc_chrdev_region()</strong>: "Allocate Character Device Region" - dodeli major/minor številko
+                                <ul>
+                                    <li>Dinamično dodeli major number (kernel izbere nezasedeno številko)</li>
+                                </ul>
+                            </li>
+                            <li><strong>&amp;dev_num</strong>: Kam shrani dodeljeno številko (pass by reference)</li>
+                            <li><strong>0</strong>: Prvi minor number (base)</li>
+                            <li><strong>1</strong>: Število naprav (rezerviramo 1 napravo)</li>
+                            <li><strong>DEVICE_NAME</strong>: Ime ("qread") - vidno v /proc/devices</li>
+                            <li><strong>Rezultat</strong>: dev_num vsebuje major/minor številko naše naprave</li>
+                        </ul>
+
+                        <strong>Vrstica 77: cdev_init(&amp;q_cdev, &amp;fops);</strong>
+                        <ul>
+                            <li><strong>cdev_init()</strong>: Inicializira character device strukturo</li>
+                            <li><strong>&amp;q_cdev</strong>: Naša cdev struktura</li>
+                            <li><strong>&amp;fops</strong>: Tabela file operations (naše read/write funkcije)</li>
+                            <li>Povezuje q_cdev s fops - kernel bo vedel, katere funkcije klicati</li>
+                        </ul>
+
+                        <strong>Vrstica 78: cdev_add(&amp;q_cdev, dev_num, 1);</strong>
+                        <ul>
+                            <li><strong>cdev_add()</strong>: Doda character device v sistem</li>
+                            <li><strong>&amp;q_cdev</strong>: Naša naprava</li>
+                            <li><strong>dev_num</strong>: Device number (major/minor)</li>
+                            <li><strong>1</strong>: Število naprav (1)</li>
+                            <li><strong>Po tem klicu</strong>: Naprava je registrirana v kernelu, ampak še VEDNO ni /dev/qread datoteke!</li>
+                        </ul>
+
+                        <strong>Vrstica 80: q_class = class_create("qread_class");</strong>
+                        <ul>
+                            <li><strong>class_create()</strong>: Ustvari razred naprav v /sys/class/</li>
+                            <li><strong>"qread_class"</strong>: Ime razreda</li>
+                            <li>Ustvari /sys/class/qread_class/</li>
+                            <li>Potrebno za samodejno ustvarjanje /dev/ vozlišča</li>
+                        </ul>
+
+                        <strong>Vrstica 81: device_create(q_class, NULL, dev_num, NULL, DEVICE_NAME);</strong>
+                        <ul>
+                            <li><strong>device_create()</strong>: Ustvari napravo in sproži udev dogodek</li>
+                            <li><strong>q_class</strong>: Razred</li>
+                            <li><strong>NULL</strong>: Starš naprava (nimamo)</li>
+                            <li><strong>dev_num</strong>: Device number</li>
+                            <li><strong>NULL</strong>: Drvdata (dodatni podatki - ne potrebujemo)</li>
+                            <li><strong>DEVICE_NAME</strong>: Ime ("qread")</li>
+                            <li><strong>Rezultat</strong>: udev daemon v user space ustvari /dev/qread! ✅</li>
+                        </ul>
+
+                        <strong>Vrstica 83: printk()</strong>
+                        <ul>
+                            <li><strong>printk()</strong>: Kernel printf - izpiše v kernel log
+                                <ul>
+                                    <li>NE moremo uporabiti printf() - to je user space funkcija!</li>
+                                </ul>
+                            </li>
+                            <li><strong>KERN_INFO</strong>: Log level (informacijska sporočilo)</li>
+                            <li>Vidno v <code>dmesg</code> ali <code>/var/log/kern.log</code></li>
+                            <li>Izpis: "qread: Naložen (MEM_SIZE=128, BLK_SIZE=32)"</li>
+                        </ul>
+
+                        <strong>Vrstica 84: return 0;</strong>
+                        <ul>
+                            <li>Vrne 0 = uspešna inicializacija</li>
+                            <li>Modul je naložen ✅</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>�� Vrstica 87-94: Funkcija qread_exit() - Čiščenje modula</h5>
+                    <div class="code-snippet">static void __exit qread_exit(void) {
+    device_destroy(q_class, dev_num);
+    class_destroy(q_class);
+    cdev_del(&amp;q_cdev);
+    unregister_chrdev_region(dev_num, 1);
+    kfree(ptr);
+    printk(KERN_INFO "qread: Odstranjen\n");
+}</div>
+                    <div class="description">
+                        To je <strong>cleanup funkcija</strong> - kliče se, ko odstranjujemo modul s <code>rmmod qread</code>.<br><br>
+                        
+                        <strong>Vrstica 87: Signature</strong>
+                        <ul>
+                            <li><strong>__exit</strong>: Označi, da se funkcija izvede SAMO pri odstranjevanju</li>
+                            <li><strong>void</strong>: Ne vrača ničesar (odstranitev ne more faila)</li>
+                        </ul>
+
+                        <strong>❗ POMEMBNO: VRSTNI RED</strong>
+                        <ul>
+                            <li>Čiščenje mora biti v <strong>OBRATNEM vrstnem redu</strong> kot inicializacija!</li>
+                            <li>Zadnji ustvarjen → prvi odstranjen (LIFO - Last In, First Out)</li>
+                            <li>Če narediš napačni vrstni red → kernel panic! 💥</li>
+                        </ul>
+
+                        <strong>Vrstica 88: device_destroy(q_class, dev_num);</strong>
+                        <ul>
+                            <li>Odstrani /dev/qread vozlišče</li>
+                            <li>Obraten od device_create()</li>
+                            <li>udev daemon odstrani /dev/qread datoteko</li>
+                        </ul>
+
+                        <strong>Vrstica 89: class_destroy(q_class);</strong>
+                        <ul>
+                            <li>Odstrani razred /sys/class/qread_class/</li>
+                            <li>Obraten od class_create()</li>
+                        </ul>
+
+                        <strong>Vrstica 90: cdev_del(&amp;q_cdev);</strong>
+                        <ul>
+                            <li>Odstrani character device iz sistema</li>
+                            <li>Obraten od cdev_add()</li>
+                            <li>Po tem klicu kernel ne bo več preusmerjal klicev na naše funkcije</li>
+                        </ul>
+
+                        <strong>Vrstica 91: unregister_chrdev_region(dev_num, 1);</strong>
+                        <ul>
+                            <li>Sprosti major/minor številko</li>
+                            <li>Obraten od alloc_chrdev_region()</li>
+                            <li>Številka postane znova na voljo za druge naprave</li>
+                        </ul>
+
+                        <strong>Vrstica 92: kfree(ptr);</strong>
+                        <ul>
+                            <li><strong>kfree()</strong>: Kernel free - sprosti alociran pomnilnik</li>
+                            <li>Obraten od kmalloc()</li>
+                            <li><strong>KRITIČNO</strong>: Brez tega → memory leak! 💧
+                                <ul>
+                                    <li>Pomnilnik ostane zaseden tudi po odstranjevanju modula</li>
+                                    <li>Ponavljajoče nalaganje/odstranjevanje bi počasi izčrpalo pomnilnik</li>
+                                </ul>
+                            </li>
+                        </ul>
+
+                        <strong>Vrstica 93: printk()</strong>
+                        <ul>
+                            <li>Izpiše "qread: Odstranjen" v kernel log</li>
+                            <li>Vidno v dmesg</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔗 Vrstica 96-97: Registracija init/exit funkcij</h5>
+                    <div class="code-snippet">module_init(qread_init);
+module_exit(qread_exit);</div>
+                    <div class="description">
+                        <strong>module_init() in module_exit()</strong>: Makroji, ki povesta kernelu, katere funkcije so init/exit.<br><br>
+                        
+                        <ul>
+                            <li><strong>module_init(qread_init)</strong>: Registrira qread_init kot inicializacijsko funkcijo
+                                <ul>
+                                    <li>Kernel pokliče qread_init(), ko izvršimo <code>insmod qread.ko</code></li>
+                                </ul>
+                            </li>
+                            <li><strong>module_exit(qread_exit)</strong>: Registrira qread_exit kot cleanup funkcijo
+                                <ul>
+                                    <li>Kernel pokliče qread_exit(), ko izvršimo <code>rmmod qread</code></li>
+                                </ul>
+                            </li>
+                            <li><strong>Brez teh makrojev</strong>: Kernel ne bi vedel, katere funkcije klicati!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📜 Vrstica 99-100: Metadata modula</h5>
+                    <div class="code-snippet">MODULE_LICENSE("GPL");
+MODULE_AUTHOR("Student");</div>
+                    <div class="description">
+                        <strong>MODULE_LICENSE() in MODULE_AUTHOR()</strong>: Metadata o modulu.<br><br>
+                        
+                        <strong>Vrstica 99: MODULE_LICENSE("GPL")</strong>
+                        <ul>
+                            <li><strong>OBVEZNO</strong>: Vsak kernel modul MORA imeti licenco!</li>
+                            <li><strong>"GPL"</strong>: GNU General Public License
+                                <ul>
+                                    <li>Open source licenca</li>
+                                    <li>Če uporabimo "GPL", lahko dostopamo do VSEH kernel simbolov</li>
+                                    <li>Če uporabimo drugo licenco (npr. "Proprietary"), nekateri simboli niso dostopni</li>
+                                </ul>
+                            </li>
+                            <li><strong>Brez tega</strong>: Kernel izpiše opozorilo "module license 'unspecified' taints kernel"</li>
+                            <li>Druge možnosti: "GPL v2", "BSD", "Dual MIT/GPL", itd.</li>
+                        </ul>
+
+                        <strong>Vrstica 100: MODULE_AUTHOR("Student")</strong>
+                        <ul>
+                            <li>Opcijsko - pove, kdo je napisal modul</li>
+                            <li>Vidno v <code>modinfo qread.ko</code></li>
+                            <li>Lahko vsebuje tudi email: "Student &lt;student@example.com&gt;"</li>
+                        </ul>
+
+                        <strong>Drugi možni makroji</strong>:
+                        <ul>
+                            <li>MODULE_DESCRIPTION("Quantum read character device driver");</li>
+                            <li>MODULE_VERSION("1.0");</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>🔑 Key Concepts - qread.c</h4>
+                <ul>
+                    <li><strong>Kernel Space vs User Space</strong>: Modul se izvaja v kernel space - ne moremo uporabljati standardnih C funkcij (printf, malloc). Uporabljamo printk, kmalloc, copy_to_user, copy_from_user.</li>
+                    <li><strong>Character Device Driver</strong>: Tip gonilnika za serijsko branje/pisanje (znak po znak). Primeri: /dev/null, /dev/random, terminal devices.</li>
+                    <li><strong>Kvantizacija branja</strong>: Read funkcija prebere NAJVEČ BLK_SIZE bajtov naenkrat, ne glede na to, koliko uporabnik zahteva. Simulira block-oriented naprave.</li>
+                    <li><strong>Device Numbers</strong>: Vsaka naprava ima major (driver ID) in minor (device ID) številko. Združeno v dev_t tip.</li>
+                    <li><strong>file_operations</strong>: Tabela funkcijskih kazalcev - povezuje operacije (read, write) z našimi funkcijami.</li>
+                    <li><strong>Module Parameters</strong>: MEM_SIZE in BLK_SIZE lahko nastavimo pri nalaganju: <code>insmod qread.ko MEM_SIZE=256</code></li>
+                    <li><strong>Offset Management</strong>: *off parameter se mora posodobiti po vsakem read/write za nadaljevanje od pravilnega mesta.</li>
+                    <li><strong>Return Values</strong>: Read/write vrneta število prebranih/zapisanih bajtov (ali 0 za EOF, negativno za napako).</li>
+                    <li><strong>Memory Safety</strong>: Uporaba copy_to_user/copy_from_user je OBVEZNA za varno komunikacijo med user in kernel space.</li>
+                    <li><strong>Resource Management</strong>: Cleanup mora biti v obratnem vrstnem redu kot inicializacija (LIFO).</li>
+                </ul>
+            </div>
+        </div>
+
+
+        <!-- test_qread.c -->
+        <div class="file-card">
+            <div class="file-name">📄 test_qread.c</div>
+
+            <div class="task-description">
+                <h3>Test Program: Preizkušanje qread gonilnika</h3>
+                <ul>
+                    <li>Programsko testiranje /dev/qread naprave</li>
+                    <li>Pisanje testnega niza v napravo</li>
+                    <li>Branje iz naprave (kvantno po BLK_SIZE bajtov)</li>
+                    <li>Preverjanje delovanja kvantizacije</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Compilation and Usage:</strong><br>
+                $ gcc -o test_qread test_qread.c<br>
+                $ sudo ./test_qread
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code:</h4>
+                <pre><code class="language-c">#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;
+
+int main() {
+    int fd = open("/dev/qread", O_RDWR);
+    char write_buf[] = "To je dolg testni niz za preverjanje delovanja kvantiziranega branja.";
+    char read_buf[64];
+    
+    // Pisanje
+    write(fd, write_buf, strlen(write_buf));
+    lseek(fd, 0, SEEK_SET);
+
+    // Branje (naj bi prebralo samo BLK_SIZE, npr. 32 bajtov)
+    int n = read(fd, read_buf, sizeof(read_buf));
+    read_buf[n] = '\0';
+    
+    printf("Prebrano (%d bajtov): %s\n", n, read_buf);
+    
+    close(fd);
+    return 0;
+}</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Line-by-Line Code Explanation - test_qread.c</h4>
+
+                <div class="explanation-block">
+                    <h5>📚 Vrstica 1-4: Vključevanje knjižnic</h5>
+                    <div class="code-snippet">#include &lt;stdio.h&gt;
+#include &lt;fcntl.h&gt;
+#include &lt;unistd.h&gt;
+#include &lt;string.h&gt;</div>
+                    <div class="description">
+                        Standardne C knjižnice za user space program.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📂 Vrstica 7: Odpiranje naprave</h5>
+                    <div class="code-snippet">int fd = open("/dev/qread", O_RDWR);</div>
+                    <div class="description">
+                        Odpre /dev/qread za branje in pisanje. Vrne file descriptor ali -1 ob napaki.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>✍️ Vrstica 12: Pisanje v napravo</h5>
+                    <div class="code-snippet">write(fd, write_buf, strlen(write_buf));</div>
+                    <div class="description">
+                        Zapiše 70 bajtov testnega niza v /dev/qread. Kliče q_write() v kernelu.
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📖 Vrstica 16-17: Kvantno branje</h5>
+                    <div class="code-snippet">int n = read(fd, read_buf, sizeof(read_buf));
+read_buf[n] = '\0';</div>
+                    <div class="description">
+                        Zahteva 64 bajtov, vendar prebere samo BLK_SIZE (32) zaradi kvantizacije! Doda '\0' za printf.
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>🔑 Key Concepts - test_qread.c</h4>
+                <ul>
+                    <li><strong>Quantized Reading</strong>: Čeprav zahtevamo 64 bajtov, preberemo samo BLK_SIZE (32)</li>
+                    <li><strong>Device Files</strong>: /dev/qread povezuje user space program z kernel driver-jem</li>
+                    <li><strong>lseek()</strong>: Reset pozicije nazaj na 0 za branje od začetka</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
