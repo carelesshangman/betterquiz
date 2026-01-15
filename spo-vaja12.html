@@ -203,7 +203,7 @@
                 <h3>Naloga: LED Driver s Časovnikom</h3>
                 <ul>
                     <li>Napišite kernel modul za upravljanje LED naprave s periodičnim spreminjanjem</li>
-                    <li>Modul mora imeti timer, ki periodično preklanja LED (on/off) v nastavljenih intervalih</li>
+                    <li>Modul mora imeti timer, ki periodično preklaplja LED (on/off) v nastavljenih intervalih</li>
                     <li>Uporabnik mora moči s pisanjem v /dev/modul upravljati LED:</li>
                     <ul>
                         <li><strong>Ukaz '1'</strong>: Vklopi LED (interval = 2000 ms)</li>
@@ -900,9 +900,9 @@ static void __exit modul_exit(void)
                         <strong>Vrstica 141: del_timer(&amp;my_timer);</strong>
                         <ul>
                             <li><strong>del_timer()</strong>: Zaustavimo timer PRVI!</li>
-                            <li><strong>ZAKAJ PRVI?</strong> Če se timer stroži med čiščenjem, bo pokličal timer_callback(), ki pa dostopa do mmio_base!</li>
+                            <li><strong>ZAKAJ PRVI?</strong> Če se timer sproži med čiščenjem, bo pokličal timer_callback(), ki pa dostopa do mmio_base!</li>
                             <li>Če iounmap() ali kfree() izvršimo pred del_timer(), timer_callback() dobi segfault!</li>
-                            <li><strong>LIFO načelo</strong>: Last In, First Out - zadnja stvar sproži se prva!</li>
+                            <li><strong>LIFO načelo</strong>: Last In, First Out - zadnja stvar se sproži prva!</li>
                         </ul>
 
                         <strong>Vrstica 143-144: iounmap()</strong>
