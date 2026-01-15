@@ -4,262 +4,183 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>SPO Vaja 4 - Buffering and Text Editor</title>
-    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/themes/prism-tomorrow.min.css">
+    <link rel="stylesheet" href="style.css">
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        :root {
-            --bg-primary: #0a0e27;
-            --bg-card: #151933;
-            --text-primary: #e4e4e7;
-            --text-secondary: #a1a1aa;
-            --accent-purple: #b794f6;
-            --accent-blue: #63b3ed;
-            --accent-green: #68d391;
-            --accent-orange: #f6ad55;
-            --accent-red: #fc8181;
-            --accent-yellow: #fbd38d;
-        }
-
-        body {
-            font-family: 'Segoe UI', system-ui, sans-serif;
-            background: var(--bg-primary);
-            color: var(--text-primary);
-            line-height: 1.6;
-            min-height: 100vh;
-        }
-
-        .container {
-            max-width: 1400px;
-            margin: 0 auto;
-            padding: 40px 20px;
-        }
-
-        .header {
-            text-align: center;
-            margin-bottom: 50px;
-            padding: 30px;
-            background: linear-gradient(135deg, rgba(183, 148, 246, 0.1), rgba(99, 179, 237, 0.1));
-            border-radius: 20px;
-            border: 2px solid var(--accent-purple);
-        }
-
-        .header h1 {
-            font-size: 3em;
-            background: linear-gradient(135deg, var(--accent-purple), var(--accent-blue));
-            -webkit-background-clip: text;
-            -webkit-text-fill-color: transparent;
-            margin-bottom: 10px;
-        }
-
-        .header p {
-            color: var(--text-secondary);
-            font-size: 1.2em;
-        }
-
-        .program-section {
-            background: var(--bg-card);
-            border-radius: 20px;
-            padding: 40px;
-            margin-bottom: 40px;
-            border: 2px solid var(--accent-purple);
-            box-shadow: 0 10px 40px rgba(0, 0, 0, 0.5);
-        }
-
-        .program-title {
-            font-size: 2.2em;
-            color: var(--accent-blue);
-            margin-bottom: 20px;
-            display: flex;
-            align-items: center;
-            gap: 15px;
-        }
-
-        .task-box {
-            background: rgba(104, 211, 145, 0.1);
-            border-left: 5px solid var(--accent-green);
-            padding: 25px;
-            margin: 30px 0;
-            border-radius: 10px;
-        }
-
-        .task-box h3 {
-            color: var(--accent-green);
-            margin-bottom: 15px;
-            font-size: 1.4em;
-        }
-
-        .task-box ul {
-            margin-left: 25px;
-            color: var(--text-secondary);
-        }
-
-        .task-box li {
-            margin-bottom: 10px;
-            line-height: 1.8;
-        }
-
-        .code-block {
-            background: #1e1e1e;
-            border-radius: 12px;
-            padding: 25px;
-            margin: 25px 0;
-            border: 2px solid var(--accent-purple);
-            overflow-x: auto;
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
             position: relative;
+            z-index: 1;
         }
 
-        .code-block h4 {
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
             color: var(--accent-purple);
             margin-bottom: 15px;
-            font-size: 1.2em;
+            font-family: 'Segoe UI', sans-serif;
         }
 
-        .code-block pre {
-            color: #d4d4d4;
-            font-family: 'Courier New', monospace;
-            font-size: 0.95em;
-            line-height: 1.6;
-            overflow-x: auto;
+        .code-display pre {
             margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
         }
 
-        .code-block pre code {
-            font-family: 'Courier New', monospace;
+        .explanation-section {
+            margin-top: 30px;
         }
 
-        .explanation {
-            background: rgba(183, 148, 246, 0.1);
-            border-left: 5px solid var(--accent-purple);
-            padding: 25px;
-            margin: 25px 0;
-            border-radius: 10px;
-        }
-
-        .explanation h4 {
+        .explanation-section h4 {
             color: var(--accent-purple);
             margin-bottom: 20px;
-            font-size: 1.5em;
-        }
-
-        .explanation h5 {
-            color: var(--accent-orange);
-            margin: 25px 0 15px 0;
             font-size: 1.3em;
         }
 
-        .explanation p {
-            color: var(--text-secondary);
-            margin-bottom: 15px;
-            line-height: 1.9;
-        }
-
-        .explanation strong {
-            color: var(--accent-orange);
-        }
-
-        .explanation ul, .explanation ol {
-            margin: 15px 0 15px 30px;
-        }
-
-        .explanation li {
-            margin-bottom: 12px;
-            color: var(--text-secondary);
-            line-height: 1.8;
-        }
-
-        .code-snippet {
-            background: #1e1e1e;
-            padding: 15px;
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
             border-radius: 8px;
-            margin: 15px 0;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
             font-family: 'Courier New', monospace;
             color: #d4d4d4;
-            border: 1px solid var(--accent-blue);
             overflow-x: auto;
         }
 
-        .highlight-box {
-            background: rgba(246, 173, 85, 0.1);
-            border: 2px solid var(--accent-orange);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
-
-        .highlight-box h5 {
-            color: var(--accent-orange);
-            margin-bottom: 12px;
-        }
-
-        .warning-box {
-            background: rgba(252, 129, 129, 0.1);
-            border: 2px solid var(--accent-red);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
-        }
-
-        .warning-box h5 {
-            color: var(--accent-red);
-            margin-bottom: 12px;
-        }
-
-        .inline-code {
-            background: rgba(183, 148, 246, 0.2);
-            padding: 3px 8px;
-            border-radius: 4px;
-            font-family: 'Courier New', monospace;
-            color: var(--accent-blue);
-            font-size: 0.9em;
-        }
-
-        .diagram {
-            text-align: center;
-            padding: 20px;
-            background: #1e1e1e;
-            border-radius: 10px;
-            margin: 20px 0;
-            color: var(--accent-green);
-            font-family: 'Courier New', monospace;
-            white-space: pre;
-            overflow-x: auto;
+        .explanation-block .description {
+            color: var(--text-secondary);
             line-height: 1.8;
         }
 
-        .flow-box {
-            background: rgba(251, 211, 141, 0.1);
-            border: 2px solid var(--accent-yellow);
-            padding: 20px;
-            margin: 20px 0;
-            border-radius: 10px;
+        .explanation-block .description strong {
+            color: var(--accent-orange);
         }
 
-        .flow-box h5 {
-            color: var(--accent-yellow);
-            margin-bottom: 12px;
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
         }
 
-        @media (max-width: 768px) {
-            .header h1 {
-                font-size: 2em;
-            }
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
 
-            .program-title {
-                font-size: 1.8em;
-            }
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
 
-            .container {
-                padding: 20px 10px;
-            }
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
 
-            .program-section {
-                padding: 20px;
-            }
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
         }
     </style>
 </head>
@@ -865,8 +786,7 @@ if (!found) {
 
     </div>
 
+    <script src="script.js"></script>
 </body>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/prism.min.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/prism/1.29.0/components/prism-c.min.js"></script>
 </html>
 
