@@ -933,7 +933,7 @@ static void __exit modul_exit(void)
                     <div class="code-snippet">module_init(modul_init);
 module_exit(modul_exit);</div>
                     <div class="description">
-                        <strong>module_init() in module_exit()</strong>: Makroji, ki povesta kernelu, katere funkcije sta init/exit.<br><br>
+                        <strong>module_init() ter module_exit()</strong>: Makroji, ki povesta kernelu, katere funkcije sta init/exit.<br><br>
                         
                         <ul>
                             <li><strong>module_init(modul_init)</strong>: Registrira modul_init() kot inicializacijska funkcija
@@ -961,7 +961,7 @@ module_exit(modul_exit);</div>
                     <li><strong>Register Offsets</strong>: Vsak register je dostopen prek offseta (mmio_base + 0, +4, +8). MMIO_SIZE mora biti dovolj velik!</li>
                     <li><strong>Switch Concept</strong>: Switch register (offset +4) kontrolira ali je LED enabled. Če je 0, timer callback se nič ne naredi.</li>
                     <li><strong>Interval Management</strong>: interval_ms se shranjuje v kernel spremenljivki in tudi v MMIO registru. Ukazi '2' in '3' ga podvojijo/razpolovijo.</li>
-                    <li><strong>Cleanup Order (LIFO)</strong>: del_timer() mora biti PRVI v modul_exit()! Če se timer sproži med čiščenjem, bi dovoil dostopati do že osvobojenega pomnilnika.</li>
+                    <li><strong>Cleanup Order (LIFO)</strong>: del_timer() mora biti PRVI v modul_exit()! Če se timer sproži med čiščenjem, bi dovolil dostopati do že osvobojenega pomnilnika.</li>
                     <li><strong>Character Device vs Block Device</strong>: Character device (register_chrdev) za serijsko komunikacijo. Block device bi bil za disk-like dostop.</li>
                     <li><strong>Kernel Context</strong>: Timer callback se izvršuje v interrupt kontekstu - ne moremo spati, ne koristimo mutex (samo spinlock), omejeni smo!</li>
                     <li><strong>User/Kernel Boundary</strong>: copy_from_user() je OBVEZNA za branje podatkov iz user space. Direkten dostop povzroči segfault!</li>
