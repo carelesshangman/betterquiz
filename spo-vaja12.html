@@ -1,0 +1,975 @@
+<!DOCTYPE html>
+<html lang="sl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>SPO Vaja 12 - Linux Kernel LED Driver</title>
+    <link rel="stylesheet" href="style.css">
+    <style>
+        .docs-container {
+            max-width: 1200px;
+            margin: 50px auto;
+            padding: 20px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .docs-header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .docs-header h1 {
+            font-size: 2.5em;
+            color: var(--accent-purple);
+            margin-bottom: 10px;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 20px;
+            padding: 10px 20px;
+            background: var(--bg-card);
+            border: 2px solid var(--accent-purple);
+            border-radius: 10px;
+            color: var(--text-primary);
+            text-decoration: none;
+            transition: all 0.3s ease;
+        }
+
+        .back-link:hover {
+            background: rgba(183, 148, 246, 0.2);
+            transform: translateX(-5px);
+        }
+
+        .file-card {
+            background: var(--bg-card);
+            border-radius: 15px;
+            padding: 30px;
+            margin-bottom: 30px;
+            border: 2px solid var(--accent-purple);
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.3);
+        }
+
+        .file-name {
+            font-size: 1.8em;
+            color: var(--accent-blue);
+            margin-bottom: 15px;
+            font-family: 'Courier New', monospace;
+        }
+
+        .task-description {
+            background: rgba(104, 211, 145, 0.1);
+            border-left: 4px solid var(--accent-green);
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 5px;
+        }
+
+        .task-description h3 {
+            color: var(--accent-green);
+            margin-bottom: 10px;
+        }
+
+        .task-description ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+
+        .task-description li {
+            margin-bottom: 5px;
+        }
+
+        .usage-example {
+            background: rgba(99, 179, 237, 0.1);
+            border: 1px solid var(--accent-blue);
+            border-radius: 5px;
+            padding: 10px;
+            margin-top: 10px;
+            font-family: 'Courier New', monospace;
+            color: var(--accent-blue);
+        }
+
+        .code-display {
+            background: #1e1e1e;
+            border-radius: 8px;
+            padding: 20px;
+            margin-top: 15px;
+            overflow-x: auto;
+            border: 1px solid var(--accent-purple);
+        }
+
+        .code-display h4 {
+            color: var(--accent-purple);
+            margin-bottom: 15px;
+            font-family: 'Segoe UI', sans-serif;
+        }
+
+        .code-display pre {
+            margin: 0;
+            font-family: 'Courier New', Consolas, monospace;
+            font-size: 0.9em;
+            line-height: 1.5;
+            color: #d4d4d4;
+        }
+
+        .explanation-section {
+            margin-top: 30px;
+        }
+
+        .explanation-section h4 {
+            color: var(--accent-purple);
+            margin-bottom: 20px;
+            font-size: 1.3em;
+        }
+
+        .explanation-block {
+            background: rgba(183, 148, 246, 0.1);
+            border-left: 4px solid var(--accent-purple);
+            padding: 20px;
+            margin-bottom: 20px;
+            border-radius: 8px;
+        }
+
+        .explanation-block h5 {
+            color: var(--accent-purple);
+            margin-bottom: 12px;
+            font-size: 1.1em;
+        }
+
+        .explanation-block .code-snippet {
+            background: #1e1e1e;
+            padding: 12px;
+            border-radius: 5px;
+            margin: 10px 0;
+            font-family: 'Courier New', monospace;
+            color: #d4d4d4;
+            overflow-x: auto;
+        }
+
+        .explanation-block .description {
+            color: var(--text-secondary);
+            line-height: 1.8;
+        }
+
+        .explanation-block .description strong {
+            color: var(--accent-orange);
+        }
+
+        .explanation-block .description ul {
+            margin-left: 20px;
+            margin-top: 10px;
+        }
+
+        .explanation-block .description li {
+            margin-bottom: 8px;
+        }
+
+        .key-concepts {
+            background: rgba(246, 173, 85, 0.1);
+            border-left: 4px solid var(--accent-orange);
+            padding: 15px;
+            margin-top: 15px;
+            border-radius: 5px;
+        }
+
+        .key-concepts h4 {
+            color: var(--accent-orange);
+            margin-bottom: 10px;
+        }
+
+        .key-concepts ul {
+            margin-left: 20px;
+            color: var(--text-secondary);
+        }
+    </style>
+</head>
+<body>
+    <div class="background-animation"></div>
+
+    <div class="docs-container">
+        <a href="spo-docs-index.html" class="back-link">← Back to SPO Index</a>
+
+        <div class="docs-header">
+            <h1>💡 Vaja 12: Linux Kernel LED Driver</h1>
+            <p class="subtitle">Gonilnik za periodično spreminjanje LED naprave s časovnikom</p>
+        </div>
+
+        <!-- main.c -->
+        <div class="file-card">
+            <div class="file-name">📄 main.c</div>
+
+            <div class="task-description">
+                <h3>Naloga: LED Driver s Časovnikom</h3>
+                <ul>
+                    <li>Napišite kernel modul za upravljanje LED naprave s periodičnim spreminjanjem</li>
+                    <li>Modul mora imeti timer, ki periodično preklanja LED (on/off) v nastavljenih intervalih</li>
+                    <li>Uporabnik mora moči s pisanjem v /dev/modul upravljati LED:</li>
+                    <ul>
+                        <li><strong>Ukaz '1'</strong>: Vklopi LED (interval = 2000 ms)</li>
+                        <li><strong>Ukaz '0'</strong>: Izklopi LED</li>
+                        <li><strong>Ukaz '2'</strong>: Podvoji interval (2x počasnejši blink)</li>
+                        <li><strong>Ukaz '3'</strong>: Razpolovi interval (2x hitrejši blink)</li>
+                    </ul>
+                    <li>Naprava simulira MMIO (Memory-Mapped I/O) register dostop s kmalloc/ioremap</li>
+                    <li>Timer se mora korektno inicializirati in očistiti</li>
+                </ul>
+            </div>
+
+            <div class="usage-example">
+                <strong>Usage Examples:</strong><br>
+                # Nalaganje modula<br>
+                $ sudo insmod modul.ko<br><br>
+                # Kreiranje naprave<br>
+                $ sudo mknod /dev/modul c [major_number] 0<br><br>
+                # Vklop LED (2s interval)<br>
+                $ echo -n 1 &gt; /dev/modul<br><br>
+                # Podvojitev intervala (4s)<br>
+                $ echo -n 2 &gt; /dev/modul<br><br>
+                # Razpolovi interval (2s)<br>
+                $ echo -n 3 &gt; /dev/modul<br><br>
+                # Izklop LED<br>
+                $ echo -n 0 &gt; /dev/modul<br><br>
+                # Odstranitev modula<br>
+                $ sudo rmmod modul
+            </div>
+
+            <div class="code-display">
+                <h4>Source Code: main.c</h4>
+                <pre><code class="language-c">#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/io.h&gt;
+#include &lt;linux/timer.h&gt;
+#include &lt;linux/jiffies.h&gt;
+
+#define DEVICE_NAME "modul"
+#define MMIO_SIZE 12
+
+static int major_number;
+static struct timer_list my_timer;
+static void __iomem *mmio_base = NULL;
+static void *dev_mem = NULL;
+static unsigned int interval_ms = 2000;
+
+static ssize_t device_write(struct file *file, const char __user *buffer, size_t len, loff_t *offset);
+static void timer_callback(struct timer_list *timer);
+
+static struct file_operations fops = {
+    .write = device_write,
+};
+
+// Timer callback function
+static void timer_callback(struct timer_list *timer)
+{
+    u32 switch_val, led_val;
+
+    switch_val = ioread32(mmio_base + 4);
+
+    if (switch_val == 1) {
+        led_val = ioread32(mmio_base);
+        led_val = (led_val == 0) ? 1 : 0;
+        iowrite32(led_val, mmio_base);
+        iowrite32(interval_ms, mmio_base + 8);
+        mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(interval_ms));
+    }
+}
+
+// Write function - handles user commands
+static ssize_t device_write(struct file *file, const char __user *buffer, size_t len, loff_t *offset)
+{
+    char cmd;
+    u32 switch_val;
+
+    if (len &lt; 1)
+        return -EINVAL;
+
+    if (copy_from_user(&amp;cmd, buffer, 1))
+        return -EFAULT;
+
+    switch (cmd) {
+        case '0':
+            switch_val = 0;
+            iowrite32(switch_val, mmio_base + 4);
+            iowrite32(0, mmio_base);
+            iowrite32(interval_ms, mmio_base + 8);
+            del_timer(&amp;my_timer);
+            printk(KERN_INFO "%s: Switch=0, Interval=%u ms (LED off)\n",
+                   DEVICE_NAME, interval_ms);
+            break;
+
+        case '1':
+            interval_ms = 2000;
+            switch_val = 1;
+            iowrite32(switch_val, mmio_base + 4);
+            iowrite32(interval_ms, mmio_base + 8);
+            mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(interval_ms));
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms\n",
+                   DEVICE_NAME, interval_ms);
+            break;
+
+        case '2':
+            interval_ms *= 2;
+            iowrite32(interval_ms, mmio_base + 8);
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms (doubled)\n",
+                   DEVICE_NAME, interval_ms);
+            break;
+
+        case '3':
+            interval_ms = (interval_ms &gt; 1) ? (interval_ms / 2) : 1;
+            iowrite32(interval_ms, mmio_base + 8);
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms (halved)\n",
+                   DEVICE_NAME, interval_ms);
+            break;
+
+        default:
+            printk(KERN_WARNING "%s: Invalid command '%c'\n", DEVICE_NAME, cmd);
+            return -EINVAL;
+    }
+
+    return len;
+}
+
+// Module initialization
+static int __init modul_init(void)
+{
+    phys_addr_t phys;
+
+    printk(KERN_INFO "%s: Initializing module\n", DEVICE_NAME);
+
+    major_number = register_chrdev(0, DEVICE_NAME, &amp;fops);
+    if (major_number &lt; 0) {
+        printk(KERN_ALERT "%s: Failed to register character device\n", DEVICE_NAME);
+        return major_number;
+    }
+    printk(KERN_INFO "%s: Registered with major number %d\n", DEVICE_NAME, major_number);
+    printk(KERN_INFO "%s: Create device with: mknod /dev/%s c %d 0\n",
+           DEVICE_NAME, DEVICE_NAME, major_number);
+
+    dev_mem = kmalloc(MMIO_SIZE, GFP_KERNEL);
+    if (!dev_mem) {
+        unregister_chrdev(major_number, DEVICE_NAME);
+        printk(KERN_ALERT "%s: Failed to allocate memory\n", DEVICE_NAME);
+        return -ENOMEM;
+    }
+
+    phys = virt_to_phys(dev_mem);
+    mmio_base = ioremap(phys, MMIO_SIZE);
+    if (!mmio_base) {
+        kfree(dev_mem);
+        unregister_chrdev(major_number, DEVICE_NAME);
+        printk(KERN_ALERT "%s: Failed to map MMIO\n", DEVICE_NAME);
+        return -ENOMEM;
+    }
+
+    iowrite32(0, mmio_base);
+    iowrite32(0, mmio_base + 4);
+    iowrite32(interval_ms, mmio_base + 8);
+
+    timer_setup(&amp;my_timer, timer_callback, 0);
+
+    printk(KERN_INFO "%s: Module initialized successfully\n", DEVICE_NAME);
+    return 0;
+}
+
+// Module cleanup
+static void __exit modul_exit(void)
+{
+    del_timer(&amp;my_timer);
+
+    if (mmio_base)
+        iounmap(mmio_base);
+
+    if (dev_mem)
+        kfree(dev_mem);
+
+    unregister_chrdev(major_number, DEVICE_NAME);
+
+    printk(KERN_INFO "%s: Module removed\n", DEVICE_NAME);
+}
+
+module_init(modul_init);
+module_exit(modul_exit);</code></pre>
+            </div>
+
+            <div class="explanation-section">
+                <h4>📖 Detailed Line-by-Line Code Explanation</h4>
+
+                <div class="explanation-block">
+                    <h5>📚 Vrstica 1-8: Vključevanje kernel knjižnic (Header includes)</h5>
+                    <div class="code-snippet">#include &lt;linux/module.h&gt;
+#include &lt;linux/kernel.h&gt;
+#include &lt;linux/fs.h&gt;
+#include &lt;linux/uaccess.h&gt;
+#include &lt;linux/slab.h&gt;
+#include &lt;linux/io.h&gt;
+#include &lt;linux/timer.h&gt;
+#include &lt;linux/jiffies.h&gt;</div>
+                    <div class="description">
+                        To so <strong>kernel header datoteke</strong> - nujne za razvoj kernel modulov. Vsaka ima specifičen namen:
+                        <ul>
+                            <li><strong>&lt;linux/module.h&gt;</strong>: OSNOVNA za vsak kernel modul. Vsebuje MODULE_LICENSE(), MODULE_AUTHOR(), module_init(), module_exit()</li>
+                            <li><strong>&lt;linux/kernel.h&gt;</strong>: Osnovne kernel definicije in makroji (printk, KERN_INFO, KERN_ALERT, itd.)</li>
+                            <li><strong>&lt;linux/fs.h&gt;</strong>: "File System" - struct file_operations, register_chrdev(), unregister_chrdev()</li>
+                            <li><strong>&lt;linux/uaccess.h&gt;</strong>: Dostop do user space (copy_from_user(), copy_to_user()) - KRITIČNO za varnost!</li>
+                            <li><strong>&lt;linux/slab.h&gt;</strong>: Pomnilniški alokator (kmalloc(), kfree())</li>
+                            <li><strong>&lt;linux/io.h&gt;</strong>: I/O operacije - ioread32(), iowrite32(), ioremap(), iounmap() - za MMIO register dostop!</li>
+                            <li><strong>&lt;linux/timer.h&gt;</strong>: Timer API - timer_setup(), mod_timer(), del_timer()</li>
+                            <li><strong>&lt;linux/jiffies.h&gt;</strong>: Jiffies (kernel čas) - msecs_to_jiffies() za pretvarjanje ms v jiffies</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📛 Vrstica 10-11: Definicije konstant</h5>
+                    <div class="code-snippet">#define DEVICE_NAME "modul"
+#define MMIO_SIZE 12</div>
+                    <div class="description">
+                        <strong>Vrstica 10: #define DEVICE_NAME "modul"</strong>
+                        <ul>
+                            <li>Ime naprave, ki se pojavi v /dev/modul</li>
+                            <li>Tudi ime, vidno v /proc/devices pri register_chrdev()</li>
+                        </ul>
+
+                        <strong>Vrstica 11: #define MMIO_SIZE 12</strong>
+                        <ul>
+                            <li><strong>MMIO</strong> = "Memory-Mapped I/O" - simulirani register prostor</li>
+                            <li>Velikost: 12 bajtov = 3 x 32-bitni registri (u32 = 4 bajti)</li>
+                            <li>Register 0 (offset +0): LED vrednost (0=off, 1=on)</li>
+                            <li>Register 1 (offset +4): Switch vrednost (0=disabled, 1=enabled)</li>
+                            <li>Register 2 (offset +8): Interval v ms (za timer)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⚙️ Vrstica 13-17: Globalne spremenljivke modula</h5>
+                    <div class="code-snippet">static int major_number;
+static struct timer_list my_timer;
+static void __iomem *mmio_base = NULL;
+static void *dev_mem = NULL;
+static unsigned int interval_ms = 2000;</div>
+                    <div class="description">
+                        <strong>Vrstica 13: static int major_number;</strong>
+                        <ul>
+                            <li>Shranjuje major number, dodeljen s register_chrdev()</li>
+                            <li>Potreben pri unregister_chrdev() v cleanup funkciji</li>
+                        </ul>
+
+                        <strong>Vrstica 14: static struct timer_list my_timer;</strong>
+                        <ul>
+                            <li>Kernel struktura za timer</li>
+                            <li>Inicializira se s timer_setup() - veže timer s callback funkcijo</li>
+                            <li>Modifikuje se s mod_timer() - nastavi čas izvršitve</li>
+                            <li>Brisuje se s del_timer() - zaustavlja timer</li>
+                        </ul>
+
+                        <strong>Vrstica 15: static void __iomem *mmio_base = NULL;</strong>
+                        <ul>
+                            <li><strong>__iomem</strong>: Posebna anotacija za MMIO naslov</li>
+                            <li>Kazalec na začetek naših simuliranih registrov (v kernel space)</li>
+                            <li>Inicializiran na NULL, nato postavljen na ioremap(phys, MMIO_SIZE)</li>
+                            <li>Dostop: ioread32(mmio_base + 0), iowrite32(val, mmio_base + 4), itd.</li>
+                        </ul>
+
+                        <strong>Vrstica 16: static void *dev_mem = NULL;</strong>
+                        <ul>
+                            <li>Kazalec na fizični pomnilnik, ki ga alociramo s kmalloc()</li>
+                            <li>To je virtualni naslov - za fizični naslov koristimo virt_to_phys()</li>
+                            <li>ioremap() ga preslika v MMIO prostor</li>
+                        </ul>
+
+                        <strong>Vrstica 17: static unsigned int interval_ms = 2000;</strong>
+                        <ul>
+                            <li>Interval med LED preklopi v millisekund</li>
+                            <li>Privzeto 2000 ms (2 sekundi)</li>
+                            <li>Spremenljiva - s comandami '2' in '3' jo podvojimo/razpolovimo</li>
+                            <li>Shranjeno tudi v MMIO registru (offset +8)</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>📑 Vrstica 19-24: Forward deklaracije in file_operations</h5>
+                    <div class="code-snippet">static ssize_t device_write(struct file *file, const char __user *buffer, size_t len, loff_t *offset);
+static void timer_callback(struct timer_list *timer);
+
+static struct file_operations fops = {
+    .write = device_write,
+};</div>
+                    <div class="description">
+                        <strong>Vrstica 19-20: Forward deklaracije</strong>
+                        <ul>
+                            <li>Obvestimo compiler za funkcije, ki jih bomo definirali kasneje</li>
+                            <li>device_write() in timer_callback() sta definirani PO inicializaciji fops</li>
+                            <li>Forward deklaracije omogočajo, da jih uporabimo v fops preden sta definirani</li>
+                        </ul>
+
+                        <strong>Vrstica 22-24: struct file_operations</strong>
+                        <ul>
+                            <li><strong>file_operations (fops)</strong>: Tabela funkcijskih kazalcev za naprave</li>
+                            <li>Povezuje operacije (read, write, open, close) z našimi funkcijami</li>
+                            <li><strong>.write = device_write</strong>: Ko user napiše v /dev/modul, kernel pokliče device_write()</li>
+                            <li>Ostali člani (.read, .open, .release) niso definirani - kernel uporabi privzete</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⏱️ Vrstica 26-41: Timer Callback Funkcija</h5>
+                    <div class="code-snippet">// Timer callback function
+static void timer_callback(struct timer_list *timer)
+{
+    u32 switch_val, led_val;
+
+    switch_val = ioread32(mmio_base + 4);
+
+    if (switch_val == 1) {
+        led_val = ioread32(mmio_base);
+        led_val = (led_val == 0) ? 1 : 0;
+        iowrite32(led_val, mmio_base);
+        iowrite32(interval_ms, mmio_base + 8);
+        mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(interval_ms));
+    }
+}</div>
+                    <div class="description">
+                        To je <strong>callback funkcija timera</strong> - kliče se samodejno, ko se timer sproži. To je JEDRO LED blink logike!<br><br>
+
+                        <strong>Vrstica 26: Signature</strong>
+                        <ul>
+                            <li><strong>void timer_callback(struct timer_list *timer)</strong>: Standardni podpis za timer callback</li>
+                            <li><strong>timer</strong>: Kazalec na timer_list strukturo (naš my_timer)</li>
+                            <li>Vedno void vrnemo - timer callback ne vrača vrednosti</li>
+                        </ul>
+
+                        <strong>Vrstica 29: u32 switch_val, led_val;</strong>
+                        <ul>
+                            <li><strong>u32</strong>: 32-bitna unsigned integer (ker ioread32() vrača u32)</li>
+                            <li>switch_val = ali je switch (LED omogočevanje) vklopljen</li>
+                            <li>led_val = trenutna LED vrednost</li>
+                        </ul>
+
+                        <strong>Vrstica 31: switch_val = ioread32(mmio_base + 4);</strong>
+                        <ul>
+                            <li><strong>ioread32()</strong>: Branje 32-bitne vrednosti iz MMIO registra</li>
+                            <li><strong>mmio_base + 4</strong>: Register 1 - switch vrednost (je LED omogočen?)</li>
+                            <li>0 = LED je disabled, 1 = LED je enabled</li>
+                            <li>Če je switch=0, timer callback NIČ ne naredi (spodnja if bloka se preskoči)</li>
+                        </ul>
+
+                        <strong>Vrstica 33-39: Samo če je switch=1</strong>
+                        <ul>
+                            <li><strong>Vrstica 34: led_val = ioread32(mmio_base);</strong>
+                                <ul>
+                                    <li>Branje trenutne LED vrednosti iz registra 0</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vrstica 35: led_val = (led_val == 0) ? 1 : 0;</strong>
+                                <ul>
+                                    <li><strong>Ternary operator: pogoj ? true_val : false_val</strong></li>
+                                    <li>PREKLOP! Če je LED=0, nastavi na 1. Če je LED=1, nastavi na 0.</li>
+                                    <li>To je ključna logika - LED se vklaplja/izklaplja</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vrstica 36: iowrite32(led_val, mmio_base);</strong>
+                                <ul>
+                                    <li>Pisanje nove LED vrednosti nazaj v register 0</li>
+                                    <li>To fizično spremeni LED na "napravi" (simulirano)</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vrstica 37: iowrite32(interval_ms, mmio_base + 8);</strong>
+                                <ul>
+                                    <li>Pisanje intervala v register 2 (za reference)</li>
+                                    <li>V resničnih driversih bi to nastavilo hardware timer</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vrstica 38: mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(interval_ms));</strong>
+                                <ul>
+                                    <li><strong>mod_timer()</strong>: Modifikira timer - ga ponovno sprožimo!</li>
+                                    <li><strong>jiffies</strong>: Trenutni kernel čas (v "jiffies" - sistemskih tiktakah)</li>
+                                    <li><strong>msecs_to_jiffies(interval_ms)</strong>: Pretvori 2000ms (ali 4000ms) v jiffies</li>
+                                    <li><strong>Rezultat</strong>: Timer se bo spet sproži čez interval_ms ms</li>
+                                    <li>KONTINUALNA ZANKA! Vsak čas, ko se timer sproži, se ponovno nastavi!</li>
+                                </ul>
+                            </li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>✍️ Vrstica 43-98: Device Write Funkcija</h5>
+                    <div class="code-snippet">// Write function - handles user commands
+static ssize_t device_write(struct file *file, const char __user *buffer, size_t len, loff_t *offset)
+{
+    char cmd;
+    u32 switch_val;
+
+    if (len &lt; 1)
+        return -EINVAL;
+
+    if (copy_from_user(&amp;cmd, buffer, 1))
+        return -EFAULT;</div>
+                    <div class="description">
+                        To je <strong>funkcija za pisanje v napravo</strong> - kliče se, ko user napiše v /dev/modul.<br><br>
+
+                        <strong>Vrstica 43: Signature</strong>
+                        <ul>
+                            <li><strong>device_write(struct file *file, const char __user *buffer, size_t len, loff_t *offset)</strong></li>
+                            <li><strong>buffer</strong>: Podatki iz user space, ki jih je user napisal</li>
+                            <li><strong>len</strong>: Dolžina podatkov</li>
+                            <li><strong>Vrne: ssize_t</strong> - število uspešno napisanih bajtov (ali -1 ob napaki)</li>
+                        </ul>
+
+                        <strong>Vrstica 48-49: Preverjanje dolžine</strong>
+                        <ul>
+                            <li>Če je len < 1, je buffer prazen - napaka!</li>
+                            <li><strong>return -EINVAL</strong>: "Invalid Argument"</li>
+                        </ul>
+
+                        <strong>Vrstica 51-52: Branje iz user space</strong>
+                        <ul>
+                            <li><strong>copy_from_user(&amp;cmd, buffer, 1)</strong>: Kopira 1 bajt iz user buffer v kernel spremenljivko cmd</li>
+                            <li><strong>KRITIČNO</strong>: NE moremo direktno brati iz buffer - moramo uporabiti copy_from_user()!</li>
+                            <li>Če ne uspe (napaka): return -EFAULT ("Bad address")</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🎛️ Vrstica 54-98: Switch statement - obdelava ukazov (Case '0', '1', '2', '3')</h5>
+                    <div class="code-snippet">    switch (cmd) {
+        case '0':
+            switch_val = 0;
+            iowrite32(switch_val, mmio_base + 4);
+            iowrite32(0, mmio_base);
+            iowrite32(interval_ms, mmio_base + 8);
+            del_timer(&amp;my_timer);
+            printk(KERN_INFO "%s: Switch=0, Interval=%u ms (LED off)\n",
+                   DEVICE_NAME, interval_ms);
+            break;</div>
+                    <div class="description">
+                        <strong>Case '0' - Izklop LED (vrstice 55-62)</strong>
+                        <ul>
+                            <li><strong>switch_val = 0</strong>: Nastavimo switch na DISABLED</li>
+                            <li><strong>iowrite32(0, mmio_base + 4)</strong>: Zapišemo 0 v switch register → LED disabled</li>
+                            <li><strong>iowrite32(0, mmio_base)</strong>: Zapišemo 0 v LED register → LED=off (varnost)</li>
+                            <li><strong>del_timer(&amp;my_timer)</strong>: ZAUSTAVIMO timer - ne bo več blinkanja!</li>
+                            <li><strong>printk()</strong>: Izpis v kernel log - vidno v dmesg</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🚀 Vrstica 64-73: Case '1' - Vklop LED</h5>
+                    <div class="code-snippet">        case '1':
+            interval_ms = 2000;
+            switch_val = 1;
+            iowrite32(switch_val, mmio_base + 4);
+            iowrite32(interval_ms, mmio_base + 8);
+            mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(interval_ms));
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms\n",
+                   DEVICE_NAME, interval_ms);
+            break;</div>
+                    <div class="description">
+                        <strong>Case '1' - Vklop LED (vrstice 64-73)</strong>
+                        <ul>
+                            <li><strong>interval_ms = 2000</strong>: Resetiraj interval na privzeto 2 sekundi</li>
+                            <li><strong>switch_val = 1</strong>: Nastavimo switch na ENABLED</li>
+                            <li><strong>iowrite32(1, mmio_base + 4)</strong>: Zapišemo 1 v switch register</li>
+                            <li><strong>iowrite32(2000, mmio_base + 8)</strong>: Zapišemo interval v timer register</li>
+                            <li><strong>mod_timer(&amp;my_timer, jiffies + msecs_to_jiffies(2000))</strong>: Sprožimo timer - LED začne blinkati!</li>
+                            <li>Naslednji klic timer_callback() bo čez 2 sekundi</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⏫ Vrstica 75-80: Case '2' - Podvojitev intervala</h5>
+                    <div class="code-snippet">        case '2':
+            interval_ms *= 2;
+            iowrite32(interval_ms, mmio_base + 8);
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms (doubled)\n",
+                   DEVICE_NAME, interval_ms);
+            break;</div>
+                    <div class="description">
+                        <strong>Case '2' - Podvojitev intervala (2x počasnejši blink)</strong>
+                        <ul>
+                            <li><strong>interval_ms *= 2</strong>: PODVOJIMO interval (2000 → 4000, 4000 → 8000, itd.)</li>
+                            <li><strong>iowrite32(interval_ms, mmio_base + 8)</strong>: Zapišemo novi interval v register</li>
+                            <li><strong>Opomba</strong>: Timer NE resetiramo - on se bo sproži ob original času, ampak naslednjič bo uporabil novi interval</li>
+                            <li>V resničnem driveru bi uporabili mod_timer() da takoj spremenimo čas!</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⏬ Vrstica 82-87: Case '3' - Razpolovi interval</h5>
+                    <div class="code-snippet">        case '3':
+            interval_ms = (interval_ms &gt; 1) ? (interval_ms / 2) : 1;
+            iowrite32(interval_ms, mmio_base + 8);
+            printk(KERN_INFO "%s: Switch=1, Interval=%u ms (halved)\n",
+                   DEVICE_NAME, interval_ms);
+            break;</div>
+                    <div class="description">
+                        <strong>Case '3' - Razpolovi interval (2x hitrejši blink)</strong>
+                        <ul>
+                            <li><strong>interval_ms = (interval_ms &gt; 1) ? (interval_ms / 2) : 1</strong>: RAZPOLOVIMO interval</li>
+                            <li>Ternary: Če je interval > 1, podeli z 2, sicer nastavi na 1 (minimum)</li>
+                            <li>To preprečuje, da bi šel interval na 0 (kar bi povzročilo probleme)</li>
+                            <li>Enaka logika kot v case '2' - register se posodobi, timer pa teče dalje</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>❌ Vrstica 89-98: Default case in return</h5>
+                    <div class="code-snippet">        default:
+            printk(KERN_WARNING "%s: Invalid command '%c'\n", DEVICE_NAME, cmd);
+            return -EINVAL;
+    }
+
+    return len;
+}</div>
+                    <div class="description">
+                        <strong>Default case</strong>
+                        <ul>
+                            <li>Če je cmd kaj drugega (ne '0', '1', '2', '3') → napaka!</li>
+                            <li><strong>printk(KERN_WARNING)</strong>: Opozorilo v kernel log</li>
+                            <li><strong>return -EINVAL</strong>: Napaka</li>
+                        </ul>
+
+                        <strong>Vrstica 97: return len;</strong>
+                        <ul>
+                            <li>Na koncu vrnemo len - število "uspešno napisanih" bajtov</li>
+                            <li>To pove user space aplikaciji, da je bilo pisanje uspešno</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔧 Vrstica 100-128: Inicializacija modula (modul_init)</h5>
+                    <div class="code-snippet">// Module initialization
+static int __init modul_init(void)
+{
+    phys_addr_t phys;
+
+    printk(KERN_INFO "%s: Initializing module\n", DEVICE_NAME);
+
+    major_number = register_chrdev(0, DEVICE_NAME, &amp;fops);
+    if (major_number &lt; 0) {
+        printk(KERN_ALERT "%s: Failed to register character device\n", DEVICE_NAME);
+        return major_number;
+    }</div>
+                    <div class="description">
+                        To je <strong>inicializacijska funkcija</strong> - kliče se ob nalaganju modula (insmod). To je KRITIČNO MESTO!<br><br>
+
+                        <strong>Vrstica 100: __init oznak</strong>
+                        <ul>
+                            <li>Označi, da se funkcija izvede SAMO enkrat pri nalaganju</li>
+                            <li>Po klicu se pomnilnik lahko sprosti - optimizacija kernela</li>
+                        </ul>
+
+                        <strong>Vrstica 103: phys_addr_t phys;</strong>
+                        <ul>
+                            <li>Tip za fizični naslov (physical address) - 64-bit na 64-bitnih sistemih</li>
+                            <li>Shrani fizični naslov našega alociranega pomnilnika</li>
+                        </ul>
+
+                        <strong>Vrstica 108-114: Registracija character device</strong>
+                        <ul>
+                            <li><strong>major_number = register_chrdev(0, DEVICE_NAME, &amp;fops)</strong>
+                                <ul>
+                                    <li><strong>register_chrdev()</strong>: Registrira character device</li>
+                                    <li><strong>0</strong>: Major number (0 = kernel samodejno izbere)</li>
+                                    <li><strong>DEVICE_NAME</strong>: "modul" - vidno v /proc/devices</li>
+                                    <li><strong>&amp;fops</strong>: Naša file_operations tabela</li>
+                                </ul>
+                            </li>
+                            <li><strong>Vrne</strong>: Pozitivno = dodelljena major number, Negativno = napaka</li>
+                            <li>Preverjamo: if (major_number < 0) → napaka, vrnemo negative vrednost</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>💾 Vrstica 116-127: Alokacija in MMIO mapping pomnilnika</h5>
+                    <div class="code-snippet">    dev_mem = kmalloc(MMIO_SIZE, GFP_KERNEL);
+    if (!dev_mem) {
+        unregister_chrdev(major_number, DEVICE_NAME);
+        printk(KERN_ALERT "%s: Failed to allocate memory\n", DEVICE_NAME);
+        return -ENOMEM;
+    }
+
+    phys = virt_to_phys(dev_mem);
+    mmio_base = ioremap(phys, MMIO_SIZE);
+    if (!mmio_base) {
+        kfree(dev_mem);
+        unregister_chrdev(major_number, DEVICE_NAME);
+        printk(KERN_ALERT "%s: Failed to map MMIO\n", DEVICE_NAME);
+        return -ENOMEM;
+    }</div>
+                    <div class="description">
+                        <strong>Vrstica 116-121: Alokacija pomnilnika</strong>
+                        <ul>
+                            <li><strong>dev_mem = kmalloc(MMIO_SIZE, GFP_KERNEL)</strong>
+                                <ul>
+                                    <li>Alocira 12 bajtov pomnilnika v kernel space</li>
+                                    <li>GFP_KERNEL = "Get Free Pages KERNEL" - normalna alokacija, lahko "spi"</li>
+                                </ul>
+                            </li>
+                            <li>Preverjamo: if (!dev_mem) → alokacija ni uspela</li>
+                            <li><strong>Odgovorno čiščenje</strong> ob napaki: unregister_chrdev() pred return!</li>
+                        </ul>
+
+                        <strong>Vrstica 123-127: MMIO mapping - KLJUČNO!</strong>
+                        <ul>
+                            <li><strong>phys = virt_to_phys(dev_mem)</strong>
+                                <ul>
+                                    <li><strong>virt_to_phys()</strong>: Pretvori virtualni naslov v fizični naslov</li>
+                                    <li>dev_mem je virtualni naslov (kaj vidi kernel)</li>
+                                    <li>phys je fizični naslov (kaj "vidi" hardware)</li>
+                                </ul>
+                            </li>
+                            <li><strong>mmio_base = ioremap(phys, MMIO_SIZE)</strong>
+                                <ul>
+                                    <li><strong>ioremap()</strong>: Preslika fizični naslov v MMIO prostor</li>
+                                    <li>To je VIRTUALNI naslov za MMIO dostop (drugačen od navadnega kernel pomnilnika!)</li>
+                                    <li>MMIO prostor ima posebne lastnosti - ne cache-ira, direct hardware dostop</li>
+                                    <li>V resničnih driversih bi phys bil naslov hardware registrov</li>
+                                </ul>
+                            </li>
+                            <li>Preverjamo: if (!mmio_base) → mapping je failo</li>
+                            <li><strong>Odgovorno čiščenje</strong>: kfree(dev_mem) + unregister_chrdev()</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>⚡ Vrstica 129-133: Inicializacija registrov in timera</h5>
+                    <div class="code-snippet">    iowrite32(0, mmio_base);
+    iowrite32(0, mmio_base + 4);
+    iowrite32(interval_ms, mmio_base + 8);
+
+    timer_setup(&amp;my_timer, timer_callback, 0);</div>
+                    <div class="description">
+                        <strong>Vrstica 129-131: Inicializacija registrov</strong>
+                        <ul>
+                            <li><strong>iowrite32(0, mmio_base + 0)</strong>: LED register = 0 (LED off)</li>
+                            <li><strong>iowrite32(0, mmio_base + 4)</strong>: Switch register = 0 (disabled)</li>
+                            <li><strong>iowrite32(interval_ms, mmio_base + 8)</strong>: Interval register = 2000 (privzeto)</li>
+                        </ul>
+
+                        <strong>Vrstica 133: timer_setup(&amp;my_timer, timer_callback, 0);</strong>
+                        <ul>
+                            <li><strong>timer_setup()</strong>: Inicializira timer strukturo (novi API, zamenjal stari init_timer())</li>
+                            <li><strong>&amp;my_timer</strong>: Naš timer</li>
+                            <li><strong>timer_callback</strong>: Funkcija, ki se pokliče ob sproženosti</li>
+                            <li><strong>0</strong>: Dodatni flags (0 = brez posebnih zastavic)</li>
+                            <li><strong>OPOMBA</strong>: timer_setup() samo inicializira, NE sproži timera! Timer se sproži šele s mod_timer() v device_write()</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🧹 Vrstica 137-158: Čiščenje modula (modul_exit)</h5>
+                    <div class="code-snippet">// Module cleanup
+static void __exit modul_exit(void)
+{
+    del_timer(&amp;my_timer);
+
+    if (mmio_base)
+        iounmap(mmio_base);
+
+    if (dev_mem)
+        kfree(dev_mem);
+
+    unregister_chrdev(major_number, DEVICE_NAME);
+
+    printk(KERN_INFO "%s: Module removed\n", DEVICE_NAME);
+}</div>
+                    <div class="description">
+                        To je <strong>cleanup funkcija</strong> - kliče se ob odstranjevanju modula (rmmod). <strong>KRITIČNO: vrstni red operacij!</strong><br><br>
+
+                        <strong>Vrstica 137: __exit oznak</strong>
+                        <ul>
+                            <li>Označi, da se funkcija izvede SAMO ob odstranjevanju</li>
+                        </ul>
+
+                        <strong>Vrstica 141: del_timer(&amp;my_timer);</strong>
+                        <ul>
+                            <li><strong>del_timer()</strong>: Zaustavimo timer PRVI!</li>
+                            <li><strong>ZAKAJ PRVI?</strong> Če se timer stroži med čiščenjem, bo pokličal timer_callback(), ki pa dostopa do mmio_base!</li>
+                            <li>Če iounmap() ali kfree() izvršimo pred del_timer(), timer_callback() dobi segfault!</li>
+                            <li><strong>LIFO načelo</strong>: Last In, First Out - zadnja stvar sproži se prva!</li>
+                        </ul>
+
+                        <strong>Vrstica 143-144: iounmap()</strong>
+                        <ul>
+                            <li><strong>iounmap(mmio_base)</strong>: Odvzamemo MMIO mapping</li>
+                            <li><strong>if (mmio_base)</strong>: Preverjamo, da je mapiranje uspelo (ni NULL)</li>
+                            <li>Po iounmap(): mmio_base naslov ni več veljaven!</li>
+                        </ul>
+
+                        <strong>Vrstica 146-147: kfree()</strong>
+                        <ul>
+                            <li><strong>kfree(dev_mem)</strong>: Sprostimo alociran pomnilnik</li>
+                            <li><strong>if (dev_mem)</strong>: Preverjamo, da je alokacija uspela (ni NULL)</li>
+                            <li><strong>KRITIČNO</strong>: Brez tega = MEMORY LEAK! Pomnilnik bi ostal zavzet!</li>
+                        </ul>
+
+                        <strong>Vrstica 149: unregister_chrdev()</strong>
+                        <ul>
+                            <li><strong>unregister_chrdev(major_number, DEVICE_NAME)</strong>: Odregistriramo napravo</li>
+                            <li>Po tem: /dev/modul ne obstaja več in kernel ne bo več klical naših funkcij</li>
+                            <li>To je obratno od register_chrdev()</li>
+                        </ul>
+                    </div>
+                </div>
+
+                <div class="explanation-block">
+                    <h5>🔗 Vrstica 160-161: Registracija init/exit</h5>
+                    <div class="code-snippet">module_init(modul_init);
+module_exit(modul_exit);</div>
+                    <div class="description">
+                        <strong>module_init() in module_exit()</strong>: Makroji, ki povesta kernelu, katere funkcije sta init/exit.<br><br>
+                        
+                        <ul>
+                            <li><strong>module_init(modul_init)</strong>: Registrira modul_init() kot inicializacijska funkcija
+                                <ul>
+                                    <li>Kernel pokliče modul_init(), ko izvršimo <code>insmod modul.ko</code></li>
+                                </ul>
+                            </li>
+                            <li><strong>module_exit(modul_exit)</strong>: Registrira modul_exit() kot cleanup funkcija
+                                <ul>
+                                    <li>Kernel pokliče modul_exit(), ko izvršimo <code>rmmod modul</code></li>
+                                </ul>
+                            </li>
+                            <li><strong>Brez teh makrojev</strong>: Kernel ne bi vedel, kaj pokličiti!</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="key-concepts">
+                <h4>🔑 Key Concepts - Timers, MMIO, LED Driver</h4>
+                <ul>
+                    <li><strong>Timer API</strong>: timer_setup() inicializira, mod_timer() sproži/ponovno nastavi, del_timer() zaustavlja. Timer callback se izvršuje v interrupt kontekstu!</li>
+                    <li><strong>MMIO (Memory-Mapped I/O)</strong>: Hardware registri so dostopni kot pomnilnik. ioread32()/iowrite32() za 32-bitni dostop. ioremap() preslika fizični naslov v kernel virtuelni prostor.</li>
+                    <li><strong>virt_to_phys() in ioremap()</strong>: virt_to_phys() pretvori kernel virtualni naslov v fizični, ioremap() preslika fizični v MMIO prostor za varno/pravilno delovanje.</li>
+                    <li><strong>Register Offsets</strong>: Vsak register je dostopen prek offseta (mmio_base + 0, +4, +8). MMIO_SIZE mora biti dovolj velik!</li>
+                    <li><strong>Switch Concept</strong>: Switch register (offset +4) kontrolira ali je LED enabled. Če je 0, timer callback se nič ne naredi.</li>
+                    <li><strong>Interval Management</strong>: interval_ms se shranjuje v kernel spremenljivki in tudi v MMIO registru. Ukazi '2' in '3' ga podvojijo/razpolovijo.</li>
+                    <li><strong>Cleanup Order (LIFO)</strong>: del_timer() mora biti PRVI v modul_exit()! Če se timer sproži med čiščenjem, bi dovoil dostopati do že osvobojenega pomnilnika.</li>
+                    <li><strong>Character Device vs Block Device</strong>: Character device (register_chrdev) za serijsko komunikacijo. Block device bi bil za disk-like dostop.</li>
+                    <li><strong>Kernel Context</strong>: Timer callback se izvršuje v interrupt kontekstu - ne moremo spati, ne koristimo mutex (samo spinlock), omejeni smo!</li>
+                    <li><strong>User/Kernel Boundary</strong>: copy_from_user() je OBVEZNA za branje podatkov iz user space. Direkten dostop povzroči segfault!</li>
+                </ul>
+            </div>
+        </div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
